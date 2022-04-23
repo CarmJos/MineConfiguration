@@ -12,7 +12,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
-    <artifactId>mineconfiguration-bungee</artifactId>
+    <artifactId>minecronfiguration-spigot</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -25,18 +25,16 @@
         </dependency>
 
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.18-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>mineconfiguration-craftbukkit</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.18-R0.1-SNAPSHOT</version>
-            <type>javadoc</type>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.18.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -62,5 +60,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>

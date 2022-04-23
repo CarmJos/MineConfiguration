@@ -18,6 +18,138 @@ EasyConfiguration for MineCraft!
 
 开始在 MineCraft 相关服务器平台上**轻松(做)配置**吧！
 
+## 开发
+
+### 项目结构
+
+#### MineConfiguration-CraftBukkit
+
+CraftBukkit系通用依赖，不包含实现部分，请使用 MineConfiguration-Bukkit 或 MineConfiguration-Spigot 。
+
+#### MineConfiguration-Bukkit
+
+适用于Bukkit的版本，包含以Bukkit为基础的其他服务端*(如Spigot、Paper、CatServer)*。
+
+#### MineConfiguration-Spigot
+
+适用于 Spigot(1.18+) 的版本，适配了1.18与更新版本自带的配置文件注释功能，更加稳定。
+
+#### MineConfiguration-Bungee
+
+适用于BungeeCord的版本，可用JSON与YAML格式，但**不支持配置文件注释**。
+如需使用配置文件注释，建议使用 [EasyConfiguration-YAML](https://github.com/CarmJos/EasyConfiguration) 。
+
+### 依赖方式
+
+#### Maven 依赖
+
+<details>
+<summary>远程库配置</summary>
+
+```xml
+
+<project>
+    <repositories>
+
+        <repository>
+            <!--采用Maven中心库，安全稳定，但版本更新需要等待同步-->
+            <id>maven</id>
+            <name>Maven Central</name>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+
+        <repository>
+            <!--采用github依赖库，实时更新，但需要配置 (推荐) -->
+            <id>EasyConfiguration</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/CarmJos/MineConfiguration</url>
+        </repository>
+
+        <repository>
+            <!--采用我的私人依赖库，简单方便，但可能因为变故而无法使用-->
+            <id>carm-repo</id>
+            <name>Carm's Repo</name>
+            <url>https://repo.carm.cc/repository/maven-public/</url>
+        </repository>
+
+    </repositories>
+</project>
+```
+
+</details>
+
+<details>
+<summary>通用原生依赖</summary>
+
+```xml
+
+<project>
+    <dependencies>
+
+        <dependency>
+            <groupId>cc.carm.lib</groupId>
+            <artifactId>mineconfiguration-bukkit</artifactId>
+            <version>[LATEST RELEASE]</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>cc.carm.lib</groupId>
+            <artifactId>mineconfiguration-spigot</artifactId>
+            <version>[LATEST RELEASE]</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>cc.carm.lib</groupId>
+            <artifactId>mineconfiguration-bungee</artifactId>
+            <version>[LATEST RELEASE]</version>
+            <scope>compile</scope>
+        </dependency>
+
+    </dependencies>
+</project>
+```
+
+</details>
+
+#### Gradle 依赖
+
+<details>
+<summary>远程库配置</summary>
+
+```groovy
+repositories {
+
+    // 采用Maven中心库，安全稳定，但版本更新需要等待同步
+    mavenCentral()
+
+    // 采用github依赖库，实时更新，但需要配置 (推荐)
+    maven { url 'https://maven.pkg.github.com/CarmJos/MineConfiguration' }
+
+    // 采用我的私人依赖库，简单方便，但可能因为变故而无法使用
+    maven { url 'https://repo.carm.cc/repository/maven-public/' }
+}
+```
+
+</details>
+
+<details>
+<summary>通用原生依赖</summary>
+
+```groovy
+
+dependencies {
+
+    api "cc.carm.lib:mineconfiguration-bukkit:[LATEST RELEASE]"
+
+    api "cc.carm.lib:mineconfiguration-spigot:[LATEST RELEASE]"
+
+    api "cc.carm.lib:mineconfiguration-bungee:[LATEST RELEASE]"
+
+}
+```
+
 ## 支持与捐赠
 
 若您觉得本插件做的不错，您可以通过捐赠支持我！
@@ -28,23 +160,4 @@ EasyConfiguration for MineCraft!
 
 ## 开源协议
 
-本项目源码采用 [The MIT License](https://opensource.org/licenses/MIT) 开源协议。
-
-<details>
-<summary>关于 MIT 协议</summary>
-
-> MIT 协议可能是几大开源协议中最宽松的一个，核心条款是：
->
-> 该软件及其相关文档对所有人免费，可以任意处置，包括使用，复制，修改，合并，发表，分发，再授权，或者销售。唯一的限制是，软件中必须包含上述版 权和许可提示。
->
-> 这意味着：
->
-> - 你可以自由使用，复制，修改，可以用于自己的项目。
-> - 可以免费分发或用来盈利。
-> - 唯一的限制是必须包含许可声明。
->
-> MIT 协议是所有开源许可中最宽松的一个，除了必须包含许可声明外，再无任何限制。
->
-> *以上文字来自 [五种开源协议GPL,LGPL,BSD,MIT,Apache](https://www.oschina.net/question/54100_9455) 。*
-
-</details>
+本项目源码采用 [GNU LESSER GENERAL PUBLIC LICENSE](https://www.gnu.org/licenses/lgpl-3.0.html) 开源协议。

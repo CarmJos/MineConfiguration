@@ -1,6 +1,7 @@
 package cc.carm.lib.configuration.bungee;
 
 import cc.carm.lib.configuration.core.ConfigInitializer;
+import cc.carm.lib.configuration.core.source.ConfigCommentInfo;
 import cc.carm.lib.configuration.core.source.impl.FileConfigProvider;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -42,14 +43,13 @@ public class BungeeConfigProvider extends FileConfigProvider<BungeeSectionWrappe
     }
 
     @Override
-    public void setComments(@NotNull String path, @NotNull String... comments) {
+    public void setComment(@Nullable String path, @Nullable ConfigCommentInfo comment) {
         // BungeeCord version doesn't support comments
     }
 
     @Override
-    public @Nullable String[] getComments(@NotNull String path) {
-        // BungeeCord version doesn't support comments
-        return null;
+    public @Nullable ConfigCommentInfo getComment(@Nullable String path) {
+        return null;  // BungeeCord version doesn't support comments
     }
 
     @Override
