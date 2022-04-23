@@ -32,6 +32,7 @@ EasyConfiguration for MineCraft!
 #### MineConfiguration-Bungee
 
 适用于BungeeCord的版本，可用JSON与YAML格式，但**不支持配置文件注释**。
+
 如需使用配置文件注释，建议使用 [EasyConfiguration-YAML](https://github.com/CarmJos/EasyConfiguration) 。
 
 ### 依赖方式
