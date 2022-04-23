@@ -18,11 +18,9 @@ EasyConfiguration for MineCraft!
 
 开始在 MineCraft 相关服务器平台上**轻松(做)配置**吧！
 
-## 开发
+## 项目结构
 
-### 项目结构
-
-#### **MineConfiguration-CraftBukkit**
+### **MineConfiguration-CraftBukkit**
 
 CraftBukkit系通用依赖，不包含实现部分，请使用 **MineConfiguration-Bukkit** 或 **MineConfiguration-Spigot** 。
 
@@ -34,19 +32,23 @@ CraftBukkit系通用依赖，不包含实现部分，请使用 **MineConfigurati
 
 以上类型可以通过 `CraftConfigValue.builder()` 来创建，部分类型提供了 `of(...);` 方法来快速创建。
 
-#### **MineConfiguration-Bukkit**
+### **MineConfiguration-Bukkit**
 
 适用于Bukkit的版本，包含以Bukkit为基础的其他服务端 *(如Spigot、Paper、CatServer)* 。
 
-#### **MineConfiguration-Spigot**
+### **MineConfiguration-Spigot**
 
 适用于 Spigot(1.18+) 的版本，适配了1.18与更新版本自带的配置文件注释功能，随Spigot更新而优化，安全稳定。
 
-#### **MineConfiguration-Bungee**
+### **MineConfiguration-Bungee**
 
 适用于BungeeCord的版本，可用JSON与YAML格式，但**不支持配置文件注释**。
 
 如需使用配置文件注释，建议使用 [EasyConfiguration-YAML](https://github.com/CarmJos/EasyConfiguration) 。
+
+## 开发
+
+请详见 [EasyConfiguration](https://github.com/CarmJos/EasyConfiguration) 的 [开发介绍](https://github.com/CarmJos/EasyConfiguration/tree/master/.documentation) 。
 
 ### 依赖方式
 
