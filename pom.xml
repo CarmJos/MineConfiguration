@@ -21,8 +21,12 @@
     </properties>
     <groupId>cc.carm.lib</groupId>
     <artifactId>mineconfiguration-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
+
+    <name>MineConfiguration</name>
+    <description>EasyConfiguration for MineCraft.</description>
+    <url>https://github.com/CarmJos/MineConfiguration</url>
 
     <developers>
         <developer>
@@ -86,11 +90,6 @@
 
     <distributionManagement>
         <downloadUrl>https://github.com/CarmJos/MineConfiguration/releases</downloadUrl>
-        <site>
-            <id>javadoc</id>
-            <name>EasySQL JavaDoc (on Github Pages)</name>
-            <url>https://CarmJos.github.io/MineConfiguration</url>
-        </site>
     </distributionManagement>
 
     <dependencies>
