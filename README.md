@@ -35,7 +35,7 @@ CraftBukkit系通用依赖，不包含实现部分，请使用 MineConfiguration
 
 #### MineConfiguration-Bukkit
 
-适用于Bukkit的版本，包含以Bukkit为基础的其他服务端*(如Spigot、Paper、CatServer)*。
+适用于Bukkit的版本，包含以Bukkit为基础的其他服务端 *(如Spigot、Paper、CatServer)* 。
 
 #### MineConfiguration-Spigot
 
@@ -44,6 +44,7 @@ CraftBukkit系通用依赖，不包含实现部分，请使用 MineConfiguration
 #### MineConfiguration-Bungee
 
 适用于BungeeCord的版本，可用JSON与YAML格式，但**不支持配置文件注释**。
+
 如需使用配置文件注释，建议使用 [EasyConfiguration-YAML](https://github.com/CarmJos/EasyConfiguration) 。
 
 ### 依赖方式
