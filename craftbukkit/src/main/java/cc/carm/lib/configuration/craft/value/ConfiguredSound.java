@@ -5,6 +5,7 @@ import cc.carm.lib.configuration.core.source.ConfigCommentInfo;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.value.type.ConfiguredValue;
 import cc.carm.lib.configuration.craft.CraftConfigValue;
+import cc.carm.lib.configuration.craft.builder.sound.SoundConfigBuilder;
 import cc.carm.lib.configuration.craft.data.SoundConfig;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -14,6 +15,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class ConfiguredSound extends ConfiguredValue<SoundConfig> {
+
+    public static @NotNull SoundConfigBuilder create() {
+        return CraftConfigValue.builder().createSound();
+    }
 
     public static @NotNull ConfiguredSound of(Sound sound) {
         return CraftConfigValue.builder().createSound().defaults(sound).build();

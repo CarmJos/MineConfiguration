@@ -7,7 +7,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ItemConfig {
@@ -16,16 +19,13 @@ public class ItemConfig {
     short data;
     @Nullable String name;
     @NotNull List<String> lore;
-    @NotNull Map<String, List<String>> additional;
 
     public ItemConfig(@NotNull Material type, short damage,
-                      @Nullable String name, @NotNull List<String> lore,
-                      @NotNull Map<String, List<String>> additional) {
+                      @Nullable String name, @NotNull List<String> lore) {
         this.type = type;
         this.data = damage;
         this.name = name;
         this.lore = lore;
-        this.additional = additional;
     }
 
     public @NotNull Material getType() {
@@ -44,31 +44,16 @@ public class ItemConfig {
         return lore;
     }
 
-    public @NotNull Map<String, List<String>> getAdditionalLore() {
-        return additional;
-    }
-
     public @NotNull ItemStack getItemStack() {
         return getItemStack(1);
     }
 
-    public @NotNull ItemStack getItemStack(int amount, @NotNull String... withAdditional) {
+    public @NotNull ItemStack getItemStack(int amount) {
         ItemStack item = new ItemStack(type, amount, data);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item;
-
         if (getName() != null) meta.setDisplayName(getName());
-
-        List<String> finalLore = new ArrayList<>();
-        if (!this.lore.isEmpty()) finalLore.addAll(this.lore);
-
-        for (String s : withAdditional) {
-            List<String> additional = this.additional.get(s);
-            if (additional != null) finalLore.addAll(additional);
-        }
-
-        if (!finalLore.isEmpty()) meta.setLore(finalLore);
-
+        if (!getLore().isEmpty()) meta.setLore(getLore());
         item.setItemMeta(meta);
         return item;
     }
@@ -80,7 +65,6 @@ public class ItemConfig {
         if (this.data != 0) map.put("data", data);
         if (name != null) map.put("name", name);
         if (!lore.isEmpty()) map.put("lore", lore);
-        if (!additional.isEmpty()) map.put("additional", additional);
 
         return map;
     }
@@ -92,9 +76,9 @@ public class ItemConfig {
         Material type = Material.matchMaterial(typeName);
         if (type == null) throw new Exception("Invalid material name: " + typeName);
         else return new ItemConfig(
-                type, section.getShort("data", (short) 0), section.getString("name"),
-                parseStringList(section.getList("lore")),
-                readAdditionalLore(section.getConfigurationSection("additional"))
+                type, section.getShort("data", (short) 0),
+                section.getString("name"),
+                parseStringList(section.getList("lore"))
         );
     }
 
@@ -104,22 +88,5 @@ public class ItemConfig {
                 .map(o -> o instanceof String ? (String) o : o.toString())
                 .collect(Collectors.toList());
     }
-
-    private static Map<String, List<String>> readAdditionalLore(@Nullable ConfigurationWrapper loreSection) {
-        Map<String, List<String>> additionalMap = new HashMap<>();
-        if (loreSection == null) return additionalMap;
-
-        for (String loreName : loreSection.getKeys(false)) {
-            if (!loreSection.isList(loreName)) continue;
-
-            List<String> additionalLore = parseStringList(loreSection.getList(loreName));
-            if (additionalLore.isEmpty()) continue;
-
-            additionalMap.put(loreName, additionalLore);
-        }
-
-        return additionalMap;
-    }
-
 
 }
