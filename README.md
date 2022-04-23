@@ -22,26 +22,27 @@ EasyConfiguration for MineCraft!
 
 ### 项目结构
 
-#### MineConfiguration-CraftBukkit
+#### **MineConfiguration-CraftBukkit**
 
-CraftBukkit系通用依赖，不包含实现部分，请使用 MineConfiguration-Bukkit 或 MineConfiguration-Spigot 。
+CraftBukkit系通用依赖，不包含实现部分，请使用 **MineConfiguration-Bukkit** 或 **MineConfiguration-Spigot** 。
 
 相较于基础版本，额外提供了以下功能：
+
 - `ConfiguredSerializable<T extends ConfigurationSerializable>`
 - `ConfiguredItem` (快捷读取简单的物品配置文件)
 - `ConfiguredSound` (快捷读取音效配置文件)
 
 以上类型可以通过 `CraftConfigValue.builder()` 来创建，部分类型提供了 `of(...);` 方法来快速创建。
 
-#### MineConfiguration-Bukkit
+#### **MineConfiguration-Bukkit**
 
 适用于Bukkit的版本，包含以Bukkit为基础的其他服务端 *(如Spigot、Paper、CatServer)* 。
 
-#### MineConfiguration-Spigot
+#### **MineConfiguration-Spigot**
 
-适用于 Spigot(1.18+) 的版本，适配了1.18与更新版本自带的配置文件注释功能，更加稳定。
+适用于 Spigot(1.18+) 的版本，适配了1.18与更新版本自带的配置文件注释功能，随Spigot更新而优化，安全稳定。
 
-#### MineConfiguration-Bungee
+#### **MineConfiguration-Bungee**
 
 适用于BungeeCord的版本，可用JSON与YAML格式，但**不支持配置文件注释**。
 
