@@ -21,11 +21,6 @@ EasyConfiguration for MineCraft!
 ## 开发
 
 ### 项目结构
-
-#### MineConfiguration-CraftBukkit
-
-CraftBukkit系通用依赖，不包含实现部分，请使用 MineConfiguration-Bukkit 或 MineConfiguration-Spigot 。
-
 #### MineConfiguration-Bukkit
 
 适用于Bukkit的版本，包含以Bukkit为基础的其他服务端*(如Spigot、Paper、CatServer)*。
@@ -149,6 +144,8 @@ dependencies {
 
 }
 ```
+
+</details>
 
 ## 支持与捐赠
 
