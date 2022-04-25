@@ -5,7 +5,7 @@ import cc.carm.lib.configuration.core.source.ConfigCommentInfo;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.value.type.ConfiguredList;
 import cc.carm.lib.configuration.craft.CraftConfigValue;
-import cc.carm.lib.configuration.craft.builder.message.MessageConfigBuilder;
+import cc.carm.lib.configuration.craft.builder.message.MessageListBuilder;
 import cc.carm.lib.configuration.craft.data.MessageText;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -20,12 +20,17 @@ import java.util.stream.Collectors;
 
 public class ConfiguredMessageList<M> extends ConfiguredList<MessageText> {
 
-    public static MessageConfigBuilder create() {
-        return CraftConfigValue.builder().createMessage();
+    @NotNull
+    public static <M> MessageListBuilder<M> create(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser) {
+        return CraftConfigValue.builder().createMessage().asList(messageParser);
+    }
+
+    public static MessageListBuilder<String> fromString() {
+        return CraftConfigValue.builder().createMessage().asStringList();
     }
 
     public static ConfiguredMessageList<String> ofString(@NotNull String... defaultMessages) {
-        return create().listOfString(defaultMessages);
+        return CraftConfigValue.builder().createMessage().listOfString(defaultMessages);
     }
 
     protected final @NotNull String[] params;

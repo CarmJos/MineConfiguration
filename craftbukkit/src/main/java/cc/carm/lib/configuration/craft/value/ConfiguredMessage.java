@@ -5,7 +5,7 @@ import cc.carm.lib.configuration.core.source.ConfigCommentInfo;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.value.type.ConfiguredValue;
 import cc.carm.lib.configuration.craft.CraftConfigValue;
-import cc.carm.lib.configuration.craft.builder.message.MessageConfigBuilder;
+import cc.carm.lib.configuration.craft.builder.message.MessageValueBuilder;
 import cc.carm.lib.configuration.craft.data.MessageText;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -18,17 +18,21 @@ import java.util.function.BiFunction;
 
 public class ConfiguredMessage<M> extends ConfiguredValue<MessageText> {
 
+    @NotNull
+    public static <M> MessageValueBuilder<@Nullable M> create(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser) {
+        return CraftConfigValue.builder().createMessage().asValue(messageParser);
+    }
 
-    public static MessageConfigBuilder create() {
-        return CraftConfigValue.builder().createMessage();
+    public static MessageValueBuilder<String> fromString() {
+        return CraftConfigValue.builder().createMessage().asStringValue();
     }
 
     public static ConfiguredMessage<String> ofString() {
-        return create().valueOfString();
+        return CraftConfigValue.builder().createMessage().valueOfString();
     }
 
     public static ConfiguredMessage<String> ofString(@NotNull String defaultMessage) {
-        return create().valueOfString(defaultMessage);
+        return CraftConfigValue.builder().createMessage().valueOfString(defaultMessage);
     }
 
     protected final @NotNull String[] params;
