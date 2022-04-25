@@ -39,7 +39,6 @@ jobs:
   central-deploy:
     name: "Deploy Project (Central Repository)"
     runs-on: ubuntu-latest
-    if: "!contains({{ env.GITHUB_REF }},'SNAPSHOT')"
     steps:
       - uses: actions/checkout@v2
       - name: "Set up JDK"
