@@ -32,11 +32,11 @@ public class MessageListBuilder<M>
         };
     }
 
-    public MessageListBuilder<M> contents(@NotNull String... messages) {
-        return contents(Arrays.asList(messages));
+    public MessageListBuilder<M> defaults(@NotNull String... messages) {
+        return defaults(Arrays.asList(messages));
     }
 
-    public MessageListBuilder<M> contents(@NotNull List<String> messages) {
+    public MessageListBuilder<M> defaults(@NotNull List<String> messages) {
         return defaults(new ArrayList<>(MessageText.of(messages)));
     }
 

@@ -29,7 +29,7 @@ public class MessageConfigBuilder {
     }
 
     public @NotNull ConfiguredMessage<String> valueOfString(@NotNull String defaultMessage) {
-        return asStringValue().content(defaultMessage).build();
+        return asStringValue().defaults(defaultMessage).build();
     }
 
 
@@ -39,7 +39,7 @@ public class MessageConfigBuilder {
     }
 
     public @NotNull ConfiguredMessageList<String> listOfString(@NotNull String... defaultMessages) {
-        return asStringList().contents(defaultMessages).build();
+        return asStringList().defaults(defaultMessages).build();
     }
 
 }

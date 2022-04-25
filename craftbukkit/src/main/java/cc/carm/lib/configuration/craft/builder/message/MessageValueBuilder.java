@@ -33,7 +33,7 @@ public class MessageValueBuilder<M>
         };
     }
 
-    public MessageValueBuilder<M> content(@NotNull String message) {
+    public MessageValueBuilder<M> defaults(@NotNull String message) {
         return defaults(MessageText.of(message));
     }
 
