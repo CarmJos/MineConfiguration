@@ -70,7 +70,7 @@ public class ItemConfig {
     }
 
     public static @NotNull ItemConfig deserialize(@NotNull ConfigurationWrapper section) throws Exception {
-        String typeName = section.getString("name");
+        String typeName = section.getString("type");
         if (typeName == null) throw new NullPointerException("Item type name is null");
 
         Material type = Material.matchMaterial(typeName);
