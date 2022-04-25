@@ -31,7 +31,7 @@ public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConf
 
     public ItemConfigBuilder defaults(@NotNull Material type, short data,
                                       @Nullable String name, @NotNull List<String> lore) {
-        return defaults(new ItemConfig(type, data, name, lore));
+        return defaultType(type).defaultDataID(data).defaultName(name).defaultLore(lore);
     }
 
     public ItemConfigBuilder defaultType(@NotNull Material type) {
@@ -39,7 +39,7 @@ public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConf
         return this;
     }
 
-    public ItemConfigBuilder defaultName(@NotNull String name) {
+    public ItemConfigBuilder defaultName(@Nullable String name) {
         this.name = name;
         return this;
     }
@@ -50,7 +50,11 @@ public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConf
     }
 
     public ItemConfigBuilder defaultLore(@NotNull String... lore) {
-        this.lore = new ArrayList<>(Arrays.asList(lore));
+        return defaultLore(Arrays.asList(lore));
+    }
+
+    public ItemConfigBuilder defaultLore(@NotNull List<String> lore) {
+        this.lore = new ArrayList<>(lore);
         return this;
     }
 

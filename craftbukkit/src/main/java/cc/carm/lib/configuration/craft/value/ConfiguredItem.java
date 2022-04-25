@@ -15,7 +15,7 @@ public class ConfiguredItem extends ConfiguredSection<ItemConfig> {
     public static ItemConfigBuilder create() {
         return CraftConfigValue.builder().createItem();
     }
-    
+
     public static ConfiguredItem of() {
         return CraftConfigValue.builder().ofItem();
     }

@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 
 public class ItemConfig {
 
-    @NotNull Material type;
-    short data;
-    @Nullable String name;
-    @NotNull List<String> lore;
+    protected @NotNull Material type;
+    protected short data;
+    protected @Nullable String name;
+    protected @NotNull List<String> lore;
 
     public ItemConfig(@NotNull Material type, short damage,
                       @Nullable String name, @NotNull List<String> lore) {
@@ -44,7 +44,7 @@ public class ItemConfig {
         return lore;
     }
 
-    public @NotNull ItemStack getItemStack() {
+    public final @NotNull ItemStack getItemStack() {
         return getItemStack(1);
     }
 
