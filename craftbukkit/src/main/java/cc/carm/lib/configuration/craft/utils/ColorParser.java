@@ -26,7 +26,7 @@ public class ColorParser {
     }
 
     /**
-     * Parse HEXColor code like &(#000000) to minecraft colored text.
+     * Parse HEXColor code like <blockquote><pre>&(#000000)</pre></blockquote> to minecraft colored text.
      *
      * @param text the text to parse
      * @return color parsed
