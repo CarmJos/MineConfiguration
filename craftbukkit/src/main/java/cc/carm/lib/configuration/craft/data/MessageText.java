@@ -50,7 +50,7 @@ public class MessageText {
         else return parser.apply(sender, setPlaceholders(message, placeholders));
     }
 
-    protected static Map<String, Object> buildParams(@Nullable String[] params, @Nullable Object[] values) {
+    public static Map<String, Object> buildParams(@Nullable String[] params, @Nullable Object[] values) {
         Map<String, Object> map = new HashMap<>();
         if (params == null || params.length == 0) return map;
         for (int i = 0; i < params.length; i++) {
@@ -59,7 +59,7 @@ public class MessageText {
         return map;
     }
 
-    protected static String setPlaceholders(@NotNull String messages, @NotNull Map<String, Object> placeholders) {
+    public static String setPlaceholders(@NotNull String messages, @NotNull Map<String, Object> placeholders) {
         if (messages.isEmpty()) return messages;
 
         String parsed = messages;

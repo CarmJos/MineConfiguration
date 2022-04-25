@@ -51,24 +51,22 @@ public class ConfiguredMessageList<M> extends ConfiguredList<MessageText> {
     }
 
     public @Nullable List<M> parse(@Nullable CommandSender sender, @Nullable Object... values) {
-        List<MessageText> list = get();
-        if (list.isEmpty()) return null;
-        return list.stream().map(value -> value.parse(this.messageParser, sender, this.params, values))
-                .collect(Collectors.toList());
+        return parse(sender, MessageText.buildParams(params, values));
     }
 
     public @Nullable List<M> parse(@Nullable CommandSender sender, @NotNull Map<String, Object> placeholders) {
         List<MessageText> list = get();
         if (list.isEmpty()) return null;
+
+        List<String> messages = list.stream().map(MessageText::getMessage).collect(Collectors.toList());
+        if (String.join("", messages).isEmpty()) return null;
+
         return list.stream().map(value -> value.parse(this.messageParser, sender, placeholders))
                 .collect(Collectors.toList());
     }
 
     public void send(@Nullable CommandSender receiver, @Nullable Object... values) {
-        if (receiver == null) return;
-        List<M> parsed = parse(receiver, values);
-        if (parsed == null) return;
-        sendFunction.accept(receiver, parsed);
+        send(receiver, MessageText.buildParams(params, values));
     }
 
     public void send(@Nullable CommandSender receiver, @NotNull Map<String, Object> placeholders) {
@@ -79,8 +77,7 @@ public class ConfiguredMessageList<M> extends ConfiguredList<MessageText> {
     }
 
     public void broadcast(@Nullable Object... values) {
-        Bukkit.getOnlinePlayers().forEach(pl -> send(pl, values));
-        send(Bukkit.getConsoleSender(), values);
+        broadcast(MessageText.buildParams(params, values));
     }
 
     public void broadcast(@NotNull Map<String, Object> placeholders) {

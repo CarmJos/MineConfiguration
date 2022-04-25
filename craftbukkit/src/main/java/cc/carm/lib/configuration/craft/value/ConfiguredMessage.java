@@ -54,22 +54,17 @@ public class ConfiguredMessage<M> extends ConfiguredValue<MessageText> {
     }
 
     public @Nullable M parse(@Nullable CommandSender sender, @Nullable Object... values) {
-        MessageText value = get();
-        if (value == null) return null;
-        else return value.parse(this.messageParser, sender, this.params, values);
+        return parse(sender, MessageText.buildParams(params, values));
     }
 
     public @Nullable M parse(@Nullable CommandSender sender, @NotNull Map<String, Object> placeholders) {
         MessageText value = get();
-        if (value == null) return null;
+        if (value == null || value.getMessage().isEmpty()) return null;
         else return value.parse(this.messageParser, sender, placeholders);
     }
 
     public void send(@Nullable CommandSender receiver, @Nullable Object... values) {
-        if (receiver == null) return;
-        M parsed = parse(receiver, values);
-        if (parsed == null) return;
-        sendFunction.accept(receiver, parsed);
+        send(receiver, MessageText.buildParams(params, values));
     }
 
     public void send(@Nullable CommandSender receiver, @NotNull Map<String, Object> placeholders) {
@@ -80,8 +75,7 @@ public class ConfiguredMessage<M> extends ConfiguredValue<MessageText> {
     }
 
     public void broadcast(@Nullable Object... values) {
-        Bukkit.getOnlinePlayers().forEach(pl -> send(pl, values));
-        send(Bukkit.getConsoleSender(), values);
+        broadcast(MessageText.buildParams(params, values));
     }
 
     public void broadcast(@NotNull Map<String, Object> placeholders) {
