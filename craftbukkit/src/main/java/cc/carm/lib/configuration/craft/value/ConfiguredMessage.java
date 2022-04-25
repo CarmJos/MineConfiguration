@@ -41,10 +41,10 @@ public class ConfiguredMessage<M> extends ConfiguredValue<MessageText> {
 
     public ConfiguredMessage(@Nullable ConfigurationProvider<?> provider,
                              @Nullable String sectionPath, @Nullable ConfigCommentInfo comments,
-                             @NotNull String message, @NotNull String[] params,
+                             @NotNull MessageText message, @NotNull String[] params,
                              @NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser,
                              @NotNull BiConsumer<@NotNull CommandSender, @NotNull M> sendFunction) {
-        super(provider, sectionPath, comments, MessageText.class, MessageText.of(message),
+        super(provider, sectionPath, comments, MessageText.class, message,
                 ConfigValueParser.castToString().andThen((s, d) -> MessageText.of(s)),
                 MessageText::getMessage
         );

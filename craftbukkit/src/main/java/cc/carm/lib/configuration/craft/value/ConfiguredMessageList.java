@@ -39,10 +39,10 @@ public class ConfiguredMessageList<M> extends ConfiguredList<MessageText> {
 
     public ConfiguredMessageList(@Nullable ConfigurationProvider<?> provider,
                                  @Nullable String sectionPath, @Nullable ConfigCommentInfo comments,
-                                 @NotNull List<String> messages, @NotNull String[] params,
+                                 @NotNull List<MessageText> messages, @NotNull String[] params,
                                  @NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser,
                                  @NotNull BiConsumer<@NotNull CommandSender, @NotNull List<M>> sendFunction) {
-        super(provider, sectionPath, comments, MessageText.class, MessageText.of(messages),
+        super(provider, sectionPath, comments, MessageText.class, messages,
                 ConfigDataFunction.castToString().andThen(MessageText::new), MessageText::getMessage
         );
         this.params = params;

@@ -1,6 +1,7 @@
 package cc.carm.lib.configuration.craft.builder.message;
 
 import cc.carm.lib.configuration.core.builder.CommonConfigBuilder;
+import cc.carm.lib.configuration.craft.data.MessageText;
 import cc.carm.lib.configuration.craft.value.ConfiguredMessage;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -8,16 +9,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class MessageValueBuilder<M>
-        extends CommonConfigBuilder<String, MessageValueBuilder<M>> {
+        extends CommonConfigBuilder<MessageText, MessageValueBuilder<M>> {
 
     public static Function<@NotNull String, @NotNull String> DEFAULT_PARAM_FORMATTER = (s) -> "%(" + s + ")";
 
-    protected @NotNull String message;
     protected @NotNull String[] params;
     protected @NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser;
     protected @NotNull BiConsumer<@NotNull CommandSender, @NotNull M> sendHandler;
@@ -25,7 +26,6 @@ public class MessageValueBuilder<M>
     protected @NotNull Function<@NotNull String, @NotNull String> paramFormatter;
 
     public MessageValueBuilder(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> parser) {
-        this.message = "";
         this.params = new String[0];
         this.paramFormatter = DEFAULT_PARAM_FORMATTER;
         this.messageParser = parser;
@@ -34,8 +34,7 @@ public class MessageValueBuilder<M>
     }
 
     public MessageValueBuilder<M> content(@NotNull String message) {
-        this.message = message;
-        return this;
+        return defaults(MessageText.of(message));
     }
 
     public MessageValueBuilder<M> params(@NotNull String... params) {
@@ -67,7 +66,8 @@ public class MessageValueBuilder<M>
     public @NotNull ConfiguredMessage<M> build() {
         return new ConfiguredMessage<>(
                 this.provider, this.path, buildComments(),
-                this.message, buildParams(), this.messageParser, this.sendHandler
+                Optional.ofNullable(this.defaultValue).orElse(MessageText.of("")),
+                buildParams(), this.messageParser, this.sendHandler
         );
     }
 

@@ -5,10 +5,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -20,13 +17,15 @@ public class MessageText {
         else return new MessageText(message);
     }
 
-    public static @NotNull List<MessageText> of(@NotNull List<String> messages) {
-        return messages.stream().map(MessageText::of).collect(Collectors.toList());
+    public static @NotNull List<MessageText> of(@Nullable List<String> messages) {
+        if (messages == null || messages.isEmpty()) return new ArrayList<>();
+        else return messages.stream().map(MessageText::of).collect(Collectors.toList());
     }
 
     public static @NotNull List<MessageText> of(@NotNull String... messages) {
-        return Arrays.stream(messages).map(MessageText::of).collect(Collectors.toList());
+        return of(Arrays.asList(messages));
     }
+
 
     protected @NotNull String message;
 
