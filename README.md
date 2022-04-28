@@ -20,6 +20,14 @@ EasyConfiguration for MineCraft!
 
 ## 项目结构
 
+### **MineConfiguration-Common**
+
+全部版本的共用部分，包括
+- `ConfigMessage` (实现类为 `ConfiguredMessage<M>`)
+- `ConfigMessageList` (实现类为 `ConfiguredMessageList<M>`)
+
+如要使用，请访问对应实现类的builder() 方法来快速创建。
+
 ### **MineConfiguration-CraftBukkit**
 
 CraftBukkit系通用依赖，不包含实现部分，请使用 **MineConfiguration-Bukkit** 或 **MineConfiguration-Spigot** 。
