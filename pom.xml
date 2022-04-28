@@ -180,6 +180,9 @@
                         <dependencySourceIncludes>
                             <dependencySourceInclude>cc.carm.lib:*</dependencySourceInclude>
                         </dependencySourceIncludes>
+                        <additionalOptions>
+                            <additionalOption>-Xdoclint:none</additionalOption>
+                        </additionalOptions>
                     </configuration>
                     <executions>
                         <execution>
