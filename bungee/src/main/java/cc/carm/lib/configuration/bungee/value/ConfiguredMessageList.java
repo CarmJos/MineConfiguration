@@ -1,13 +1,13 @@
-package cc.carm.lib.configuration.craft.value;
+package cc.carm.lib.configuration.bungee.value;
 
+import cc.carm.lib.configuration.bungee.BungeeConfigValue;
+import cc.carm.lib.configuration.bungee.builder.message.BungeeMessageListBuilder;
+import cc.carm.lib.configuration.bungee.data.MessageText;
 import cc.carm.lib.configuration.common.value.ConfigMessageList;
 import cc.carm.lib.configuration.core.source.ConfigCommentInfo;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
-import cc.carm.lib.configuration.craft.CraftConfigValue;
-import cc.carm.lib.configuration.craft.builder.message.CraftMessageListBuilder;
-import cc.carm.lib.configuration.craft.data.MessageText;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,12 +19,12 @@ import java.util.function.BiFunction;
 public class ConfiguredMessageList<M> extends ConfigMessageList<M, MessageText, CommandSender> {
 
     @NotNull
-    public static <M> CraftMessageListBuilder<M> create(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser) {
-        return CraftConfigValue.builder().createMessage().asList(messageParser);
+    public static <M> BungeeMessageListBuilder<M> create(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser) {
+        return BungeeConfigValue.builder().createMessage().asList(messageParser);
     }
 
-    public static CraftMessageListBuilder<String> asStrings() {
-        return CraftConfigValue.builder().createMessage().asStringList();
+    public static BungeeMessageListBuilder<String> asStrings() {
+        return BungeeConfigValue.builder().createMessage().asStringList();
     }
 
     public static ConfiguredMessageList<String> ofStrings(@NotNull String... defaultMessages) {
@@ -40,8 +40,8 @@ public class ConfiguredMessageList<M> extends ConfigMessageList<M, MessageText, 
     }
 
     public void broadcast(@NotNull Map<String, Object> placeholders) {
-        Bukkit.getOnlinePlayers().forEach(pl -> send(pl, placeholders));
-        send(Bukkit.getConsoleSender(), placeholders);
+        ProxyServer.getInstance().getPlayers().forEach(pl -> send(pl, placeholders));
+        send(ProxyServer.getInstance().getConsole(), placeholders);
     }
 
 }

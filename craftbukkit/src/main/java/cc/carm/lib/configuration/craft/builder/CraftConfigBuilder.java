@@ -2,7 +2,7 @@ package cc.carm.lib.configuration.craft.builder;
 
 import cc.carm.lib.configuration.core.builder.ConfigBuilder;
 import cc.carm.lib.configuration.craft.builder.item.ItemConfigBuilder;
-import cc.carm.lib.configuration.craft.builder.message.MessageConfigBuilder;
+import cc.carm.lib.configuration.craft.builder.message.CraftMessageBuilder;
 import cc.carm.lib.configuration.craft.builder.serializable.SerializableBuilder;
 import cc.carm.lib.configuration.craft.builder.sound.SoundConfigBuilder;
 import cc.carm.lib.configuration.craft.data.ItemConfig;
@@ -21,8 +21,8 @@ public class CraftConfigBuilder extends ConfigBuilder {
         return new ItemConfigBuilder();
     }
 
-    public @NotNull MessageConfigBuilder createMessage() {
-        return new MessageConfigBuilder();
+    public @NotNull CraftMessageBuilder createMessage() {
+        return new CraftMessageBuilder();
     }
 
     public <V extends ConfigurationSerializable> @NotNull SerializableBuilder<V> ofSerializable(@NotNull Class<V> valueClass) {

@@ -1,6 +1,6 @@
 package cc.carm.lib.configuration;
 
-import cc.carm.lib.configuration.bungee.BungeeConfigProvider;
+import cc.carm.lib.configuration.bungee.source.BungeeConfigProvider;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.JsonConfiguration;
 import net.md_5.bungee.config.YamlConfiguration;

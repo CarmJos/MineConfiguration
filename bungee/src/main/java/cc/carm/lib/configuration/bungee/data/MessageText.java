@@ -1,7 +1,7 @@
-package cc.carm.lib.configuration.craft.data;
+package cc.carm.lib.configuration.bungee.data;
 
 import cc.carm.lib.configuration.common.data.AbstractText;
-import org.bukkit.command.CommandSender;
+import net.md_5.bungee.api.CommandSender;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

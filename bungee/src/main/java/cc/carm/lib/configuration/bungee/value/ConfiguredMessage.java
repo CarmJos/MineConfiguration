@@ -1,13 +1,13 @@
-package cc.carm.lib.configuration.craft.value;
+package cc.carm.lib.configuration.bungee.value;
 
+import cc.carm.lib.configuration.bungee.BungeeConfigValue;
+import cc.carm.lib.configuration.bungee.builder.message.BungeeMessageValueBuilder;
+import cc.carm.lib.configuration.bungee.data.MessageText;
 import cc.carm.lib.configuration.common.value.ConfigMessage;
 import cc.carm.lib.configuration.core.source.ConfigCommentInfo;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
-import cc.carm.lib.configuration.craft.CraftConfigValue;
-import cc.carm.lib.configuration.craft.builder.message.CraftMessageValueBuilder;
-import cc.carm.lib.configuration.craft.data.MessageText;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,12 +18,12 @@ import java.util.function.BiFunction;
 public class ConfiguredMessage<M> extends ConfigMessage<M, MessageText, CommandSender> {
 
     @NotNull
-    public static <M> CraftMessageValueBuilder<@Nullable M> create(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser) {
-        return CraftConfigValue.builder().createMessage().asValue(messageParser);
+    public static <M> BungeeMessageValueBuilder<@Nullable M> create(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser) {
+        return BungeeConfigValue.builder().createMessage().asValue(messageParser);
     }
 
-    public static CraftMessageValueBuilder<String> asString() {
-        return CraftConfigValue.builder().createMessage().asStringValue();
+    public static BungeeMessageValueBuilder<String> asString() {
+        return BungeeConfigValue.builder().createMessage().asStringValue();
     }
 
     public static ConfiguredMessage<String> ofString() {
@@ -44,8 +44,8 @@ public class ConfiguredMessage<M> extends ConfigMessage<M, MessageText, CommandS
 
 
     public void broadcast(@NotNull Map<String, Object> placeholders) {
-        Bukkit.getOnlinePlayers().forEach(pl -> send(pl, placeholders));
-        send(Bukkit.getConsoleSender(), placeholders);
+        ProxyServer.getInstance().getPlayers().forEach(pl -> send(pl, placeholders));
+        send(ProxyServer.getInstance().getConsole(), placeholders);
     }
 
 

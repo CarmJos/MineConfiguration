@@ -12,8 +12,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
-    <artifactId>mineconfiguration-bukkit</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>mineconfiguration-common</artifactId>
 
     <dependencies>
 
@@ -25,20 +24,22 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>mineconfiguration-craftbukkit</artifactId>
-            <version>${project.parent.version}</version>
+            <groupId>de.themoep</groupId>
+            <artifactId>minedown</artifactId>
+            <version>1.7.1-SNAPSHOT</version>
             <scope>compile</scope>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-chat</artifactId>
+            <version>1.16-R0.4</version>
             <scope>provided</scope>
         </dependency>
 
     </dependencies>
+
 
     <build>
         <plugins>

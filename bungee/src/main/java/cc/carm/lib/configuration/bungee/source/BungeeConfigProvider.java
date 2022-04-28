@@ -1,4 +1,4 @@
-package cc.carm.lib.configuration.bungee;
+package cc.carm.lib.configuration.bungee.source;
 
 import cc.carm.lib.configuration.core.ConfigInitializer;
 import cc.carm.lib.configuration.core.source.ConfigCommentInfo;
