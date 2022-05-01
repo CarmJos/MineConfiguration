@@ -20,14 +20,12 @@ public class CraftMessageBuilder extends MessageConfigBuilder<CommandSender, Mes
     }
 
     @Override
-    public @NotNull
-    <M> CraftMessageValueBuilder<M> asValue(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> parser) {
+    public @NotNull <M> CraftMessageValueBuilder<M> asValue(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> parser) {
         return new CraftMessageValueBuilder<>(parser);
     }
 
     @Override
-    public @NotNull
-    <M> CraftMessageListBuilder<M> asList(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> parser) {
+    public @NotNull <M> CraftMessageListBuilder<M> asList(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> parser) {
         return new CraftMessageListBuilder<>(parser);
     }
 
@@ -41,8 +39,7 @@ public class CraftMessageBuilder extends MessageConfigBuilder<CommandSender, Mes
         return asList(defaultParser()).whenSend((r, m) -> m.forEach(r::sendMessage));
     }
 
-    protected static @NotNull
-    BiFunction<@Nullable CommandSender, @NotNull String, @Nullable String> defaultParser() {
+    protected static @NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable String> defaultParser() {
         return (receiver, message) -> {
             if (receiver instanceof Player && hasPlaceholderAPI()) {
                 message = PAPIHelper.parseMessages((Player) receiver, message);

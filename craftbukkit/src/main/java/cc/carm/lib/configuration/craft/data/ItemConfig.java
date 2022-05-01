@@ -1,7 +1,11 @@
 package cc.carm.lib.configuration.craft.data;
 
+import cc.carm.lib.configuration.common.utils.ColorParser;
 import cc.carm.lib.configuration.core.source.ConfigurationWrapper;
+import cc.carm.lib.configuration.craft.utils.PAPIHelper;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -49,15 +53,22 @@ public class ItemConfig {
     }
 
     public @NotNull ItemStack getItemStack(int amount) {
+        return getItemStack(null, amount);
+    }
+
+    public @NotNull ItemStack getItemStack(@Nullable Player player) {
+        return getItemStack(player, 1);
+    }
+
+    public @NotNull ItemStack getItemStack(@Nullable Player player, int amount) {
         ItemStack item = new ItemStack(type, amount, data);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item;
-        if (getName() != null) meta.setDisplayName(getName());
-        if (!getLore().isEmpty()) meta.setLore(getLore());
+        if (getName() != null) meta.setDisplayName(parseName(player, getName()));
+        if (!getLore().isEmpty()) meta.setLore(parseLore(player, getLore()));
         item.setItemMeta(meta);
         return item;
     }
-
 
     public @NotNull Map<String, Object> serialize() {
         Map<String, Object> map = new LinkedHashMap<>();
@@ -88,5 +99,21 @@ public class ItemConfig {
                 .map(o -> o instanceof String ? (String) o : o.toString())
                 .collect(Collectors.toList());
     }
+
+    protected static @NotNull String parseName(@Nullable Player player, String message) {
+        if (player != null && hasPlaceholderAPI()) message = PAPIHelper.parseMessages(player, message);
+        return ColorParser.parse(message);
+    }
+
+
+    protected static @NotNull List<String> parseLore(@Nullable Player player, List<String> messages) {
+        if (player != null && hasPlaceholderAPI()) messages = PAPIHelper.parseMessages(player, messages);
+        return ColorParser.parse(messages);
+    }
+
+    public static boolean hasPlaceholderAPI() {
+        return Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
+    }
+
 
 }
