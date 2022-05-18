@@ -29,22 +29,22 @@ public class ConfiguredTitle extends ConfiguredSection<TitleConfig> {
     }
 
     public static ConfiguredTitle of(@Nullable String line1, @Nullable String line2,
-                                     long fadeIn, long stay, long fadeOut) {
+                                     int fadeIn, int stay, int fadeOut) {
         return create().defaults(line1, line2).fadeIn(fadeIn).stay(stay).fadeOut(fadeOut).build();
     }
 
     protected final @NotNull TitleSendConsumer sendConsumer;
     protected final @NotNull String[] params;
 
-    protected final long fadeIn;
-    protected final long stay;
-    protected final long fadeOut;
+    protected final int fadeIn;
+    protected final int stay;
+    protected final int fadeOut;
 
     public ConfiguredTitle(@Nullable ConfigurationProvider<?> provider, @Nullable String sectionPath,
                            @Nullable List<String> headerComments, @Nullable String inlineComments,
                            @Nullable TitleConfig defaultValue, @NotNull String[] params,
                            @NotNull TitleSendConsumer sendConsumer,
-                           long fadeIn, long stay, long fadeOut) {
+                           int fadeIn, int stay, int fadeOut) {
         super(provider, sectionPath, headerComments, inlineComments, TitleConfig.class, defaultValue, getTitleParser(), TitleConfig::serialize);
         this.sendConsumer = sendConsumer;
         this.params = params;
@@ -53,18 +53,18 @@ public class ConfiguredTitle extends ConfiguredSection<TitleConfig> {
         this.fadeOut = fadeOut;
     }
 
-    @Range(from = 0L, to = Long.MAX_VALUE)
-    public long getFadeInTicks() {
+    @Range(from = 0L, to = Integer.MAX_VALUE)
+    public int getFadeInTicks() {
         return fadeIn;
     }
 
-    @Range(from = 0L, to = Long.MAX_VALUE)
-    public long getStayTicks() {
+    @Range(from = 0L, to = Integer.MAX_VALUE)
+    public int getStayTicks() {
         return stay;
     }
 
-    @Range(from = 0L, to = Long.MAX_VALUE)
-    public long getFadeOutTicks() {
+    @Range(from = 0L, to = Integer.MAX_VALUE)
+    public int getFadeOutTicks() {
         return fadeOut;
     }
 

@@ -56,10 +56,6 @@ public class ConfiguredItem extends ConfiguredSection<ItemConfig> {
         return getItem(player, amount, new HashMap<>());
     }
 
-    public @Nullable ItemStack getItem(@Nullable Player player, @NotNull Object... values) {
-        return getItem(player, 1, values);
-    }
-
     public @Nullable ItemStack getItem(@Nullable Player player, int amount, @NotNull Object... values) {
         return getItem(player, amount, ParamsUtils.buildParams(params, values));
     }

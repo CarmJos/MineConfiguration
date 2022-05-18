@@ -18,9 +18,9 @@ public interface TitleSendConsumer {
      * @param line2   第二行文字
      */
     void send(@NotNull Player player,
-              @Range(from = 0L, to = Integer.MAX_VALUE) long fadeIn,
-              @Range(from = 0L, to = Integer.MAX_VALUE) long stay,
-              @Range(from = 0L, to = Integer.MAX_VALUE) long fadeOut,
+              @Range(from = 0L, to = Integer.MAX_VALUE) int fadeIn,
+              @Range(from = 0L, to = Integer.MAX_VALUE) int stay,
+              @Range(from = 0L, to = Integer.MAX_VALUE) int fadeOut,
               @NotNull String line1, @NotNull String line2);
 
 }

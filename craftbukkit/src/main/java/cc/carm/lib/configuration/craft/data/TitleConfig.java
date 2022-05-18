@@ -34,9 +34,9 @@ public class TitleConfig {
     }
 
     public void send(@NotNull Player player,
-                     @Range(from = 0L, to = Long.MAX_VALUE) long fadeIn,
-                     @Range(from = 0L, to = Long.MAX_VALUE) long stay,
-                     @Range(from = 0L, to = Long.MAX_VALUE) long fadeOut,
+                     @Range(from = 0L, to = Long.MAX_VALUE) int fadeIn,
+                     @Range(from = 0L, to = Long.MAX_VALUE) int stay,
+                     @Range(from = 0L, to = Long.MAX_VALUE) int fadeOut,
                      @NotNull Map<String, Object> placeholders,
                      @Nullable TitleSendConsumer sendConsumer) {
         if (this.line1 == null && this.line2 == null) return;

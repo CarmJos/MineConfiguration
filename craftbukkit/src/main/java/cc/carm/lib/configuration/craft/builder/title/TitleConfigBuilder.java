@@ -30,9 +30,9 @@ public class TitleConfigBuilder extends AbstractCraftBuilder<TitleConfig, TitleC
 
     protected @NotNull String[] params;
 
-    protected @Range(from = 0L, to = Integer.MAX_VALUE) long fadeIn = 10;
-    protected @Range(from = 0L, to = Integer.MAX_VALUE) long stay = 60;
-    protected @Range(from = 0L, to = Integer.MAX_VALUE) long fadeOut = 10;
+    protected @Range(from = 0L, to = Integer.MAX_VALUE) int fadeIn = 10;
+    protected @Range(from = 0L, to = Integer.MAX_VALUE) int stay = 60;
+    protected @Range(from = 0L, to = Integer.MAX_VALUE) int fadeOut = 10;
 
     protected @NotNull TitleSendConsumer sendConsumer;
     protected @NotNull Function<@NotNull String, @NotNull String> paramFormatter;
@@ -61,17 +61,17 @@ public class TitleConfigBuilder extends AbstractCraftBuilder<TitleConfig, TitleC
         return params(params.toArray(new String[0]));
     }
 
-    public TitleConfigBuilder fadeIn(@Range(from = 0L, to = Integer.MAX_VALUE) long fadeIn) {
+    public TitleConfigBuilder fadeIn(@Range(from = 0L, to = Integer.MAX_VALUE) int fadeIn) {
         this.fadeIn = fadeIn;
         return this;
     }
 
-    public TitleConfigBuilder stay(@Range(from = 0L, to = Integer.MAX_VALUE) long stay) {
+    public TitleConfigBuilder stay(@Range(from = 0L, to = Integer.MAX_VALUE) int stay) {
         this.stay = stay;
         return this;
     }
 
-    public TitleConfigBuilder fadeOut(@Range(from = 0L, to = Integer.MAX_VALUE) long fadeOut) {
+    public TitleConfigBuilder fadeOut(@Range(from = 0L, to = Integer.MAX_VALUE) int fadeOut) {
         this.fadeOut = fadeOut;
         return this;
     }
@@ -90,8 +90,8 @@ public class TitleConfigBuilder extends AbstractCraftBuilder<TitleConfig, TitleC
     public @NotNull ConfiguredTitle build() {
         return new ConfiguredTitle(
                 this.provider, this.path, this.headerComments, this.inlineComment,
-                this.defaultValue, this.params, this.sendConsumer,
-                this.fadeIn, this.stay, this.fadeOut
+                this.defaultValue, ParamsUtils.formatParams(this.paramFormatter, this.params),
+                this.sendConsumer, this.fadeIn, this.stay, this.fadeOut
         );
     }
 }
