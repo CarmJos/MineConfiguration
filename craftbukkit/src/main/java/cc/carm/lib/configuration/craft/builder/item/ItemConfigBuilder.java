@@ -1,5 +1,6 @@
 package cc.carm.lib.configuration.craft.builder.item;
 
+import cc.carm.lib.configuration.common.utils.ParamsUtils;
 import cc.carm.lib.configuration.craft.builder.AbstractCraftBuilder;
 import cc.carm.lib.configuration.craft.data.ItemConfig;
 import cc.carm.lib.configuration.craft.value.ConfiguredItem;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConfigBuilder> {
 
@@ -18,6 +20,9 @@ public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConf
     protected short data;
     protected String name;
     protected List<String> lore = new ArrayList<>();
+
+    protected @NotNull String[] params;
+    protected @NotNull Function<@NotNull String, @NotNull String> paramFormatter = ParamsUtils.DEFAULT_PARAM_FORMATTER;
 
     public ItemConfigBuilder defaults(@NotNull Material type,
                                       @Nullable String name, @NotNull String... lore) {
@@ -58,6 +63,21 @@ public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConf
         return this;
     }
 
+    public ItemConfigBuilder formatParam(@NotNull Function<@NotNull String, @NotNull String> paramFormatter) {
+        this.paramFormatter = paramFormatter;
+        return getThis();
+    }
+
+    public ItemConfigBuilder params(@NotNull String... params) {
+        this.params = params;
+        return getThis();
+    }
+
+    public ItemConfigBuilder params(@NotNull List<String> params) {
+        this.params = params.toArray(new String[0]);
+        return getThis();
+    }
+
     @Override
     protected @NotNull ItemConfigBuilder getThis() {
         return this;
@@ -71,7 +91,11 @@ public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConf
     @Override
     public @NotNull ConfiguredItem build() {
         ItemConfig defaultItem = Optional.ofNullable(this.defaultValue).orElse(buildDefault());
-        return new ConfiguredItem(this.provider, this.path, buildComments(), defaultItem);
+        return new ConfiguredItem(this.provider, this.path, this.headerComments, this.inlineComment, defaultItem, buildParams());
+    }
+
+    protected final String[] buildParams() {
+        return Arrays.stream(params).map(param -> paramFormatter.apply(param)).toArray(String[]::new);
     }
 
 }

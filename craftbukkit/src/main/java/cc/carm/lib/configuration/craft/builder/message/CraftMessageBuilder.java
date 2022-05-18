@@ -1,22 +1,20 @@
 package cc.carm.lib.configuration.craft.builder.message;
 
 import cc.carm.lib.configuration.common.builder.message.MessageConfigBuilder;
-import cc.carm.lib.configuration.common.utils.ColorParser;
-import cc.carm.lib.configuration.craft.data.MessageText;
-import cc.carm.lib.configuration.craft.utils.PAPIHelper;
-import org.bukkit.Bukkit;
+import cc.carm.lib.configuration.craft.data.TextConfig;
+import cc.carm.lib.configuration.craft.utils.TextParser;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.function.BiFunction;
 
-public class CraftMessageBuilder extends MessageConfigBuilder<CommandSender, MessageText> {
+public class CraftMessageBuilder extends MessageConfigBuilder<CommandSender, TextConfig> {
 
 
     public CraftMessageBuilder() {
-        super(CommandSender.class, MessageText.class);
+        super(CommandSender.class, TextConfig.class);
     }
 
     @Override
@@ -40,16 +38,7 @@ public class CraftMessageBuilder extends MessageConfigBuilder<CommandSender, Mes
     }
 
     protected static @NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable String> defaultParser() {
-        return (receiver, message) -> {
-            if (receiver instanceof Player && hasPlaceholderAPI()) {
-                message = PAPIHelper.parseMessages((Player) receiver, message);
-            }
-            return ColorParser.parse(message);
-        };
-    }
-
-    public static boolean hasPlaceholderAPI() {
-        return Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
+        return (receiver, message) -> TextParser.parseText(receiver, message, new HashMap<>());
     }
 
 }

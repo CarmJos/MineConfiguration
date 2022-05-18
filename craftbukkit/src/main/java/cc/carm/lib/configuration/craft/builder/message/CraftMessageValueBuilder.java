@@ -1,7 +1,8 @@
 package cc.carm.lib.configuration.craft.builder.message;
 
 import cc.carm.lib.configuration.common.builder.message.MessageValueBuilder;
-import cc.carm.lib.configuration.craft.data.MessageText;
+import cc.carm.lib.configuration.common.utils.ParamsUtils;
+import cc.carm.lib.configuration.craft.data.TextConfig;
 import cc.carm.lib.configuration.craft.value.ConfiguredMessage;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -11,10 +12,10 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 public class CraftMessageValueBuilder<M>
-        extends MessageValueBuilder<M, CommandSender, MessageText, CraftMessageValueBuilder<M>> {
+        extends MessageValueBuilder<M, CommandSender, TextConfig, CraftMessageValueBuilder<M>> {
 
     public CraftMessageValueBuilder(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> parser) {
-        super(CommandSender.class, MessageText::new, parser);
+        super(CommandSender.class, TextConfig::new, parser);
     }
 
     @Override
@@ -25,9 +26,10 @@ public class CraftMessageValueBuilder<M>
     @Override
     public @NotNull ConfiguredMessage<M> build() {
         return new ConfiguredMessage<>(
-                this.provider, this.path, buildComments(),
-                Optional.ofNullable(this.defaultValue).orElse(MessageText.of("")),
-                buildParams(), this.messageParser, this.sendHandler
+                this.provider, this.path, this.headerComments, this.inlineComment,
+                Optional.ofNullable(this.defaultValue).orElse(TextConfig.of("")),
+                ParamsUtils.formatParams(this.paramFormatter, this.params),
+                this.messageParser, this.sendHandler
         );
     }
 

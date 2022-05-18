@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 public class ColorParser {
 
+    public static Pattern HEX_PATTERN = Pattern.compile("&\\(&?#([0-9a-fA-F]{6})\\)");
+
     public static String parse(String text) {
         return parseBaseColor(parseHexColor(text));
     }
@@ -24,25 +26,19 @@ public class ColorParser {
         return text.replaceAll("&", "§").replace("§§", "&");
     }
 
-    /**
-     * Parse HEXColor code like <blockquote><pre>&amp;(#000000)</pre></blockquote> to minecraft colored text.
-     *
-     * @param text the text to parse
-     * @return color parsed
-     */
     public static String parseHexColor(String text) {
-        Pattern pattern = Pattern.compile("&\\((&?#[0-9a-fA-F]{6})\\)");
-        Matcher matcher = pattern.matcher(text);
+        Matcher matcher = HEX_PATTERN.matcher(text);
         while (matcher.find()) {
-            String hexColor = text.substring(matcher.start() + 2, matcher.end() - 1);
-            hexColor = hexColor.replace("&", "");
-            StringBuilder bukkitColorCode = new StringBuilder('§' + "x");
-            for (int i = 1; i < hexColor.length(); i++) {
-                bukkitColorCode.append('§').append(hexColor.charAt(i));
-            }
-            text = text.replaceAll("&\\(" + hexColor + "\\)", bukkitColorCode.toString().toLowerCase());
+            text = matcher.replaceFirst(buildHexColor(matcher.group(1)).toLowerCase());
             matcher.reset(text);
         }
         return text;
     }
+
+    private static String buildHexColor(String hexCode) {
+        return Arrays.stream(hexCode.split(""))
+                .map(s -> '§' + s)
+                .collect(Collectors.joining("", '§' + "x", ""));
+    }
+
 }

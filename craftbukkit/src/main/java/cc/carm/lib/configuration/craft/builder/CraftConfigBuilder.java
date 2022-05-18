@@ -5,6 +5,7 @@ import cc.carm.lib.configuration.craft.builder.item.ItemConfigBuilder;
 import cc.carm.lib.configuration.craft.builder.message.CraftMessageBuilder;
 import cc.carm.lib.configuration.craft.builder.serializable.SerializableBuilder;
 import cc.carm.lib.configuration.craft.builder.sound.SoundConfigBuilder;
+import cc.carm.lib.configuration.craft.builder.title.TitleConfigBuilder;
 import cc.carm.lib.configuration.craft.data.ItemConfig;
 import cc.carm.lib.configuration.craft.value.ConfiguredItem;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -23,6 +24,10 @@ public class CraftConfigBuilder extends ConfigBuilder {
 
     public @NotNull CraftMessageBuilder createMessage() {
         return new CraftMessageBuilder();
+    }
+
+    public @NotNull TitleConfigBuilder createTitle() {
+        return new TitleConfigBuilder();
     }
 
     public <V extends ConfigurationSerializable> @NotNull SerializableBuilder<V> ofSerializable(@NotNull Class<V> valueClass) {

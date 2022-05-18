@@ -1,15 +1,14 @@
 package cc.carm.lib.configuration.spigot.source;
 
 import cc.carm.lib.configuration.core.ConfigInitializer;
-import cc.carm.lib.configuration.core.source.ConfigCommentInfo;
 import cc.carm.lib.configuration.craft.source.CraftConfigProvider;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SpigotConfigProvider extends CraftConfigProvider {
@@ -25,33 +24,31 @@ public class SpigotConfigProvider extends CraftConfigProvider {
     }
 
     @Override
-    public void setComment(@Nullable String path, @Nullable ConfigCommentInfo commentInfo) {
+    public void setHeaderComment(@Nullable String path, @Nullable List<String> comments) {
         if (path == null) {
-            if (commentInfo == null) this.configuration.options().setFooter(null);
-            else if (!String.join("", commentInfo.getComments()).isEmpty()) {
-                this.configuration.options().setFooter(Arrays.asList(commentInfo.getComments()));
-            }
+            this.configuration.options().setHeader(comments);
         } else {
-            if (commentInfo == null) this.configuration.setComments(path, null);
-            else {
-                List<String> comments = new ArrayList<>();
-
-                if (!String.join("", commentInfo.getComments()).isEmpty()) {
-                    if (commentInfo.startWrap()) comments.add("");
-                    comments.addAll(Arrays.asList(commentInfo.getComments()));
-                    if (commentInfo.endWrap()) comments.add("");
-                } else if (commentInfo.startWrap() || commentInfo.endWrap()) {
-                    comments.add("");
-                }
-
-                this.configuration.setComments(path, comments);
-            }
+            this.configuration.setComments(path, comments);
         }
     }
 
     @Override
-    public @Nullable ConfigCommentInfo getComment(@Nullable String path) {
-        return null;
+    public void setInlineComment(@NotNull String path, @Nullable String comment) {
+        if (comment == null) {
+            this.configuration.setInlineComments(path, null);
+        } else {
+            this.configuration.setComments(path, Collections.singletonList(comment));
+        }
     }
 
+    @Override
+    public @Nullable @Unmodifiable List<String> getHeaderComment(@Nullable String path) {
+        if (path == null) return Collections.unmodifiableList(this.configuration.options().getHeader());
+        else return this.configuration.getComments(path);
+    }
+
+    @Override
+    public @Nullable String getInlineComment(@NotNull String path) {
+        return String.join(" ", this.configuration.getInlineComments(path));
+    }
 }

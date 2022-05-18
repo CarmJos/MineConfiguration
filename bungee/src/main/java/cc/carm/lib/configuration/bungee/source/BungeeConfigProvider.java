@@ -1,15 +1,16 @@
 package cc.carm.lib.configuration.bungee.source;
 
 import cc.carm.lib.configuration.core.ConfigInitializer;
-import cc.carm.lib.configuration.core.source.ConfigCommentInfo;
 import cc.carm.lib.configuration.core.source.impl.FileConfigProvider;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class BungeeConfigProvider extends FileConfigProvider<BungeeSectionWrapper> {
 
@@ -43,13 +44,23 @@ public class BungeeConfigProvider extends FileConfigProvider<BungeeSectionWrappe
     }
 
     @Override
-    public void setComment(@Nullable String path, @Nullable ConfigCommentInfo comment) {
-        // BungeeCord version doesn't support comments
+    public void setHeaderComment(@Nullable String path, @Nullable List<String> comments) {
+
     }
 
     @Override
-    public @Nullable ConfigCommentInfo getComment(@Nullable String path) {
-        return null;  // BungeeCord version doesn't support comments
+    public void setInlineComment(@NotNull String path, @Nullable String comment) {
+
+    }
+
+    @Override
+    public @Nullable @Unmodifiable List<String> getHeaderComment(@Nullable String path) {
+        return null;
+    }
+
+    @Override
+    public @Nullable String getInlineComment(@NotNull String path) {
+        return null;
     }
 
     @Override

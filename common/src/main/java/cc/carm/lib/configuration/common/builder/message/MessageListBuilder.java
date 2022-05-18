@@ -2,6 +2,7 @@ package cc.carm.lib.configuration.common.builder.message;
 
 
 import cc.carm.lib.configuration.common.data.AbstractText;
+import cc.carm.lib.configuration.common.utils.ParamsUtils;
 import cc.carm.lib.configuration.common.value.ConfigMessageList;
 import cc.carm.lib.configuration.core.builder.CommonConfigBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -14,8 +15,6 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static cc.carm.lib.configuration.common.builder.message.MessageConfigBuilder.DEFAULT_PARAM_FORMATTER;
 
 public abstract class MessageListBuilder<M, R, T extends AbstractText<R>, B extends MessageListBuilder<M, R, T, B>>
         extends CommonConfigBuilder<List<T>, B> {
@@ -36,7 +35,7 @@ public abstract class MessageListBuilder<M, R, T extends AbstractText<R>, B exte
         this.textBuilder = textBuilder;
         this.params = new String[0];
         this.messageParser = parser;
-        this.paramFormatter = DEFAULT_PARAM_FORMATTER;
+        this.paramFormatter = ParamsUtils.DEFAULT_PARAM_FORMATTER;
         this.sendFunction = (sender, M) -> {
         };
     }
@@ -67,9 +66,5 @@ public abstract class MessageListBuilder<M, R, T extends AbstractText<R>, B exte
 
     @Override
     public abstract @NotNull ConfigMessageList<M, T, R> build();
-
-    protected final String[] buildParams() {
-        return Arrays.stream(params).map(param -> paramFormatter.apply(param)).toArray(String[]::new);
-    }
 
 }

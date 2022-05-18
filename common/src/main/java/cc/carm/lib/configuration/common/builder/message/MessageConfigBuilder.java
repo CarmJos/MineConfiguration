@@ -9,11 +9,6 @@ import java.util.function.Function;
 
 public abstract class MessageConfigBuilder<R, T extends AbstractText<R>> {
 
-    /**
-     * 默认的变量格式为 {@code %(变量名)}。
-     */
-    public static Function<@NotNull String, @NotNull String> DEFAULT_PARAM_FORMATTER = (s) -> "%(" + s + ")";
-
     protected final @NotNull Class<R> receiverClazz;
     protected final @NotNull Class<T> textClazz;
 

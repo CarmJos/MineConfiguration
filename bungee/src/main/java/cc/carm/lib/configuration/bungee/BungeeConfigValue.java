@@ -3,11 +3,12 @@ package cc.carm.lib.configuration.bungee;
 import cc.carm.lib.configuration.bungee.builder.BungeeConfigBuilder;
 import cc.carm.lib.configuration.bungee.source.BungeeConfigProvider;
 import cc.carm.lib.configuration.bungee.source.BungeeSectionWrapper;
-import cc.carm.lib.configuration.core.source.ConfigCommentInfo;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.value.impl.CachedConfigValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public abstract class BungeeConfigValue<T> extends CachedConfigValue<T> {
 
@@ -15,9 +16,10 @@ public abstract class BungeeConfigValue<T> extends CachedConfigValue<T> {
         return new BungeeConfigBuilder();
     }
 
-    public BungeeConfigValue(@Nullable BungeeConfigProvider provider,
-                             @Nullable String configPath, @Nullable ConfigCommentInfo comments, @Nullable T defaultValue) {
-        super(provider, configPath, comments, defaultValue);
+    public BungeeConfigValue(@Nullable BungeeConfigProvider provider, @Nullable String configPath,
+                             @Nullable List<String> headerComments, @Nullable String inlineComments,
+                             @Nullable T defaultValue) {
+        super(provider, configPath, headerComments, inlineComments, defaultValue);
     }
 
     public BungeeConfigProvider getBukkitProvider() {

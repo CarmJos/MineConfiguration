@@ -1,6 +1,7 @@
 package cc.carm.lib.configuration;
 
 import cc.carm.lib.configuration.bungee.source.BungeeConfigProvider;
+import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.JsonConfiguration;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -37,6 +38,14 @@ public class MineConfiguration {
         return from(new File(fileName), source);
     }
 
+    public static BungeeConfigProvider from(Plugin plugin, String fileName) {
+        return from(plugin, fileName, fileName);
+    }
+
+    public static BungeeConfigProvider from(Plugin plugin, String fileName, String source) {
+        return from(new File(plugin.getDataFolder(), fileName), source);
+    }
+
     public static BungeeConfigProvider fromYAML(File file, String source) {
         return create(file, source, ConfigurationProvider.getProvider(YamlConfiguration.class));
     }
@@ -53,6 +62,13 @@ public class MineConfiguration {
         return fromYAML(fileName, fileName);
     }
 
+    public static BungeeConfigProvider fromYAML(Plugin plugin, String fileName) {
+        return fromYAML(plugin, fileName, fileName);
+    }
+
+    public static BungeeConfigProvider fromYAML(Plugin plugin, String fileName, String source) {
+        return fromYAML(new File(plugin.getDataFolder(), fileName), source);
+    }
 
     public static BungeeConfigProvider fromJSON(File file, String source) {
         return create(file, source, ConfigurationProvider.getProvider(JsonConfiguration.class));
@@ -70,5 +86,12 @@ public class MineConfiguration {
         return fromJSON(fileName, fileName);
     }
 
+    public static BungeeConfigProvider fromJSON(Plugin plugin, String fileName) {
+        return fromJSON(plugin, fileName, fileName);
+    }
+
+    public static BungeeConfigProvider fromJSON(Plugin plugin, String fileName, String source) {
+        return fromJSON(new File(plugin.getDataFolder(), fileName), source);
+    }
 
 }

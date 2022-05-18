@@ -1,7 +1,6 @@
 package cc.carm.lib.configuration.craft.value;
 
 import cc.carm.lib.configuration.core.function.ConfigValueParser;
-import cc.carm.lib.configuration.core.source.ConfigCommentInfo;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.value.type.ConfiguredValue;
 import cc.carm.lib.configuration.craft.CraftConfigValue;
@@ -12,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 public class ConfiguredSound extends ConfiguredValue<SoundConfig> {
@@ -32,10 +32,22 @@ public class ConfiguredSound extends ConfiguredValue<SoundConfig> {
         return CraftConfigValue.builder().createSound().defaults(sound, volume, pitch).build();
     }
 
-    public ConfiguredSound(@Nullable ConfigurationProvider<?> provider,
-                           @Nullable String sectionPath, @Nullable ConfigCommentInfo comments,
+    public static @NotNull ConfiguredSound of(String soundName) {
+        return CraftConfigValue.builder().createSound().defaults(soundName).build();
+    }
+
+    public static @NotNull ConfiguredSound of(String soundName, float volume) {
+        return CraftConfigValue.builder().createSound().defaults(soundName, volume).build();
+    }
+
+    public static @NotNull ConfiguredSound of(String soundName, float volume, float pitch) {
+        return CraftConfigValue.builder().createSound().defaults(soundName, volume, pitch).build();
+    }
+
+    public ConfiguredSound(@Nullable ConfigurationProvider<?> provider, @Nullable String sectionPath,
+                           @Nullable List<String> headerComments, @Nullable String inlineComments,
                            @Nullable SoundConfig defaultValue) {
-        super(provider, sectionPath, comments, SoundConfig.class, defaultValue, getSoundParser(), SoundConfig::serialize);
+        super(provider, sectionPath, headerComments, inlineComments, SoundConfig.class, defaultValue, getSoundParser(), SoundConfig::serialize);
     }
 
     public void setSound(@NotNull Sound sound) {
@@ -47,7 +59,7 @@ public class ConfiguredSound extends ConfiguredValue<SoundConfig> {
     }
 
     public void setSound(@NotNull Sound sound, float volume, float pitch) {
-        set(new SoundConfig(sound, volume, pitch));
+        set(new SoundConfig(sound.name(), sound, volume, pitch));
     }
 
     public void playTo(@NotNull Player player) {

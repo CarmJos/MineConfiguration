@@ -1,6 +1,7 @@
 package cc.carm.lib.configuration;
 
 import cc.carm.lib.configuration.bukkit.source.BukkitConfigProvider;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,4 +31,11 @@ public class MineConfiguration {
         return from(new File(fileName), source);
     }
 
+    public static BukkitConfigProvider from(Plugin plugin, String fileName) {
+        return from(plugin, fileName, fileName);
+    }
+
+    public static BukkitConfigProvider from(Plugin plugin, String fileName, String source) {
+        return from(new File(plugin.getDataFolder(), fileName), source);
+    }
 }

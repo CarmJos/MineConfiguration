@@ -7,27 +7,36 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+
 public class SoundConfig {
 
-    protected @NotNull Sound type;
+    protected @NotNull String typeName;
+    protected @Nullable Sound type;
     protected float volume;
     protected float pitch;
 
-    public SoundConfig(@NotNull Sound type) {
-        this(type, 1, 1);
+    public SoundConfig(@NotNull String typeName) {
+        this(typeName, 1, 1);
     }
 
-    public SoundConfig(@NotNull Sound type, float volume) {
-        this(type, volume, 1);
+    public SoundConfig(@NotNull String typeName, float volume) {
+        this(typeName, volume, 1);
     }
 
-    public SoundConfig(@NotNull Sound type, float volume, float pitch) {
+    public SoundConfig(@NotNull String typeName, float volume, float pitch) {
+        this(typeName, Arrays.stream(Sound.values()).filter(s -> s.name().equalsIgnoreCase(typeName)).findFirst().orElse(null), volume, pitch);
+    }
+
+    public SoundConfig(@NotNull String typeName, @Nullable Sound type, float volume, float pitch) {
+        this.typeName = typeName;
         this.type = type;
         this.volume = volume;
         this.pitch = pitch;
     }
 
     public void playTo(Player player) {
+        if (type == null) return;
         player.playSound(player.getLocation(), type, volume, pitch);
     }
 
@@ -35,7 +44,11 @@ public class SoundConfig {
         Bukkit.getOnlinePlayers().forEach(this::playTo);
     }
 
-    public @NotNull Sound getType() {
+    public @NotNull String getTypeName() {
+        return typeName;
+    }
+
+    public @Nullable Sound getType() {
         return type;
     }
 
@@ -48,6 +61,7 @@ public class SoundConfig {
     }
 
     public void setType(@NotNull Sound type) {
+        this.typeName = type.name();
         this.type = type;
     }
 
@@ -61,11 +75,11 @@ public class SoundConfig {
 
     public @NotNull String serialize() {
         if (pitch != 1) {
-            return type.name() + ":" + volume + ":" + pitch;
+            return typeName + ":" + volume + ":" + pitch;
         } else if (volume != 1) {
-            return type.name() + ":" + volume;
+            return typeName + ":" + volume;
         } else {
-            return type.name();
+            return typeName;
         }
     }
 
@@ -78,6 +92,7 @@ public class SoundConfig {
 
         try {
             return new SoundConfig(
+                    args[0],
                     Sound.valueOf(args[0]),
                     (args.length >= 2) ? Float.parseFloat(args[1]) : 1,
                     (args.length >= 3) ? Float.parseFloat(args[2]) : 1

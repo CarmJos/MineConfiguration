@@ -1,8 +1,8 @@
 package cc.carm.lib.configuration.common.value;
 
 import cc.carm.lib.configuration.common.data.AbstractText;
+import cc.carm.lib.configuration.common.utils.ParamsUtils;
 import cc.carm.lib.configuration.core.function.ConfigDataFunction;
-import cc.carm.lib.configuration.core.source.ConfigCommentInfo;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.value.type.ConfiguredList;
 import org.jetbrains.annotations.NotNull;
@@ -25,14 +25,14 @@ public abstract class ConfigMessageList<M, T extends AbstractText<R>, R> extends
     protected final @NotNull Function<String, T> textBuilder;
 
     @SuppressWarnings("NullableProblems")
-    public ConfigMessageList(@Nullable ConfigurationProvider<?> provider,
-                             @Nullable String sectionPath, @Nullable ConfigCommentInfo comments,
+    public ConfigMessageList(@Nullable ConfigurationProvider<?> provider, @Nullable String sectionPath,
+                             @Nullable List<String> headerComments, @Nullable String inlineComments,
                              @NotNull Class<T> textClazz, @NotNull List<T> messages, @NotNull String[] params,
                              @NotNull BiFunction<@Nullable R, @NotNull String, @Nullable M> messageParser,
                              @NotNull BiConsumer<@NotNull R, @NotNull List<M>> sendFunction,
                              @NotNull Function<String, @NotNull T> textBuilder) {
         super(
-                provider, sectionPath, comments, textClazz, messages,
+                provider, sectionPath, headerComments, inlineComments, textClazz, messages,
                 ConfigDataFunction.castToString().andThen(textBuilder::apply), AbstractText::getMessage
         );
         this.params = params;
@@ -42,7 +42,7 @@ public abstract class ConfigMessageList<M, T extends AbstractText<R>, R> extends
     }
 
     public @Nullable List<M> parse(@Nullable R sender, @Nullable Object... values) {
-        return parse(sender, T.buildParams(params, values));
+        return parse(sender, ParamsUtils.buildParams(params, values));
     }
 
     public @Nullable List<M> parse(@Nullable R sender, @NotNull Map<String, Object> placeholders) {
@@ -57,7 +57,7 @@ public abstract class ConfigMessageList<M, T extends AbstractText<R>, R> extends
     }
 
     public void send(@Nullable R receiver, @Nullable Object... values) {
-        send(receiver, T.buildParams(params, values));
+        send(receiver, ParamsUtils.buildParams(params, values));
     }
 
     public void send(@Nullable R receiver, @NotNull Map<String, Object> placeholders) {
@@ -68,7 +68,7 @@ public abstract class ConfigMessageList<M, T extends AbstractText<R>, R> extends
     }
 
     public void broadcast(@Nullable Object... values) {
-        broadcast(T.buildParams(params, values));
+        broadcast(ParamsUtils.buildParams(params, values));
     }
 
     public abstract void broadcast(@NotNull Map<String, Object> placeholders);

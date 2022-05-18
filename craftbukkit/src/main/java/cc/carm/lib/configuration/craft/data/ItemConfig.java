@@ -1,9 +1,7 @@
 package cc.carm.lib.configuration.craft.data;
 
-import cc.carm.lib.configuration.common.utils.ColorParser;
 import cc.carm.lib.configuration.core.source.ConfigurationWrapper;
-import cc.carm.lib.configuration.craft.utils.PAPIHelper;
-import org.bukkit.Bukkit;
+import cc.carm.lib.configuration.craft.utils.TextParser;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -11,11 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class ItemConfig {
 
@@ -44,8 +38,19 @@ public class ItemConfig {
         return name;
     }
 
+    public @Nullable String getName(@Nullable Player player, @NotNull Map<String, Object> placeholders) {
+        return Optional.ofNullable(getName())
+                .map(name -> TextParser.parseText(player, name, placeholders))
+                .orElse(null);
+    }
+
     public @NotNull List<String> getLore() {
         return lore;
+    }
+
+    public @Nullable List<String> getLore(@Nullable Player player, @NotNull Map<String, Object> placeholders) {
+        if (getLore().isEmpty()) return null;
+        else return TextParser.parseList(player, getLore(), placeholders);
     }
 
     public final @NotNull ItemStack getItemStack() {
@@ -53,19 +58,23 @@ public class ItemConfig {
     }
 
     public @NotNull ItemStack getItemStack(int amount) {
-        return getItemStack(null, amount);
+        return getItemStack(null, amount, new HashMap<>());
     }
 
     public @NotNull ItemStack getItemStack(@Nullable Player player) {
-        return getItemStack(player, 1);
+        return getItemStack(player, new HashMap<>());
     }
 
-    public @NotNull ItemStack getItemStack(@Nullable Player player, int amount) {
+    public @NotNull ItemStack getItemStack(@Nullable Player player, @NotNull Map<String, Object> placeholders) {
+        return getItemStack(player, 1, placeholders);
+    }
+
+    public @NotNull ItemStack getItemStack(@Nullable Player player, int amount, @NotNull Map<String, Object> placeholders) {
         ItemStack item = new ItemStack(type, amount, data);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item;
-        if (getName() != null) meta.setDisplayName(parseName(player, getName()));
-        if (!getLore().isEmpty()) meta.setLore(parseLore(player, getLore()));
+        Optional.ofNullable(getName(player, placeholders)).ifPresent(meta::setDisplayName);
+        Optional.ofNullable(getLore(player, placeholders)).ifPresent(meta::setLore);
         item.setItemMeta(meta);
         return item;
     }
@@ -89,31 +98,8 @@ public class ItemConfig {
         else return new ItemConfig(
                 type, section.getShort("data", (short) 0),
                 section.getString("name"),
-                parseStringList(section.getList("lore"))
+                section.getStringList("lore")
         );
     }
-
-    private static List<String> parseStringList(@Nullable List<?> data) {
-        if (data == null) return new ArrayList<>();
-        else return data.stream()
-                .map(o -> o instanceof String ? (String) o : o.toString())
-                .collect(Collectors.toList());
-    }
-
-    protected static @NotNull String parseName(@Nullable Player player, String message) {
-        if (player != null && hasPlaceholderAPI()) message = PAPIHelper.parseMessages(player, message);
-        return ColorParser.parse(message);
-    }
-
-
-    protected static @NotNull List<String> parseLore(@Nullable Player player, List<String> messages) {
-        if (player != null && hasPlaceholderAPI()) messages = PAPIHelper.parseMessages(player, messages);
-        return ColorParser.parse(messages);
-    }
-
-    public static boolean hasPlaceholderAPI() {
-        return Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
-    }
-
 
 }

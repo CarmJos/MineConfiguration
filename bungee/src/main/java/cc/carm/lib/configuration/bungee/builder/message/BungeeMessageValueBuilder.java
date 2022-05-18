@@ -3,6 +3,7 @@ package cc.carm.lib.configuration.bungee.builder.message;
 import cc.carm.lib.configuration.bungee.data.MessageText;
 import cc.carm.lib.configuration.bungee.value.ConfiguredMessage;
 import cc.carm.lib.configuration.common.builder.message.MessageValueBuilder;
+import cc.carm.lib.configuration.common.utils.ParamsUtils;
 import net.md_5.bungee.api.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,9 +26,10 @@ public class BungeeMessageValueBuilder<M>
     @Override
     public @NotNull ConfiguredMessage<M> build() {
         return new ConfiguredMessage<>(
-                this.provider, this.path, buildComments(),
+                this.provider, this.path, this.headerComments, this.inlineComment,
                 Optional.ofNullable(this.defaultValue).orElse(MessageText.of("")),
-                buildParams(), this.messageParser, this.sendHandler
+                ParamsUtils.formatParams(this.paramFormatter, this.params),
+                this.messageParser, this.sendHandler
         );
     }
 
