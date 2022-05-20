@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>mineconfiguration-parent</artifactId>
+        <artifactId>mineconfiguration-bukkit</artifactId>
         <groupId>cc.carm.lib</groupId>
         <version>1.4.0</version>
     </parent>
@@ -12,7 +12,8 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
-    <artifactId>mineconfiguration-common</artifactId>
+    <artifactId>mineconfiguration-bukkit-base</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
 
@@ -24,22 +25,13 @@
         </dependency>
 
         <dependency>
-            <groupId>de.themoep</groupId>
-            <artifactId>minedown</artifactId>
-            <version>1.7.1-SNAPSHOT</version>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>mineconfiguration-common</artifactId>
+            <version>${project.parent.version}</version>
             <scope>compile</scope>
-            <optional>true</optional>
         </dependency>
-
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-chat</artifactId>
-            <version>1.16-R0.4</version>
-            <scope>provided</scope>
-        </dependency>
-
+        
     </dependencies>
-
 
     <build>
         <plugins>
