@@ -26,7 +26,7 @@ public abstract class CraftConfigProvider extends FileConfigProvider<CraftSectio
     }
 
     @Override
-    public void reload() throws Exception {
+    protected void onReload() throws Exception {
         configuration.load(getFile());
     }
 

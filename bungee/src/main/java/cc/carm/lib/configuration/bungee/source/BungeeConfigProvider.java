@@ -34,7 +34,7 @@ public class BungeeConfigProvider extends FileConfigProvider<BungeeSectionWrappe
     }
 
     @Override
-    public void reload() throws Exception {
+    protected void onReload() throws Exception {
         this.configuration = getLoader().load(file);
     }
 
