@@ -23,14 +23,17 @@ EasyConfiguration for MineCraft!
 ### **MineConfiguration-Common**
 
 全部版本的共用部分，包括
+
 - `ConfigMessage` (实现类为 `ConfiguredMessage<M>`)
 - `ConfigMessageList` (实现类为 `ConfiguredMessageList<M>`)
 
 如要使用，请访问对应实现类的builder() 方法来快速创建。
 
-### **MineConfiguration-CraftBukkit**
+### MineConfiguration-Bukkit
 
-CraftBukkit系通用依赖，不包含实现部分，请使用 **MineConfiguration-Bukkit** 或 **MineConfiguration-Spigot** 。
+#### MineConfiguration-Bukkit-Base
+
+Bukkit系通用依赖，不包含实现部分，请使用 **MineConfiguration-Bukkit-General** 或 **MineConfiguration-Bukkit-Native** 。
 
 相较于基础版本，额外提供了以下功能：
 
@@ -40,13 +43,13 @@ CraftBukkit系通用依赖，不包含实现部分，请使用 **MineConfigurati
 
 以上类型可以通过 `CraftConfigValue.builder()` 来创建，部分类型提供了 `of(...);` 方法来快速创建。
 
-### **MineConfiguration-Bukkit**
+#### **MineConfiguration-Bukkit-General** _(推荐)_
 
 适用于Bukkit的版本，包含以Bukkit为基础的其他服务端 *(如Spigot、Paper、CatServer)* 。
 
-### **MineConfiguration-Spigot**
+#### **MineConfiguration-Bukkit-Native**
 
-适用于 Spigot(1.18+) 的版本，适配了1.18与更新版本自带的配置文件注释功能，随Spigot更新而优化，安全稳定。
+适用于 Spigot(1.18+) 的版本，适配了1.18及以后版本Spigot原生自带的配置文件注释功能，随Spigot更新而优化，安全稳定。
 
 ### **MineConfiguration-Bungee**
 
@@ -56,7 +59,8 @@ CraftBukkit系通用依赖，不包含实现部分，请使用 **MineConfigurati
 
 ## 开发
 
-请详见 [EasyConfiguration](https://github.com/CarmJos/EasyConfiguration) 的 [开发介绍](https://github.com/CarmJos/EasyConfiguration/tree/master/.documentation) 。
+请详见 [EasyConfiguration](https://github.com/CarmJos/EasyConfiguration)
+的 [开发介绍](https://github.com/CarmJos/EasyConfiguration/tree/master/.documentation) 。
 
 ### 依赖方式
 
@@ -107,14 +111,14 @@ CraftBukkit系通用依赖，不包含实现部分，请使用 **MineConfigurati
 
         <dependency>
             <groupId>cc.carm.lib</groupId>
-            <artifactId>mineconfiguration-bukkit</artifactId>
+            <artifactId>mineconfiguration-bukkit-general</artifactId>
             <version>[LATEST RELEASE]</version>
             <scope>compile</scope>
         </dependency>
-
+        
         <dependency>
             <groupId>cc.carm.lib</groupId>
-            <artifactId>mineconfiguration-spigot</artifactId>
+            <artifactId>mineconfiguration-bukkit-native</artifactId>
             <version>[LATEST RELEASE]</version>
             <scope>compile</scope>
         </dependency>
@@ -160,9 +164,9 @@ repositories {
 
 dependencies {
 
-    api "cc.carm.lib:mineconfiguration-bukkit:[LATEST RELEASE]"
+    api "cc.carm.lib:mineconfiguration-bukkit-general:[LATEST RELEASE]"
 
-    api "cc.carm.lib:mineconfiguration-spigot:[LATEST RELEASE]"
+    api "cc.carm.lib:mineconfiguration-bukkit-native:[LATEST RELEASE]"
 
     api "cc.carm.lib:mineconfiguration-bungee:[LATEST RELEASE]"
 
