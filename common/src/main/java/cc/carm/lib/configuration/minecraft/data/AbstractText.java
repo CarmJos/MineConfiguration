@@ -1,6 +1,6 @@
-package cc.carm.lib.configuration.common.data;
+package cc.carm.lib.configuration.minecraft.data;
 
-import cc.carm.lib.configuration.common.utils.ParamsUtils;
+import cc.carm.lib.configuration.minecraft.utils.ParamsUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

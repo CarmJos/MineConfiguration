@@ -3,7 +3,7 @@ package cc.carm.lib.configuration.bungee.value;
 import cc.carm.lib.configuration.bungee.BungeeConfigValue;
 import cc.carm.lib.configuration.bungee.builder.message.BungeeMessageListBuilder;
 import cc.carm.lib.configuration.bungee.data.MessageText;
-import cc.carm.lib.configuration.common.value.ConfigMessageList;
+import cc.carm.lib.configuration.minecraft.value.ConfigMessageList;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;

@@ -1,6 +1,6 @@
 package cc.carm.lib.configuration.craft.builder.message;
 
-import cc.carm.lib.configuration.common.builder.message.MessageConfigBuilder;
+import cc.carm.lib.configuration.minecraft.builder.message.MessageConfigBuilder;
 import cc.carm.lib.configuration.craft.data.TextConfig;
 import cc.carm.lib.configuration.craft.utils.TextParser;
 import org.bukkit.command.CommandSender;

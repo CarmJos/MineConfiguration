@@ -1,8 +1,8 @@
-package cc.carm.lib.configuration.common.builder.message;
+package cc.carm.lib.configuration.minecraft.builder.message;
 
-import cc.carm.lib.configuration.common.data.AbstractText;
-import cc.carm.lib.configuration.common.utils.ParamsUtils;
-import cc.carm.lib.configuration.common.value.ConfigMessage;
+import cc.carm.lib.configuration.minecraft.data.AbstractText;
+import cc.carm.lib.configuration.minecraft.utils.ParamsUtils;
+import cc.carm.lib.configuration.minecraft.value.ConfigMessage;
 import cc.carm.lib.configuration.core.builder.CommonConfigBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

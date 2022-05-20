@@ -1,6 +1,6 @@
 package cc.carm.lib.configuration.craft.builder.item;
 
-import cc.carm.lib.configuration.common.utils.ParamsUtils;
+import cc.carm.lib.configuration.minecraft.utils.ParamsUtils;
 import cc.carm.lib.configuration.craft.builder.AbstractCraftBuilder;
 import cc.carm.lib.configuration.craft.data.ItemConfig;
 import cc.carm.lib.configuration.craft.value.ConfiguredItem;

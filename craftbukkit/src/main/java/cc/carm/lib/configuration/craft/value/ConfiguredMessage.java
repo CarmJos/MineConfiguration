@@ -1,6 +1,6 @@
 package cc.carm.lib.configuration.craft.value;
 
-import cc.carm.lib.configuration.common.value.ConfigMessage;
+import cc.carm.lib.configuration.minecraft.value.ConfigMessage;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.craft.CraftConfigValue;
 import cc.carm.lib.configuration.craft.builder.message.CraftMessageValueBuilder;

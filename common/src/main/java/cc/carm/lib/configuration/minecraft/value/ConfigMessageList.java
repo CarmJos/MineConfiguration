@@ -1,7 +1,7 @@
-package cc.carm.lib.configuration.common.value;
+package cc.carm.lib.configuration.minecraft.value;
 
-import cc.carm.lib.configuration.common.data.AbstractText;
-import cc.carm.lib.configuration.common.utils.ParamsUtils;
+import cc.carm.lib.configuration.minecraft.data.AbstractText;
+import cc.carm.lib.configuration.minecraft.utils.ParamsUtils;
 import cc.carm.lib.configuration.core.function.ConfigDataFunction;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.value.type.ConfiguredList;

@@ -1,6 +1,6 @@
 package cc.carm.lib.configuration.craft.data;
 
-import cc.carm.lib.configuration.common.data.AbstractText;
+import cc.carm.lib.configuration.minecraft.data.AbstractText;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

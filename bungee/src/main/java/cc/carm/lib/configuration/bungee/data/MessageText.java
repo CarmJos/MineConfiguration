@@ -1,6 +1,6 @@
 package cc.carm.lib.configuration.bungee.data;
 
-import cc.carm.lib.configuration.common.data.AbstractText;
+import cc.carm.lib.configuration.minecraft.data.AbstractText;
 import net.md_5.bungee.api.CommandSender;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

@@ -1,11 +1,10 @@
-package cc.carm.lib.configuration.common.builder.message;
+package cc.carm.lib.configuration.minecraft.builder.message;
 
-import cc.carm.lib.configuration.common.data.AbstractText;
+import cc.carm.lib.configuration.minecraft.data.AbstractText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public abstract class MessageConfigBuilder<R, T extends AbstractText<R>> {
 

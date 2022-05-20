@@ -1,4 +1,4 @@
-package cc.carm.lib.configuration.common.utils;
+package cc.carm.lib.configuration.minecraft.utils;
 
 import java.util.Arrays;
 import java.util.List;

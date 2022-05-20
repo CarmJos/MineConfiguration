@@ -1,6 +1,6 @@
 package cc.carm.lib.configuration.craft.value;
 
-import cc.carm.lib.configuration.common.utils.ParamsUtils;
+import cc.carm.lib.configuration.minecraft.utils.ParamsUtils;
 import cc.carm.lib.configuration.core.function.ConfigValueParser;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.source.ConfigurationWrapper;

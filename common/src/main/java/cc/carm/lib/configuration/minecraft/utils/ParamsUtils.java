@@ -1,4 +1,4 @@
-package cc.carm.lib.configuration.common.utils;
+package cc.carm.lib.configuration.minecraft.utils;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,7 +1,7 @@
 package cc.carm.lib.configuration.craft.utils;
 
-import cc.carm.lib.configuration.common.utils.ColorParser;
-import cc.carm.lib.configuration.common.utils.ParamsUtils;
+import cc.carm.lib.configuration.minecraft.utils.ColorParser;
+import cc.carm.lib.configuration.minecraft.utils.ParamsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

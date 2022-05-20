@@ -2,8 +2,8 @@ package cc.carm.lib.configuration.bungee.builder.message;
 
 import cc.carm.lib.configuration.bungee.data.MessageText;
 import cc.carm.lib.configuration.bungee.value.ConfiguredMessage;
-import cc.carm.lib.configuration.common.builder.message.MessageValueBuilder;
-import cc.carm.lib.configuration.common.utils.ParamsUtils;
+import cc.carm.lib.configuration.minecraft.builder.message.MessageValueBuilder;
+import cc.carm.lib.configuration.minecraft.utils.ParamsUtils;
 import net.md_5.bungee.api.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

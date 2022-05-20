@@ -1,7 +1,7 @@
 package cc.carm.lib.configuration.craft.builder.message;
 
-import cc.carm.lib.configuration.common.builder.message.MessageListBuilder;
-import cc.carm.lib.configuration.common.utils.ParamsUtils;
+import cc.carm.lib.configuration.minecraft.builder.message.MessageListBuilder;
+import cc.carm.lib.configuration.minecraft.utils.ParamsUtils;
 import cc.carm.lib.configuration.craft.data.TextConfig;
 import cc.carm.lib.configuration.craft.value.ConfiguredMessageList;
 import org.bukkit.command.CommandSender;
