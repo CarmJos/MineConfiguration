@@ -35,11 +35,6 @@ public class BukkitConfigProvider extends CraftConfigProvider {
     }
 
     @Override
-    public void reload() throws Exception {
-        configuration.load(getFile());
-    }
-
-    @Override
     public void save() throws Exception {
         configuration.save(getFile());
 
