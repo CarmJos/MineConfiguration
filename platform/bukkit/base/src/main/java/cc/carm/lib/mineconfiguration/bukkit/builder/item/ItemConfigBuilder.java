@@ -17,11 +17,11 @@ import java.util.function.Function;
 public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConfigBuilder> {
 
     protected Material type;
-    protected short data;
-    protected String name;
+    protected short data = 0;
+    protected String name = null;
     protected List<String> lore = new ArrayList<>();
 
-    protected @NotNull String[] params;
+    protected @NotNull String[] params = new String[0];
     protected @NotNull Function<@NotNull String, @NotNull String> paramFormatter = ParamsUtils.DEFAULT_PARAM_FORMATTER;
 
     public ItemConfigBuilder defaults(@NotNull Material type,
