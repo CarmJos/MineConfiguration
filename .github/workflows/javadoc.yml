@@ -60,10 +60,10 @@ jobs:
 
       - name: Commit documentation changes
         run: |
-          echo "Committing changes to ${{ github.repositoryUrl }} ..."
+          echo "Committing changes to git@github.com:${{ github.repository_owner }}/${{ github.event.repository.name }}.git ..."
           cd docs
           git init
-          git remote add origin ${{ github.repositoryUrl }}
+          git remote add origin git@github.com:${{ github.repository_owner }}/${{ github.event.repository.name }}.git
           git checkout -b gh-pages
           git add -A
           git commit -m "API Document generated."
