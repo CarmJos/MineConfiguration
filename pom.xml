@@ -14,7 +14,7 @@
     </properties>
     <groupId>cc.carm.lib</groupId>
     <artifactId>mineconfiguration-parent</artifactId>
-    <version>1.4.2</version>
+    <version>1.4.3</version>
     <packaging>pom</packaging>
     <modules>
         <module>common</module>

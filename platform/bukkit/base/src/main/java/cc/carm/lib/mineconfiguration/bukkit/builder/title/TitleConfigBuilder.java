@@ -28,7 +28,7 @@ public class TitleConfigBuilder extends AbstractCraftBuilder<TitleConfig, TitleC
         }
     };
 
-    protected @NotNull String[] params;
+    protected @NotNull String[] params = new String[0];
 
     protected @Range(from = 0L, to = Integer.MAX_VALUE) int fadeIn = 10;
     protected @Range(from = 0L, to = Integer.MAX_VALUE) int stay = 60;
