@@ -9,6 +9,8 @@ import cc.carm.lib.mineconfiguration.bungee.MineConfiguration;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 
 public class ConfigTest {
@@ -16,8 +18,17 @@ public class ConfigTest {
 
     @Test
     public void test() {
-        ConfigurationProvider<?> config = MineConfiguration.from(new File("target/config.yml"));
+        File file = new File("target/config.yml");
+        ConfigurationProvider<?> config = MineConfiguration.from(file);
         config.initialize(Configuration.class);
+
+        try {
+            System.out.println("--------------------------------------------");
+            System.out.println(new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8));
+            System.out.println("--------------------------------------------");
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
 
