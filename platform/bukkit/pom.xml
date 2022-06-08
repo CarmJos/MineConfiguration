@@ -5,24 +5,22 @@
     <parent>
         <artifactId>mineconfiguration-parent</artifactId>
         <groupId>cc.carm.lib</groupId>
-        <version>1.4.3</version>
+        <version>2.0.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <properties>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.source>${project.jdk.version}</maven.compiler.source>
+        <maven.compiler.target>${project.jdk.version}</maven.compiler.target>
     </properties>
-    <artifactId>mineconfiguration-bukkit</artifactId>
+    <artifactId>mineconfiguration-bukkit-parent</artifactId>
     <packaging>pom</packaging>
     <modules>
         <module>base</module>
-
         <module>general</module>
-        <module>native</module>
     </modules>
 
-    <name>MineConfiguration-Bukkit</name>
+    <name>MineConfiguration-Bukkit-Parent</name>
 
     <dependencies>
 

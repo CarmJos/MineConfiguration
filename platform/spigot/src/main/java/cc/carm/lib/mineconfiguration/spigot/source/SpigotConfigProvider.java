@@ -1,6 +1,7 @@
-package cc.carm.lib.mineconfiguration.bukkit.source;
+package cc.carm.lib.mineconfiguration.spigot.source;
 
 import cc.carm.lib.configuration.core.ConfigInitializer;
+import cc.carm.lib.mineconfiguration.bukkit.source.CraftConfigProvider;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,4 +1,4 @@
-package cc.carm.lib.mineconfiguration;
+package cc.carm.lib.mineconfiguration.bungee;
 
 import cc.carm.lib.mineconfiguration.bungee.source.BungeeConfigProvider;
 import net.md_5.bungee.api.plugin.Plugin;

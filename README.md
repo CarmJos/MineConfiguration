@@ -43,19 +43,17 @@ Bukkit系通用依赖，不包含实现部分，请使用 **MineConfiguration-Bu
 
 以上类型可以通过 `CraftConfigValue.builder()` 来创建，部分类型提供了 `of(...);` 方法来快速创建。
 
-#### **MineConfiguration-Bukkit-General** _(推荐)_
+#### **MineConfiguration-Bukkit** _(推荐)_
 
 适用于Bukkit的版本，包含以Bukkit为基础的其他服务端 *(如Spigot、Paper、CatServer)* 。
 
-#### **MineConfiguration-Bukkit-Native**
+#### **MineConfiguration-Spigot**
 
 适用于 Spigot(1.18+) 的版本，适配了1.18及以后版本Spigot原生自带的配置文件注释功能，随Spigot更新而优化，安全稳定。
 
 ### **MineConfiguration-Bungee**
 
-适用于BungeeCord的版本，可用JSON与YAML格式，但**不支持配置文件注释**。
-
-如需使用配置文件注释，建议使用 [EasyConfiguration-YAML](https://github.com/CarmJos/EasyConfiguration) 。
+适用于BungeeCord的版本，可用JSON与YAML格式。其中JSON格式**不支持配置文件注释**。
 
 ## 开发
 
@@ -111,14 +109,14 @@ Bukkit系通用依赖，不包含实现部分，请使用 **MineConfiguration-Bu
 
         <dependency>
             <groupId>cc.carm.lib</groupId>
-            <artifactId>mineconfiguration-bukkit-general</artifactId>
+            <artifactId>mineconfiguration-bukkit</artifactId>
             <version>[LATEST RELEASE]</version>
             <scope>compile</scope>
         </dependency>
         
         <dependency>
             <groupId>cc.carm.lib</groupId>
-            <artifactId>mineconfiguration-bukkit-native</artifactId>
+            <artifactId>mineconfiguration-spigot</artifactId>
             <version>[LATEST RELEASE]</version>
             <scope>compile</scope>
         </dependency>
@@ -164,9 +162,9 @@ repositories {
 
 dependencies {
 
-    api "cc.carm.lib:mineconfiguration-bukkit-general:[LATEST RELEASE]"
+    api "cc.carm.lib:mineconfiguration-bukkit:[LATEST RELEASE]"
 
-    api "cc.carm.lib:mineconfiguration-bukkit-native:[LATEST RELEASE]"
+    api "cc.carm.lib:mineconfiguration-spigot:[LATEST RELEASE]"
 
     api "cc.carm.lib:mineconfiguration-bungee:[LATEST RELEASE]"
 

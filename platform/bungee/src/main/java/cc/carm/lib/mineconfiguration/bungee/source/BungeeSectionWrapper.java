@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cc.carm.lib.mineconfiguration.bungee.source.BungeeConfigProvider.SEPARATOR;
+
 public class BungeeSectionWrapper implements ConfigurationWrapper {
 
     private final Configuration section;
@@ -22,14 +24,31 @@ public class BungeeSectionWrapper implements ConfigurationWrapper {
         return section == null ? null : new BungeeSectionWrapper(section);
     }
 
+    protected static Set<String> getAllKeys(@NotNull Configuration config) {
+        Set<String> keys = new LinkedHashSet<>();
+        for (String key : config.getKeys()) {
+            keys.add(key);
+            Object value = config.get(key);
+            if (value instanceof Configuration) {
+                getAllKeys((Configuration) value).stream()
+                        .map(subKey -> key + SEPARATOR + subKey).forEach(keys::add);
+            }
+        }
+        return keys;
+    }
+
     @Override
     public @NotNull Set<String> getKeys(boolean deep) {
-        return new LinkedHashSet<>(section.getKeys());
+        if (deep) {
+            return new LinkedHashSet<>(getAllKeys(section));
+        } else {
+            return new LinkedHashSet<>(section.getKeys());
+        }
     }
 
     @Override
     public @NotNull Map<String, Object> getValues(boolean deep) {
-        return section.getKeys().stream()
+        return getKeys(deep).stream()
                 .collect(Collectors.toMap(key -> key, section::get, (a, b) -> b, LinkedHashMap::new));
     }
 

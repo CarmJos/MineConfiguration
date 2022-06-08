@@ -1,4 +1,4 @@
-package cc.carm.lib.mineconfiguration;
+package cc.carm.lib.mineconfiguration.bukkit;
 
 import cc.carm.lib.mineconfiguration.bukkit.source.BukkitConfigProvider;
 import org.bukkit.plugin.Plugin;

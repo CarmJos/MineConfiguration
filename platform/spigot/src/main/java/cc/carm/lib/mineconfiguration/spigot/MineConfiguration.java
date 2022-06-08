@@ -1,6 +1,6 @@
-package cc.carm.lib.mineconfiguration;
+package cc.carm.lib.mineconfiguration.spigot;
 
-import cc.carm.lib.mineconfiguration.bukkit.source.SpigotConfigProvider;
+import cc.carm.lib.mineconfiguration.spigot.source.SpigotConfigProvider;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
