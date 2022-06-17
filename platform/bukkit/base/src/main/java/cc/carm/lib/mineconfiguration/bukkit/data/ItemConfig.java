@@ -24,6 +24,19 @@ public class ItemConfig {
     protected @NotNull Map<Enchantment, Integer> enchants;
     protected @NotNull Set<ItemFlag> flags;
 
+    public ItemConfig(@NotNull Material type, @Nullable String name) {
+        this(type, name, Collections.emptyList());
+    }
+
+    public ItemConfig(@NotNull Material type, @Nullable String name, @NotNull List<String> lore) {
+        this(type, (short) 0, name, lore);
+    }
+
+    public ItemConfig(@NotNull Material type, short damage,
+                      @Nullable String name, @NotNull List<String> lore) {
+        this(type, damage, name, lore, Collections.emptyMap(), Collections.emptySet());
+    }
+
     public ItemConfig(@NotNull Material type, short damage,
                       @Nullable String name, @NotNull List<String> lore,
                       @NotNull Map<Enchantment, Integer> enchants,
