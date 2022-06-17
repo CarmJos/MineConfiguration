@@ -5,13 +5,12 @@ import cc.carm.lib.mineconfiguration.bukkit.data.ItemConfig;
 import cc.carm.lib.mineconfiguration.bukkit.value.ConfiguredItem;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConfigBuilder> {
@@ -20,6 +19,9 @@ public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConf
     protected short data = 0;
     protected String name = null;
     protected List<String> lore = new ArrayList<>();
+
+    protected Map<Enchantment, Integer> enchants = new LinkedHashMap<>();
+    protected Set<ItemFlag> flags = new LinkedHashSet<>();
 
     protected @NotNull String[] params = new String[0];
     protected @NotNull Function<@NotNull String, @NotNull String> paramFormatter = ParamsUtils.DEFAULT_PARAM_FORMATTER;
@@ -63,6 +65,24 @@ public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConf
         return this;
     }
 
+    public ItemConfigBuilder defaultEnchants(@NotNull Map<Enchantment, Integer> enchants) {
+        this.enchants = new LinkedHashMap<>(enchants);
+        return this;
+    }
+
+    public ItemConfigBuilder defaultEnchant(@NotNull Enchantment enchant, int level) {
+        return defaultEnchants(Collections.singletonMap(enchant, level));
+    }
+
+    public ItemConfigBuilder defaultFlags(@NotNull Set<ItemFlag> flags) {
+        this.flags = new LinkedHashSet<>(flags);
+        return this;
+    }
+
+    public ItemConfigBuilder defaultFlags(@NotNull ItemFlag... flags) {
+        return defaultFlags(new LinkedHashSet<>(Arrays.asList(flags)));
+    }
+
     public ItemConfigBuilder formatParam(@NotNull Function<@NotNull String, @NotNull String> paramFormatter) {
         this.paramFormatter = paramFormatter;
         return getThis();
@@ -85,7 +105,7 @@ public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConf
 
     protected @Nullable ItemConfig buildDefault() {
         if (this.type == null) return null;
-        else return new ItemConfig(type, data, name, lore);
+        else return new ItemConfig(type, data, name, lore, enchants, flags);
     }
 
     @Override

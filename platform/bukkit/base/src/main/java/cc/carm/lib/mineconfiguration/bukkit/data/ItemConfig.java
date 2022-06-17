@@ -3,13 +3,16 @@ package cc.carm.lib.mineconfiguration.bukkit.data;
 import cc.carm.lib.configuration.core.source.ConfigurationWrapper;
 import cc.carm.lib.mineconfiguration.bukkit.utils.TextParser;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ItemConfig {
 
@@ -18,12 +21,19 @@ public class ItemConfig {
     protected @Nullable String name;
     protected @NotNull List<String> lore;
 
+    protected @NotNull Map<Enchantment, Integer> enchants;
+    protected @NotNull Set<ItemFlag> flags;
+
     public ItemConfig(@NotNull Material type, short damage,
-                      @Nullable String name, @NotNull List<String> lore) {
+                      @Nullable String name, @NotNull List<String> lore,
+                      @NotNull Map<Enchantment, Integer> enchants,
+                      @NotNull Set<ItemFlag> flags) {
         this.type = type;
         this.data = damage;
         this.name = name;
         this.lore = lore;
+        this.enchants = enchants;
+        this.flags = flags;
     }
 
     public @NotNull Material getType() {
@@ -75,6 +85,8 @@ public class ItemConfig {
         if (meta == null) return item;
         Optional.ofNullable(getName(player, placeholders)).ifPresent(meta::setDisplayName);
         Optional.ofNullable(getLore(player, placeholders)).ifPresent(meta::setLore);
+        enchants.forEach((enchant, level) -> meta.addEnchant(enchant, level, true));
+        flags.forEach(meta::addItemFlags);
         item.setItemMeta(meta);
         return item;
     }
@@ -86,6 +98,18 @@ public class ItemConfig {
         if (name != null) map.put("name", name);
         if (!lore.isEmpty()) map.put("lore", lore);
 
+        Map<String, Integer> enchantments = new LinkedHashMap<>();
+        enchants.forEach((enchant, level) -> {
+            if (level > 0) enchantments.put(enchant.getName(), level);
+        });
+
+        if (!enchantments.isEmpty()) {
+            map.put("enchants", enchantments);
+        }
+
+        if (!flags.isEmpty()) {
+            map.put("flags", flags.stream().map(ItemFlag::name).collect(Collectors.toSet()));
+        }
         return map;
     }
 
@@ -95,11 +119,41 @@ public class ItemConfig {
 
         Material type = Material.matchMaterial(typeName);
         if (type == null) throw new Exception("Invalid material name: " + typeName);
-        else return new ItemConfig(
-                type, section.getShort("data", (short) 0),
-                section.getString("name"),
-                section.getStringList("lore")
-        );
+
+        short data = section.getShort("data", (short) 0);
+        String name = section.getString("name");
+        List<String> lore = section.getStringList("lore");
+
+        Map<Enchantment, Integer> enchantments = readEnchantments(section.getConfigurationSection("enchants"));
+        Set<ItemFlag> flags = readFlags(section.getStringList("flags"));
+
+        return new ItemConfig(type, data, name, lore, enchantments, flags);
+    }
+
+    private static ItemFlag parseFlag(String flagName) {
+        return Arrays.stream(ItemFlag.values()).filter(flag -> flag.name().equalsIgnoreCase(flagName)).findFirst().orElse(null);
+    }
+
+    private static Set<ItemFlag> readFlags(List<String> flagConfig) {
+        Set<ItemFlag> flags = new LinkedHashSet<>();
+        for (String flagName : flagConfig) {
+            ItemFlag flag = parseFlag(flagName);
+            if (flag != null) flags.add(flag);
+        }
+        return flags;
+    }
+
+    private static Map<Enchantment, Integer> readEnchantments(ConfigurationWrapper section) {
+        Map<Enchantment, Integer> enchantments = new LinkedHashMap<>();
+        if (section == null) return enchantments;
+        section.getKeys(false).forEach(key -> {
+            Enchantment enchantment = Enchantment.getByName(key);
+            int level = section.getInt(key, 0);
+            if (enchantment != null && level > 0) {
+                enchantments.put(enchantment, level);
+            }
+        });
+        return enchantments;
     }
 
 }
