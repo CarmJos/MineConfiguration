@@ -121,7 +121,7 @@ public class ItemConfig {
         }
 
         if (!flags.isEmpty()) {
-            map.put("flags", flags.stream().map(ItemFlag::name).collect(Collectors.toSet()));
+            map.put("flags", flags.stream().map(ItemFlag::name).collect(Collectors.toList()));
         }
         return map;
     }
