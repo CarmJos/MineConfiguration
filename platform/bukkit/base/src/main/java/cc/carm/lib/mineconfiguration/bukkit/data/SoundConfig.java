@@ -85,7 +85,7 @@ public class SoundConfig {
 
     @Contract("null -> null")
     public static @Nullable SoundConfig deserialize(@Nullable String string) throws Exception {
-        if (string == null || string.length() == 0) return null;
+        if (string == null || string.isEmpty()) return null;
 
         String[] args = string.contains(":") ? string.split(":") : new String[]{string};
         if (args.length < 1) return null;
