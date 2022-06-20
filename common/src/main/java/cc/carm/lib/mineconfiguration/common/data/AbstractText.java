@@ -28,16 +28,14 @@ public abstract class AbstractText<R> {
         return this.message;
     }
 
-    public <M> @Nullable M parse(@NotNull BiFunction<@Nullable R, @NotNull String, @NotNull M> parser,
-                                 @Nullable R receiver, @Nullable String[] params, @Nullable Object[] values) {
+    public <M> @NotNull M parse(@NotNull BiFunction<@Nullable R, @NotNull String, @NotNull M> parser,
+                                @Nullable R receiver, @Nullable String[] params, @Nullable Object[] values) {
         return parse(parser, receiver, ParamsUtils.buildParams(params, values));
     }
 
-    public <M> @Nullable M parse(@NotNull BiFunction<@Nullable R, @NotNull String, @NotNull M> parser,
-                                 @Nullable R receiver, @NotNull Map<String, Object> placeholders) {
-        String message = getMessage();
-        if (message.isEmpty()) return null; // No further processing
-        else return parser.apply(receiver, ParamsUtils.setPlaceholders(message, placeholders));
+    public <M> @NotNull M parse(@NotNull BiFunction<@Nullable R, @NotNull String, @NotNull M> parser,
+                                @Nullable R receiver, @NotNull Map<String, Object> placeholders) {
+        return parser.apply(receiver, ParamsUtils.setPlaceholders(message, placeholders));
     }
 
 

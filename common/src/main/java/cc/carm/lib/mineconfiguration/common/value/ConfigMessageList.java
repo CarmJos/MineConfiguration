@@ -1,10 +1,10 @@
 package cc.carm.lib.mineconfiguration.common.value;
 
-import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
-import cc.carm.lib.mineconfiguration.common.data.AbstractText;
 import cc.carm.lib.configuration.core.function.ConfigDataFunction;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.value.type.ConfiguredList;
+import cc.carm.lib.mineconfiguration.common.data.AbstractText;
+import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
