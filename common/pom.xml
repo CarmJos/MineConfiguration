@@ -17,12 +17,13 @@
     <dependencies>
 
         <dependency>
-            <groupId>${project.parent.groupId}</groupId>
+            <groupId>cc.carm.lib</groupId>
             <artifactId>easyconfiguration-core</artifactId>
-            <version>${easyconfiguration.version}</version>
+            <version>3.2.0</version>
             <scope>compile</scope>
         </dependency>
 
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-chat</artifactId>

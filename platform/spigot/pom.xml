@@ -17,6 +17,8 @@
     <artifactId>mineconfiguration-spigot</artifactId>
     <packaging>jar</packaging>
 
+    <name>MineConfiguration-Spigot</name>
+
     <dependencies>
 
         <dependency>

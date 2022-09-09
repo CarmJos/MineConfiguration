@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
+@SuppressWarnings("deprecation")
 public class BungeeMessageBuilder extends MessageConfigBuilder<CommandSender, MessageText> {
 
 

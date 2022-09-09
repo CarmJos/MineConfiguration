@@ -61,7 +61,7 @@ public class TitleConfig {
         return map;
     }
 
-    public static @NotNull TitleConfig deserialize(@NotNull ConfigurationWrapper section) {
+    public static @NotNull TitleConfig deserialize(@NotNull ConfigurationWrapper<?> section) {
         return of(section.getString("line1"), section.getString("line2"));
     }
 

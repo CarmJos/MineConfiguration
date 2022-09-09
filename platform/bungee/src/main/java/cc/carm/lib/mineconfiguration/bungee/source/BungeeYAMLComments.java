@@ -1,60 +1,23 @@
 package cc.carm.lib.mineconfiguration.bungee.source;
 
+import cc.carm.lib.configuration.core.source.ConfigurationComments;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.List;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static cc.carm.lib.mineconfiguration.bungee.source.BungeeConfigProvider.SEPARATOR;
 
-public class BungeeYAMLComments {
-
-    protected final @NotNull Map<String, List<String>> headerComments = new HashMap<>();
-    protected final @NotNull Map<String, String> inlineComments = new HashMap<>();
-
-    protected @NotNull Map<String, List<String>> getHeaderComments() {
-        return headerComments;
-    }
-
-    protected @NotNull Map<String, String> getInlineComments() {
-        return inlineComments;
-    }
-
-    public void setHeaderComments(@Nullable String path, @Nullable List<String> comments) {
-        if (comments == null) {
-            getHeaderComments().remove(path);
-        } else {
-            getHeaderComments().put(path, comments);
-        }
-    }
-
-
-    public void setInlineComment(@NotNull String path, @Nullable String comment) {
-        if (comment == null) {
-            getInlineComments().remove(path);
-        } else {
-            getInlineComments().put(path, comment);
-        }
-    }
-
-    @Nullable
-    @Unmodifiable
-    public List<String> getHeaderComment(@Nullable String path) {
-        return Optional.ofNullable(getHeaderComments().get(path)).map(Collections::unmodifiableList).orElse(null);
-    }
-
-    public @Nullable String getInlineComment(@NotNull String path) {
-        return getInlineComments().get(path);
-    }
+public class BungeeYAMLComments extends ConfigurationComments {
 
     public @Nullable String buildHeaderComments(@Nullable String path, @NotNull String indents) {
         List<String> comments = getHeaderComment(path);
@@ -144,7 +107,7 @@ public class BungeeYAMLComments {
      * @param key 键
      * @return 该键的缩进文本
      */
-    protected static String getIndents(String key) {
+    protected static String getIndents(@NotNull String key) {
         String[] splitKey = key.split("[" + SEPARATOR + "]");
         return IntStream.range(1, splitKey.length).mapToObj(i -> "  ").collect(Collectors.joining());
     }

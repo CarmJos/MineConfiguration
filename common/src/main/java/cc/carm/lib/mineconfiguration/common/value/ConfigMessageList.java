@@ -24,7 +24,6 @@ public abstract class ConfigMessageList<M, T extends AbstractText<R>, R> extends
 
     protected final @NotNull Function<String, T> textBuilder;
 
-    @SuppressWarnings("NullableProblems")
     public ConfigMessageList(@Nullable ConfigurationProvider<?> provider, @Nullable String sectionPath,
                              @Nullable List<String> headerComments, @Nullable String inlineComments,
                              @NotNull Class<T> textClazz, @NotNull List<T> messages, @NotNull String[] params,

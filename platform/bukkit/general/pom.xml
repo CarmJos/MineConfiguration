@@ -16,6 +16,8 @@
     <artifactId>mineconfiguration-bukkit</artifactId>
     <packaging>jar</packaging>
 
+    <name>MineConfiguration-Bukkit</name>
+
     <dependencies>
 
         <dependency>

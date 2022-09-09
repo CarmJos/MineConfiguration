@@ -1,10 +1,10 @@
 package cc.carm.lib.mineconfiguration.bukkit.source;
 
 import cc.carm.lib.configuration.core.ConfigInitializer;
+import cc.carm.lib.configuration.core.source.ConfigurationComments;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,13 +12,12 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 public class BukkitConfigProvider extends CraftConfigProvider {
 
     protected static final char SEPARATOR = '.';
 
-    protected BukkitYAMLComments bukkitComments = new BukkitYAMLComments();
+    protected @NotNull BukkitYAMLComments comments = new BukkitYAMLComments();
 
     public BukkitConfigProvider(@NotNull File file) {
         super(file);
@@ -39,7 +38,7 @@ public class BukkitConfigProvider extends CraftConfigProvider {
         configuration.save(getFile());
 
         StringWriter writer = new StringWriter();
-        this.bukkitComments.writeComments(configuration, new BufferedWriter(writer));
+        this.comments.writeComments(configuration, new BufferedWriter(writer));
         String value = writer.toString(); // config contents
 
         Path toUpdatePath = getFile().toPath();
@@ -49,24 +48,8 @@ public class BukkitConfigProvider extends CraftConfigProvider {
     }
 
     @Override
-    public void setHeaderComment(@Nullable String path, @Nullable List<String> comments) {
-        this.bukkitComments.setHeaderComments(path, comments);
+    public @Nullable ConfigurationComments getComments() {
+        return this.comments;
     }
 
-    @Override
-    public void setInlineComment(@NotNull String path, @Nullable String comment) {
-        this.bukkitComments.setInlineComment(path, comment);
-    }
-
-    @Override
-    @Nullable
-    @Unmodifiable
-    public List<String> getHeaderComment(@Nullable String path) {
-        return this.bukkitComments.getHeaderComment(path);
-    }
-
-    @Override
-    public @Nullable String getInlineComment(@NotNull String path) {
-        return this.bukkitComments.getInlineComment(path);
-    }
 }

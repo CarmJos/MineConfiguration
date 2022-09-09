@@ -1,8 +1,10 @@
 package cc.carm.lib.mineconfiguration.bukkit.data;
 
 import cc.carm.lib.configuration.core.source.ConfigurationWrapper;
+import cc.carm.lib.mineconfiguration.bukkit.source.CraftSectionWrapper;
 import cc.carm.lib.mineconfiguration.bukkit.utils.TextParser;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -126,7 +128,11 @@ public class ItemConfig {
         return map;
     }
 
-    public static @NotNull ItemConfig deserialize(@NotNull ConfigurationWrapper section) throws Exception {
+    public static @NotNull ItemConfig deserialize(@NotNull ConfigurationSection section) throws Exception {
+        return deserialize(CraftSectionWrapper.of(section));
+    }
+    
+    public static @NotNull ItemConfig deserialize(@NotNull ConfigurationWrapper<?> section) throws Exception {
         String typeName = section.getString("type");
         if (typeName == null) throw new NullPointerException("Item type name is null");
 
@@ -156,7 +162,7 @@ public class ItemConfig {
         return flags;
     }
 
-    private static Map<Enchantment, Integer> readEnchantments(ConfigurationWrapper section) {
+    private static Map<Enchantment, Integer> readEnchantments(ConfigurationWrapper<?> section) {
         Map<Enchantment, Integer> enchantments = new LinkedHashMap<>();
         if (section == null) return enchantments;
         section.getKeys(false).forEach(key -> {

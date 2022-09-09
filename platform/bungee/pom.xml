@@ -22,8 +22,8 @@
 
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>easyconfiguration-core</artifactId>
-            <version>${easyconfiguration.version}</version>
+            <artifactId>mineconfiguration-common</artifactId>
+            <version>${project.parent.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -41,13 +41,6 @@
             <version>1.18-R0.1-SNAPSHOT</version>
             <type>javadoc</type>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>mineconfiguration-common</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>compile</scope>
         </dependency>
 
     </dependencies>

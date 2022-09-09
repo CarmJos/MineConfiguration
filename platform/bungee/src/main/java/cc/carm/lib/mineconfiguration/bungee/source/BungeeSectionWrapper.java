@@ -11,12 +11,12 @@ import java.util.stream.Collectors;
 
 import static cc.carm.lib.mineconfiguration.bungee.source.BungeeConfigProvider.SEPARATOR;
 
-public class BungeeSectionWrapper implements ConfigurationWrapper {
+public class BungeeSectionWrapper implements ConfigurationWrapper<Configuration> {
 
-    private final Configuration section;
+    private final Configuration configuration;
 
     private BungeeSectionWrapper(@NotNull Configuration section) {
-        this.section = section;
+        this.configuration = section;
     }
 
     @Contract("!null->!null")
@@ -38,33 +38,38 @@ public class BungeeSectionWrapper implements ConfigurationWrapper {
     }
 
     @Override
+    public @NotNull Configuration getSource() {
+        return this.configuration;
+    }
+
+    @Override
     public @NotNull Set<String> getKeys(boolean deep) {
         if (deep) {
-            return new LinkedHashSet<>(getAllKeys(section));
+            return new LinkedHashSet<>(getAllKeys(configuration));
         } else {
-            return new LinkedHashSet<>(section.getKeys());
+            return new LinkedHashSet<>(configuration.getKeys());
         }
     }
 
     @Override
     public @NotNull Map<String, Object> getValues(boolean deep) {
         return getKeys(deep).stream()
-                .collect(Collectors.toMap(key -> key, section::get, (a, b) -> b, LinkedHashMap::new));
+                .collect(Collectors.toMap(key -> key, configuration::get, (a, b) -> b, LinkedHashMap::new));
     }
 
     @Override
     public void set(@NotNull String path, @Nullable Object value) {
-        this.section.set(path, value);
+        this.configuration.set(path, value);
     }
 
     @Override
     public boolean contains(@NotNull String path) {
-        return this.section.contains(path);
+        return this.configuration.contains(path);
     }
 
     @Override
     public @Nullable Object get(@NotNull String path) {
-        return this.section.get(path);
+        return this.configuration.get(path);
     }
 
     @Override
@@ -74,7 +79,7 @@ public class BungeeSectionWrapper implements ConfigurationWrapper {
 
     @Override
     public @Nullable List<?> getList(@NotNull String path) {
-        return this.section.getList(path);
+        return this.configuration.getList(path);
     }
 
     @Override
@@ -83,7 +88,7 @@ public class BungeeSectionWrapper implements ConfigurationWrapper {
     }
 
     @Override
-    public @Nullable ConfigurationWrapper getConfigurationSection(@NotNull String path) {
-        return of(this.section.getSection(path));
+    public @Nullable BungeeSectionWrapper getConfigurationSection(@NotNull String path) {
+        return of(this.configuration.getSection(path));
     }
 }

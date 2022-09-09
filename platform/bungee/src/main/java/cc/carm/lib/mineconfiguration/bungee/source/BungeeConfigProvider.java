@@ -1,13 +1,13 @@
 package cc.carm.lib.mineconfiguration.bungee.source;
 
 import cc.carm.lib.configuration.core.ConfigInitializer;
+import cc.carm.lib.configuration.core.source.ConfigurationComments;
 import cc.carm.lib.configuration.core.source.impl.FileConfigProvider;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,7 +16,6 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 public class BungeeConfigProvider extends FileConfigProvider<BungeeSectionWrapper> {
 
@@ -53,6 +52,11 @@ public class BungeeConfigProvider extends FileConfigProvider<BungeeSectionWrappe
     }
 
     @Override
+    public @Nullable ConfigurationComments getComments() {
+        return this.comments;
+    }
+
+    @Override
     public void save() throws Exception {
         getLoader().save(configuration, file);
         if (getLoader() instanceof YamlConfiguration) {
@@ -65,26 +69,6 @@ public class BungeeConfigProvider extends FileConfigProvider<BungeeSectionWrappe
                 Files.write(toUpdatePath, value.getBytes(StandardCharsets.UTF_8));
             }
         }
-    }
-
-    @Override
-    public void setHeaderComment(@Nullable String path, @Nullable List<String> comments) {
-        this.comments.setHeaderComments(path, comments);
-    }
-
-    @Override
-    public void setInlineComment(@NotNull String path, @Nullable String comment) {
-        this.comments.setInlineComment(path, comment);
-    }
-
-    @Override
-    public @Nullable @Unmodifiable List<String> getHeaderComment(@Nullable String path) {
-        return this.comments.getHeaderComment(path);
-    }
-
-    @Override
-    public @Nullable String getInlineComment(@NotNull String path) {
-        return this.comments.getInlineComment(path);
     }
 
     @Override

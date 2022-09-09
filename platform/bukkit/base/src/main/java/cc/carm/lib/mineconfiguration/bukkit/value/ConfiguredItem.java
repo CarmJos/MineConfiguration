@@ -1,13 +1,13 @@
 package cc.carm.lib.mineconfiguration.bukkit.value;
 
-import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
-import cc.carm.lib.mineconfiguration.bukkit.data.ItemConfig;
-import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import cc.carm.lib.configuration.core.function.ConfigValueParser;
-import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.source.ConfigurationWrapper;
 import cc.carm.lib.configuration.core.value.type.ConfiguredSection;
+import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
 import cc.carm.lib.mineconfiguration.bukkit.builder.item.ItemConfigBuilder;
+import cc.carm.lib.mineconfiguration.bukkit.data.ItemConfig;
+import cc.carm.lib.mineconfiguration.bukkit.source.CraftConfigProvider;
+import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("ALL")
 public class ConfiguredItem extends ConfiguredSection<ItemConfig> {
 
     public static ItemConfigBuilder create() {
@@ -33,14 +34,17 @@ public class ConfiguredItem extends ConfiguredSection<ItemConfig> {
 
     protected final @NotNull String[] params;
 
-    public ConfiguredItem(@Nullable ConfigurationProvider<?> provider, @Nullable String sectionPath,
+    public ConfiguredItem(@Nullable CraftConfigProvider provider, @Nullable String sectionPath,
                           @Nullable List<String> headerComments, @Nullable String inlineComments,
                           @Nullable ItemConfig defaultValue, @NotNull String[] params) {
-        super(provider, sectionPath, headerComments, inlineComments, ItemConfig.class, defaultValue, getItemParser(), ItemConfig::serialize);
+        super(
+                provider, sectionPath, headerComments, inlineComments, ItemConfig.class, defaultValue,
+                getItemParser(), ItemConfig::serialize
+        );
         this.params = params;
     }
 
-    public static ConfigValueParser<ConfigurationWrapper, ItemConfig> getItemParser() {
+    public static ConfigValueParser<ConfigurationWrapper<?>, ItemConfig> getItemParser() {
         return (s, d) -> ItemConfig.deserialize(s);
     }
 

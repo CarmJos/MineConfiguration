@@ -1,14 +1,14 @@
 package cc.carm.lib.mineconfiguration.bukkit.value;
 
-import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
-import cc.carm.lib.mineconfiguration.bukkit.data.TitleConfig;
-import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import cc.carm.lib.configuration.core.function.ConfigValueParser;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.source.ConfigurationWrapper;
 import cc.carm.lib.configuration.core.value.type.ConfiguredSection;
+import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
 import cc.carm.lib.mineconfiguration.bukkit.builder.title.TitleConfigBuilder;
+import cc.carm.lib.mineconfiguration.bukkit.data.TitleConfig;
 import cc.carm.lib.mineconfiguration.bukkit.function.TitleSendConsumer;
+import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -103,7 +103,7 @@ public class ConfiguredTitle extends ConfiguredSection<TitleConfig> {
     }
 
 
-    public static ConfigValueParser<ConfigurationWrapper, TitleConfig> getTitleParser() {
+    public static ConfigValueParser<ConfigurationWrapper<?>, TitleConfig> getTitleParser() {
         return (s, d) -> TitleConfig.deserialize(s);
     }
 }

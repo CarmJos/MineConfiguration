@@ -10,61 +10,66 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public class CraftSectionWrapper implements ConfigurationWrapper {
+public class CraftSectionWrapper implements ConfigurationWrapper<ConfigurationSection> {
 
-    protected final ConfigurationSection section;
+    protected final ConfigurationSection configuration;
 
-    protected CraftSectionWrapper(ConfigurationSection section) {
-        this.section = section;
+    protected CraftSectionWrapper(ConfigurationSection configuration) {
+        this.configuration = configuration;
     }
 
     public ConfigurationSection getSourceSection() {
-        return section;
+        return configuration;
+    }
+
+    @Override
+    public @NotNull ConfigurationSection getSource() {
+        return this.configuration;
     }
 
     @Override
     public @NotNull Set<String> getKeys(boolean deep) {
-        return this.section.getKeys(deep);
+        return this.configuration.getKeys(deep);
     }
 
     @Override
     public @NotNull Map<String, Object> getValues(boolean deep) {
-        return this.section.getValues(deep);
+        return this.configuration.getValues(deep);
     }
 
     @Override
     public void set(@NotNull String path, @Nullable Object value) {
-        this.section.set(path, value);
+        this.configuration.set(path, value);
     }
 
     @Override
     public boolean contains(@NotNull String path) {
-        return this.section.contains(path);
+        return this.configuration.contains(path);
     }
 
     @Override
     public @Nullable Object get(@NotNull String path) {
-        return this.section.get(path);
+        return this.configuration.get(path);
     }
 
     @Override
     public boolean isList(@NotNull String path) {
-        return this.section.isList(path);
+        return this.configuration.isList(path);
     }
 
     @Override
     public @Nullable List<?> getList(@NotNull String path) {
-        return this.section.getList(path);
+        return this.configuration.getList(path);
     }
 
     @Override
     public boolean isConfigurationSection(@NotNull String path) {
-        return this.section.isConfigurationSection(path);
+        return this.configuration.isConfigurationSection(path);
     }
 
     @Override
-    public @Nullable ConfigurationWrapper getConfigurationSection(@NotNull String path) {
-        return Optional.ofNullable(section.getConfigurationSection(path))
+    public @Nullable CraftSectionWrapper getConfigurationSection(@NotNull String path) {
+        return Optional.ofNullable(configuration.getConfigurationSection(path))
                 .map(CraftSectionWrapper::of).orElse(null);
     }
 
