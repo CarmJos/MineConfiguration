@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("ALL")
 public class ConfiguredItem extends ConfiguredSection<ItemConfig> {
 
     public static ItemConfigBuilder create() {
