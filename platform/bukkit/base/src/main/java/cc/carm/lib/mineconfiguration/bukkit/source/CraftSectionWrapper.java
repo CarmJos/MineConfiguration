@@ -18,10 +18,6 @@ public class CraftSectionWrapper implements ConfigurationWrapper<ConfigurationSe
         this.configuration = configuration;
     }
 
-    public ConfigurationSection getSourceSection() {
-        return configuration;
-    }
-
     @Override
     public @NotNull ConfigurationSection getSource() {
         return this.configuration;
