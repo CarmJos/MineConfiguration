@@ -7,11 +7,12 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class ProtocolLibHelper {
 
     @SuppressWarnings("deprecation")
-    public static void sendTitle(Player player, long fadeIn, long stay, long fadeOut, String line1, String line2) throws Exception {
+    public static void sendTitle(@NotNull Player player, long fadeIn, long stay, long fadeOut, String line1, String line2) throws Exception {
         ProtocolManager pm = ProtocolLibrary.getProtocolManager();
 
         if (line1 != null) {
@@ -35,7 +36,6 @@ public class ProtocolLibHelper {
                 .write(1, Math.toIntExact(stay))
                 .write(2, Math.toIntExact(fadeOut));
         pm.sendServerPacket(player, timePacket, false);
-
     }
 
 }
