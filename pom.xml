@@ -9,11 +9,13 @@
         <maven.compiler.target>${project.jdk.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+
+        <deps.easyconfifuration.version>3.3.1</deps.easyconfifuration.version>
     </properties>
 
     <groupId>cc.carm.lib</groupId>
     <artifactId>mineconfiguration-parent</artifactId>
-    <version>2.1.1</version>
+    <version>2.2.0</version>
     <packaging>pom</packaging>
     <modules>
         <module>common</module>
