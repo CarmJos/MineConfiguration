@@ -4,7 +4,6 @@ import cc.carm.lib.configuration.core.function.ConfigDataFunction;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.value.type.ConfiguredList;
 import cc.carm.lib.mineconfiguration.common.data.AbstractText;
-import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +15,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class ConfigMessageList<M, T extends AbstractText<R>, R> extends ConfiguredList<T> {
+public abstract class ConfigMessageList<M, T extends AbstractText<R>, R>
+        extends ConfiguredList<T> implements BaseMessage<R, List<M>> {
 
     protected final @NotNull String[] params;
     protected final @NotNull BiFunction<@Nullable R, @NotNull String, @Nullable M> messageParser;
@@ -40,37 +40,33 @@ public abstract class ConfigMessageList<M, T extends AbstractText<R>, R> extends
         this.textBuilder = textBuilder;
     }
 
-    public @Nullable List<M> parse(@Nullable R sender, @Nullable Object... values) {
-        return parse(sender, ParamsUtils.buildParams(params, values));
+    @Override
+    public String[] getParams() {
+        return params;
     }
 
-    public @Nullable List<M> parse(@Nullable R sender, @NotNull Map<String, Object> placeholders) {
+    @Override
+    public void apply(@NotNull R receiver, @NotNull List<M> message) {
+        sendFunction.accept(receiver, message);
+    }
+
+    /**
+     * 为某位接收者解析消息
+     *
+     * @param receiver     消息的接收者
+     * @param placeholders 消息中的变量与对应参数
+     */
+    @Override
+    public @Nullable List<M> parse(@Nullable R receiver, @NotNull Map<String, Object> placeholders) {
         List<T> list = get();
         if (list.isEmpty()) return null;
 
         List<String> messages = list.stream().map(T::getMessage).collect(Collectors.toList());
         if (String.join("", messages).isEmpty()) return null;
 
-        return list.stream().map(value -> value.parse(this.messageParser, sender, placeholders))
+        return list.stream().map(value -> value.parse(this.messageParser, receiver, placeholders))
                 .collect(Collectors.toList());
     }
-
-    public void send(@Nullable R receiver, @Nullable Object... values) {
-        send(receiver, ParamsUtils.buildParams(params, values));
-    }
-
-    public void send(@Nullable R receiver, @NotNull Map<String, Object> placeholders) {
-        if (receiver == null) return;
-        List<M> parsed = parse(receiver, placeholders);
-        if (parsed == null) return;
-        sendFunction.accept(receiver, parsed);
-    }
-
-    public void broadcast(@Nullable Object... values) {
-        broadcast(ParamsUtils.buildParams(params, values));
-    }
-
-    public abstract void broadcast(@NotNull Map<String, Object> placeholders);
 
     public void setMessages(@NotNull String... values) {
         setMessages(values.length == 0 ? null : Arrays.asList(values));
@@ -82,7 +78,6 @@ public abstract class ConfigMessageList<M, T extends AbstractText<R>, R> extends
         } else {
             set(buildText(values));
         }
-
     }
 
     protected List<T> buildText(List<String> values) {

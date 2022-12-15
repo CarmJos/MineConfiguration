@@ -1,17 +1,18 @@
 package cc.carm.lib.mineconfiguration.bukkit.value;
 
+import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
+import cc.carm.lib.mineconfiguration.bukkit.builder.message.CraftMessageValueBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.data.TextConfig;
 import cc.carm.lib.mineconfiguration.common.value.ConfigMessage;
-import cc.carm.lib.configuration.core.source.ConfigurationProvider;
-import cc.carm.lib.mineconfiguration.bukkit.builder.message.CraftMessageValueBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
@@ -43,10 +44,11 @@ public class ConfiguredMessage<M> extends ConfigMessage<M, TextConfig, CommandSe
     }
 
     @Override
-    public void broadcast(@NotNull Map<String, Object> placeholders) {
-        Bukkit.getOnlinePlayers().forEach(pl -> send(pl, placeholders));
-        send(Bukkit.getConsoleSender(), placeholders);
+    public @NotNull Collection<CommandSender> getAllReceivers() {
+        List<CommandSender> senders = new ArrayList<>();
+        senders.add(Bukkit.getConsoleSender());
+        senders.addAll(Bukkit.getOnlinePlayers());
+        return senders;
     }
-
 
 }

@@ -10,6 +10,8 @@ import net.md_5.bungee.api.ProxyServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -38,9 +40,11 @@ public class ConfiguredMessageList<M> extends ConfigMessageList<M, MessageText, 
         super(provider, sectionPath, headerComments, inlineComments, MessageText.class, messages, params, messageParser, sendFunction, MessageText::of);
     }
 
-    public void broadcast(@NotNull Map<String, Object> placeholders) {
-        ProxyServer.getInstance().getPlayers().forEach(pl -> send(pl, placeholders));
-        send(ProxyServer.getInstance().getConsole(), placeholders);
+    @Override
+    public @NotNull Collection<CommandSender> getAllReceivers() {
+        List<CommandSender> senders = new ArrayList<>();
+        senders.add(ProxyServer.getInstance().getConsole());
+        senders.addAll(ProxyServer.getInstance().getPlayers());
+        return senders;
     }
-
 }
