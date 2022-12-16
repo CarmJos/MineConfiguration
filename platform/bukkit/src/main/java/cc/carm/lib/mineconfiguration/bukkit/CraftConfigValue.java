@@ -25,7 +25,7 @@ public abstract class CraftConfigValue<T> extends CachedConfigValue<T> {
     public CraftConfigProvider getBukkitProvider() {
         ConfigurationProvider<?> provider = getProvider();
         if (provider instanceof CraftConfigProvider) return (CraftConfigProvider) getProvider();
-        else throw new IllegalStateException("Provider is not a SpigotConfigProvider");
+        else throw new IllegalStateException("Provider is not a CraftConfigProvider");
     }
 
     public CraftSectionWrapper getBukkitConfig() {

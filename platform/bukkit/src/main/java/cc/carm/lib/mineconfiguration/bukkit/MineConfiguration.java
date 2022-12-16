@@ -38,4 +38,5 @@ public class MineConfiguration {
     public static BukkitConfigProvider from(Plugin plugin, String fileName, String source) {
         return from(new File(plugin.getDataFolder(), fileName), source);
     }
+
 }

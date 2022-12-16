@@ -106,6 +106,26 @@ public interface BaseMessage<R, M> {
         }
     }
 
+
+    /**
+     * 广播此消息(包括后台)
+     *
+     * @param values 已定变量的对应参数(按定义顺序)
+     */
+    default void sendToAll(@Nullable Object... values) {
+        broadcast(values);
+    }
+
+    /**
+     * 广播此消息(包括后台)
+     *
+     * @param placeholders 消息中的变量与对应参数
+     */
+    default void sendToAll(@NotNull Map<String, Object> placeholders) {
+        broadcast(placeholders);
+    }
+
+
     /**
      * 广播此消息(包括后台)
      *

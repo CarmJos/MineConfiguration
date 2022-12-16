@@ -87,15 +87,15 @@ public class ConfiguredTitle extends ConfiguredSection<TitleConfig> {
         }
     }
 
-    public void sendAll(Object... values) {
-        sendAll(this.params, values);
+    public void sendToAll(Object... values) {
+        sendToAll(this.params, values);
     }
 
-    public void sendAll(@NotNull String[] params, @NotNull Object[] values) {
-        sendAll(ParamsUtils.buildParams(params, values));
+    public void sendToAll(@NotNull String[] params, @NotNull Object[] values) {
+        sendToAll(ParamsUtils.buildParams(params, values));
     }
 
-    public void sendAll(@NotNull Map<String, Object> placeholders) {
+    public void sendToAll(@NotNull Map<String, Object> placeholders) {
         TitleConfig config = get();
         if (config == null) return;
 

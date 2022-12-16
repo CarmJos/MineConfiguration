@@ -5,19 +5,22 @@
     <parent>
         <artifactId>mineconfiguration-parent</artifactId>
         <groupId>cc.carm.lib</groupId>
-        <version>2.2.1</version>
+        <version>2.3.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <properties>
         <maven.compiler.source>${project.jdk.version}</maven.compiler.source>
         <maven.compiler.target>${project.jdk.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     </properties>
     <artifactId>mineconfiguration-bungee</artifactId>
     <packaging>jar</packaging>
 
     <name>MineConfiguration-Bungee</name>
-    
+    <description>轻松(做)配置，适用于BungeeCord的版本，可用JSON与YAML格式。</description>
+
     <dependencies>
 
         <dependency>
