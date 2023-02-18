@@ -1,6 +1,6 @@
 package cc.carm.lib.mineconfiguration.bukkit.utils;
 
-import cc.carm.lib.mineconfiguration.common.utils.ColorParser;
+import cc.carm.lib.easyplugin.utils.ColorParser;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

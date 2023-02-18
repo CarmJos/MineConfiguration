@@ -1,8 +1,8 @@
 package cc.carm.lib.mineconfiguration.bungee.builder.message;
 
+import cc.carm.lib.easyplugin.utils.ColorParser;
 import cc.carm.lib.mineconfiguration.bungee.data.MessageText;
 import cc.carm.lib.mineconfiguration.common.builder.message.MessageConfigBuilder;
-import cc.carm.lib.mineconfiguration.common.utils.ColorParser;
 import net.md_5.bungee.api.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
