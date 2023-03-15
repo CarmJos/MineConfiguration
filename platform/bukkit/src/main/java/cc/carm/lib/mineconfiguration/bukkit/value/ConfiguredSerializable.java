@@ -1,12 +1,11 @@
 package cc.carm.lib.mineconfiguration.bukkit.value;
 
+import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
-import cc.carm.lib.mineconfiguration.bukkit.source.CraftConfigProvider;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 public class ConfiguredSerializable<T extends ConfigurationSerializable> extends CraftConfigValue<T> {
@@ -22,10 +21,8 @@ public class ConfiguredSerializable<T extends ConfigurationSerializable> extends
 
     protected final @NotNull Class<T> valueClass;
 
-    public ConfiguredSerializable(@Nullable CraftConfigProvider provider, @Nullable String sectionPath,
-                                  @Nullable List<String> headerComments, @Nullable String inlineComments,
-                                  @NotNull Class<T> valueClass, @Nullable T defaultValue) {
-        super(provider, sectionPath, headerComments, inlineComments, defaultValue);
+    public ConfiguredSerializable(@NotNull ValueManifest<T> manifest, @NotNull Class<T> valueClass) {
+        super(manifest);
         this.valueClass = valueClass;
     }
 

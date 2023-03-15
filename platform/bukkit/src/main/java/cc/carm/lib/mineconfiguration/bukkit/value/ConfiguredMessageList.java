@@ -1,6 +1,6 @@
 package cc.carm.lib.mineconfiguration.bukkit.value;
 
-import cc.carm.lib.configuration.core.source.ConfigurationProvider;
+import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
 import cc.carm.lib.mineconfiguration.bukkit.builder.message.CraftMessageListBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.data.TextConfig;
@@ -31,12 +31,10 @@ public class ConfiguredMessageList<M> extends ConfigMessageList<M, TextConfig, C
         return asStrings().defaults(defaultMessages).build();
     }
 
-    public ConfiguredMessageList(@Nullable ConfigurationProvider<?> provider, @Nullable String sectionPath,
-                                 @Nullable List<String> headerComments, @Nullable String inlineComments,
-                                 @NotNull List<TextConfig> messages, @NotNull String[] params,
+    public ConfiguredMessageList(@NotNull ValueManifest<List<TextConfig>> manifest, @NotNull String[] params,
                                  @NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser,
                                  @NotNull BiConsumer<@NotNull CommandSender, @NotNull List<M>> sendFunction) {
-        super(provider, sectionPath, headerComments, inlineComments, TextConfig.class, messages, params, messageParser, sendFunction, TextConfig::of);
+        super(manifest, TextConfig.class, params, messageParser, sendFunction, TextConfig::of);
     }
 
     @Override

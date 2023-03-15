@@ -1,13 +1,12 @@
 package cc.carm.lib.mineconfiguration.common.value;
 
 import cc.carm.lib.configuration.core.function.ConfigValueParser;
-import cc.carm.lib.configuration.core.source.ConfigurationProvider;
+import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.configuration.core.value.type.ConfiguredValue;
 import cc.carm.lib.mineconfiguration.common.data.AbstractText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -22,15 +21,15 @@ public abstract class ConfigMessage<M, T extends AbstractText<R>, R>
 
     protected final @NotNull Function<String, T> textBuilder;
 
-    public ConfigMessage(@Nullable ConfigurationProvider<?> provider, @Nullable String sectionPath,
-                         @Nullable List<String> headerComments, @Nullable String inlineComments,
-                         @NotNull Class<T> textClazz, @NotNull T defaultMessage, @NotNull String[] params,
+    public ConfigMessage(@NotNull ValueManifest<T> manifest,
+                         @NotNull Class<T> textClazz, @NotNull String[] params,
                          @NotNull BiFunction<@Nullable R, @NotNull String, @Nullable M> messageParser,
                          @NotNull BiConsumer<@NotNull R, @NotNull M> sendFunction,
                          @NotNull Function<String, T> textBuilder) {
         super(
-                provider, sectionPath, headerComments, inlineComments, textClazz, defaultMessage,
-                ConfigValueParser.castToString().andThen((s, d) -> textBuilder.apply(s)), AbstractText::getMessage
+                manifest, textClazz,
+                ConfigValueParser.castToString().andThen((s, d) -> textBuilder.apply(s)),
+                AbstractText::getMessage
         );
         this.params = params;
         this.messageParser = messageParser;
@@ -62,5 +61,5 @@ public abstract class ConfigMessage<M, T extends AbstractText<R>, R>
     protected T buildText(String value) {
         return textBuilder.apply(value);
     }
-    
+
 }

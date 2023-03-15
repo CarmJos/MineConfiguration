@@ -1,9 +1,9 @@
 package cc.carm.lib.mineconfiguration.bungee.value;
 
-import cc.carm.lib.configuration.core.source.ConfigurationProvider;
+import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.mineconfiguration.bungee.BungeeConfigValue;
 import cc.carm.lib.mineconfiguration.bungee.builder.message.BungeeMessageValueBuilder;
-import cc.carm.lib.mineconfiguration.bungee.data.MessageText;
+import cc.carm.lib.mineconfiguration.bungee.data.TextConfig;
 import cc.carm.lib.mineconfiguration.common.value.ConfigMessage;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-public class ConfiguredMessage<M> extends ConfigMessage<M, MessageText, CommandSender> {
+public class ConfiguredMessage<M> extends ConfigMessage<M, TextConfig, CommandSender> {
 
     @NotNull
     public static <M> BungeeMessageValueBuilder<@Nullable M> create(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser) {
@@ -35,12 +35,10 @@ public class ConfiguredMessage<M> extends ConfigMessage<M, MessageText, CommandS
         return asString().defaults(defaultMessage).build();
     }
 
-    public ConfiguredMessage(@Nullable ConfigurationProvider<?> provider, @Nullable String sectionPath,
-                             @Nullable List<String> headerComments, @Nullable String inlineComments,
-                             @NotNull MessageText defaultMessage, @NotNull String[] params,
+    public ConfiguredMessage(@NotNull ValueManifest<TextConfig> manifest, @NotNull String[] params,
                              @NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser,
                              @NotNull BiConsumer<@NotNull CommandSender, @NotNull M> sendFunction) {
-        super(provider, sectionPath, headerComments, inlineComments, MessageText.class, defaultMessage, params, messageParser, sendFunction, MessageText::of);
+        super(manifest, TextConfig.class, params, messageParser, sendFunction, TextConfig::of);
     }
 
     @Override

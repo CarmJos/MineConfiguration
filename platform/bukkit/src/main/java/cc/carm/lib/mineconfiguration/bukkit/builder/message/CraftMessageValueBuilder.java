@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 public class CraftMessageValueBuilder<M>
@@ -26,8 +25,7 @@ public class CraftMessageValueBuilder<M>
     @Override
     public @NotNull ConfiguredMessage<M> build() {
         return new ConfiguredMessage<>(
-                this.provider, this.path, this.headerComments, this.inlineComment,
-                Optional.ofNullable(this.defaultValue).orElse(TextConfig.of("")),
+                buildManifest(TextConfig.of("")),
                 ParamsUtils.formatParams(this.paramFormatter, this.params),
                 this.messageParser, this.sendHandler
         );

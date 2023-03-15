@@ -89,8 +89,7 @@ public class TitleConfigBuilder extends AbstractCraftBuilder<TitleConfig, TitleC
     @Override
     public @NotNull ConfiguredTitle build() {
         return new ConfiguredTitle(
-                this.provider, this.path, this.headerComments, this.inlineComment,
-                this.defaultValue, ParamsUtils.formatParams(this.paramFormatter, this.params),
+                buildManifest(), ParamsUtils.formatParams(this.paramFormatter, this.params),
                 this.sendConsumer, this.fadeIn, this.stay, this.fadeOut
         );
     }

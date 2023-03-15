@@ -1,8 +1,8 @@
 package cc.carm.lib.mineconfiguration.bukkit.value;
 
 import cc.carm.lib.configuration.core.function.ConfigValueParser;
-import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import cc.carm.lib.configuration.core.source.ConfigurationWrapper;
+import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.configuration.core.value.type.ConfiguredSection;
 import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
 import cc.carm.lib.mineconfiguration.bukkit.builder.title.TitleConfigBuilder;
@@ -15,8 +15,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class ConfiguredTitle extends ConfiguredSection<TitleConfig> {
 
@@ -40,12 +42,10 @@ public class ConfiguredTitle extends ConfiguredSection<TitleConfig> {
     protected final int stay;
     protected final int fadeOut;
 
-    public ConfiguredTitle(@Nullable ConfigurationProvider<?> provider, @Nullable String sectionPath,
-                           @Nullable List<String> headerComments, @Nullable String inlineComments,
-                           @Nullable TitleConfig defaultValue, @NotNull String[] params,
+    public ConfiguredTitle(@NotNull ValueManifest<TitleConfig> manifest, @NotNull String[] params,
                            @NotNull TitleSendConsumer sendConsumer,
                            int fadeIn, int stay, int fadeOut) {
-        super(provider, sectionPath, headerComments, inlineComments, TitleConfig.class, defaultValue, getTitleParser(), TitleConfig::serialize);
+        super(manifest, TitleConfig.class, getTitleParser(), TitleConfig::serialize);
         this.sendConsumer = sendConsumer;
         this.params = params;
         this.fadeIn = fadeIn;
@@ -102,6 +102,16 @@ public class ConfiguredTitle extends ConfiguredSection<TitleConfig> {
         Bukkit.getOnlinePlayers().forEach(onlinePlayer -> send(onlinePlayer, placeholders));
     }
 
+    public void sendToEach(@NotNull Function<@NotNull Player, Object[]> eachValues) {
+        sendToEach(null, eachValues);
+    }
+
+    public void sendToEach(@Nullable Predicate<Player> limiter,
+                           @NotNull Function<@NotNull Player, Object[]> eachValues) {
+        Predicate<Player> predicate = Optional.ofNullable(limiter).orElse(r -> true);
+        Bukkit.getOnlinePlayers().stream().filter(predicate)
+                .forEach(r -> send(r, ParamsUtils.buildParams(params, eachValues.apply(r))));
+    }
 
     public static ConfigValueParser<ConfigurationWrapper<?>, TitleConfig> getTitleParser() {
         return (s, d) -> TitleConfig.deserialize(s);

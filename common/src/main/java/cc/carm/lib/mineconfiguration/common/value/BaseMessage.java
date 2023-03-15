@@ -41,21 +41,21 @@ public interface BaseMessage<R, M> {
     /**
      * 为某位接收者解析此消息。
      *
-     * @param sender       接收者
+     * @param receiver     接收者
      * @param placeholders 消息中的变量与对应参数
      * @return 解析变量后的消息内容
      */
-    @Nullable M parse(@Nullable R sender, @NotNull Map<String, Object> placeholders);
+    @Nullable M parse(@Nullable R receiver, @NotNull Map<String, Object> placeholders);
 
     /**
      * 为某位接收者解析此消息。
      *
-     * @param sender 接收者
-     * @param values 已定变量的对应参数
+     * @param receiver 接收者
+     * @param values   已定变量的对应参数
      * @return 解析变量后的消息内容
      */
-    default @Nullable M parse(@Nullable R sender, @Nullable Object... values) {
-        return parse(sender, ParamsUtils.buildParams(getParams(), values));
+    default @Nullable M parse(@Nullable R receiver, @Nullable Object... values) {
+        return parse(receiver, ParamsUtils.buildParams(getParams(), values));
     }
 
     /**

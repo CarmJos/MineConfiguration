@@ -1,7 +1,7 @@
 package cc.carm.lib.mineconfiguration.common.value;
 
 import cc.carm.lib.configuration.core.function.ConfigDataFunction;
-import cc.carm.lib.configuration.core.source.ConfigurationProvider;
+import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.configuration.core.value.type.ConfiguredList;
 import cc.carm.lib.mineconfiguration.common.data.AbstractText;
 import org.jetbrains.annotations.NotNull;
@@ -24,15 +24,15 @@ public abstract class ConfigMessageList<M, T extends AbstractText<R>, R>
 
     protected final @NotNull Function<String, T> textBuilder;
 
-    public ConfigMessageList(@Nullable ConfigurationProvider<?> provider, @Nullable String sectionPath,
-                             @Nullable List<String> headerComments, @Nullable String inlineComments,
-                             @NotNull Class<T> textClazz, @NotNull List<T> messages, @NotNull String[] params,
+    public ConfigMessageList(@NotNull ValueManifest<List<T>> manifest,
+                             @NotNull Class<T> textClazz, @NotNull String[] params,
                              @NotNull BiFunction<@Nullable R, @NotNull String, @Nullable M> messageParser,
                              @NotNull BiConsumer<@NotNull R, @NotNull List<M>> sendFunction,
                              @NotNull Function<String, @NotNull T> textBuilder) {
         super(
-                provider, sectionPath, headerComments, inlineComments, textClazz, messages,
-                ConfigDataFunction.castToString().andThen(textBuilder::apply), AbstractText::getMessage
+                manifest, textClazz,
+                ConfigDataFunction.castToString().andThen(textBuilder::apply),
+                AbstractText::getMessage
         );
         this.params = params;
         this.messageParser = messageParser;
@@ -68,12 +68,25 @@ public abstract class ConfigMessageList<M, T extends AbstractText<R>, R>
                 .collect(Collectors.toList());
     }
 
+    public @Nullable M parseToLine(@Nullable R receiver, @NotNull Map<String, Object> placeholders) {
+        List<T> list = get();
+        if (list.isEmpty()) return null;
+
+        List<String> messages = list.stream().map(T::getMessage).collect(Collectors.toList());
+        if (String.join("", messages).isEmpty()) return null;
+
+        String combined = String.join("\n", messages);
+        T text = textBuilder.apply(combined);
+
+        return text.parse(this.messageParser, receiver, placeholders);
+    }
+
     public void setMessages(@NotNull String... values) {
         setMessages(values.length == 0 ? null : Arrays.asList(values));
     }
 
     public void setMessages(@Nullable List<String> values) {
-        if (values == null || values.isEmpty()) {
+        if (values == null) {
             set(null);
         } else {
             set(buildText(values));

@@ -1,5 +1,6 @@
 package cc.carm.lib.mineconfiguration.bukkit.builder.item;
 
+import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.mineconfiguration.bukkit.builder.AbstractCraftBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.data.ItemConfig;
 import cc.carm.lib.mineconfiguration.bukkit.value.ConfiguredItem;
@@ -110,8 +111,12 @@ public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConf
 
     @Override
     public @NotNull ConfiguredItem build() {
-        ItemConfig defaultItem = Optional.ofNullable(this.defaultValue).orElse(buildDefault());
-        return new ConfiguredItem(this.provider, this.path, this.headerComments, this.inlineComment, defaultItem, buildParams());
+        return new ConfiguredItem(
+                new ValueManifest<>(
+                        this.provider, this.path, this.headerComments, this.inlineComment,
+                        Optional.ofNullable(this.defaultValue).orElse(buildDefault())
+                ), buildParams()
+        );
     }
 
     protected final String[] buildParams() {

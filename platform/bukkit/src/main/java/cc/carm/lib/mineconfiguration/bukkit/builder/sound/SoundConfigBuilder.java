@@ -40,7 +40,7 @@ public class SoundConfigBuilder extends AbstractCraftBuilder<SoundConfig, SoundC
 
     @Override
     public @NotNull ConfiguredSound build() {
-        return new ConfiguredSound(this.provider, this.path, this.headerComments, this.inlineComment, this.defaultValue);
+        return new ConfiguredSound(buildManifest());
     }
 
 }

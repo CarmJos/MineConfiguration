@@ -1,13 +1,15 @@
 package cc.carm.lib.mineconfiguration.common.builder.message;
 
+import cc.carm.lib.configuration.core.builder.CommonConfigBuilder;
+import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.mineconfiguration.common.data.AbstractText;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import cc.carm.lib.mineconfiguration.common.value.ConfigMessage;
-import cc.carm.lib.configuration.core.builder.CommonConfigBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -64,4 +66,10 @@ public abstract class MessageValueBuilder<M, R, T extends AbstractText<R>, B ext
     @Override
     public abstract @NotNull ConfigMessage<M, T, R> build();
 
+    protected @NotNull ValueManifest<T> buildManifest(@NotNull T emptyValue) {
+        return new ValueManifest<>(
+                this.provider, this.path, this.headerComments, this.inlineComment,
+                Optional.ofNullable(this.defaultValue).orElse(emptyValue)
+        );
+    }
 }

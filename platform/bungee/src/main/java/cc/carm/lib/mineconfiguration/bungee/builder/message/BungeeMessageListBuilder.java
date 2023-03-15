@@ -1,6 +1,7 @@
 package cc.carm.lib.mineconfiguration.bungee.builder.message;
 
-import cc.carm.lib.mineconfiguration.bungee.data.MessageText;
+import cc.carm.lib.configuration.core.value.ValueManifest;
+import cc.carm.lib.mineconfiguration.bungee.data.TextConfig;
 import cc.carm.lib.mineconfiguration.bungee.value.ConfiguredMessageList;
 import cc.carm.lib.mineconfiguration.common.builder.message.MessageListBuilder;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
@@ -13,10 +14,10 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 public class BungeeMessageListBuilder<M>
-        extends MessageListBuilder<M, CommandSender, MessageText, BungeeMessageListBuilder<M>> {
+        extends MessageListBuilder<M, CommandSender, TextConfig, BungeeMessageListBuilder<M>> {
 
     public BungeeMessageListBuilder(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> parser) {
-        super(CommandSender.class, MessageText::of, parser);
+        super(CommandSender.class, TextConfig::of, parser);
     }
 
     @Override
@@ -27,8 +28,7 @@ public class BungeeMessageListBuilder<M>
     @Override
     public @NotNull ConfiguredMessageList<M> build() {
         return new ConfiguredMessageList<>(
-                this.provider, this.path, this.headerComments, this.inlineComment,
-                Optional.ofNullable(this.defaultValue).orElse(MessageText.of(new ArrayList<>())),
+                buildManifest(TextConfig.of(new ArrayList<>())),
                 ParamsUtils.formatParams(this.paramFormatter, this.params),
                 this.messageParser, this.sendFunction
         );

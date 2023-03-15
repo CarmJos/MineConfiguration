@@ -1,7 +1,7 @@
 package cc.carm.lib.mineconfiguration.bungee.builder.message;
 
 import cc.carm.lib.easyplugin.utils.ColorParser;
-import cc.carm.lib.mineconfiguration.bungee.data.MessageText;
+import cc.carm.lib.mineconfiguration.bungee.data.TextConfig;
 import cc.carm.lib.mineconfiguration.common.builder.message.MessageConfigBuilder;
 import net.md_5.bungee.api.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -10,11 +10,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.BiFunction;
 
 @SuppressWarnings("deprecation")
-public class BungeeMessageBuilder extends MessageConfigBuilder<CommandSender, MessageText> {
+public class BungeeMessageBuilder extends MessageConfigBuilder<CommandSender, TextConfig> {
 
 
     public BungeeMessageBuilder() {
-        super(CommandSender.class, MessageText.class);
+        super(CommandSender.class, TextConfig.class);
     }
 
     @Override

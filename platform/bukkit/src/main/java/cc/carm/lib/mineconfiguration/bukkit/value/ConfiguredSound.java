@@ -1,7 +1,7 @@
 package cc.carm.lib.mineconfiguration.bukkit.value;
 
 import cc.carm.lib.configuration.core.function.ConfigValueParser;
-import cc.carm.lib.configuration.core.source.ConfigurationProvider;
+import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.configuration.core.value.type.ConfiguredValue;
 import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
 import cc.carm.lib.mineconfiguration.bukkit.builder.sound.SoundConfigBuilder;
@@ -9,9 +9,7 @@ import cc.carm.lib.mineconfiguration.bukkit.data.SoundConfig;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 public class ConfiguredSound extends ConfiguredValue<SoundConfig> {
@@ -44,10 +42,8 @@ public class ConfiguredSound extends ConfiguredValue<SoundConfig> {
         return CraftConfigValue.builder().createSound().defaults(soundName, volume, pitch).build();
     }
 
-    public ConfiguredSound(@Nullable ConfigurationProvider<?> provider, @Nullable String sectionPath,
-                           @Nullable List<String> headerComments, @Nullable String inlineComments,
-                           @Nullable SoundConfig defaultValue) {
-        super(provider, sectionPath, headerComments, inlineComments, SoundConfig.class, defaultValue, getSoundParser(), SoundConfig::serialize);
+    public ConfiguredSound(@NotNull ValueManifest<SoundConfig> manifest) {
+        super(manifest, SoundConfig.class, getSoundParser(), SoundConfig::serialize);
     }
 
     public void setSound(@NotNull Sound sound) {

@@ -1,6 +1,7 @@
 package cc.carm.lib.mineconfiguration.bukkit;
 
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
+import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.configuration.core.value.impl.CachedConfigValue;
 import cc.carm.lib.mineconfiguration.bukkit.builder.CraftConfigBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.source.CraftConfigProvider;
@@ -16,10 +17,8 @@ public abstract class CraftConfigValue<T> extends CachedConfigValue<T> {
         return new CraftConfigBuilder();
     }
 
-    public CraftConfigValue(@Nullable CraftConfigProvider provider, @Nullable String sectionPath,
-                            @Nullable List<String> headerComments, @Nullable String inlineComments,
-                            @Nullable T defaultValue) {
-        super(provider, sectionPath, headerComments, inlineComments, defaultValue);
+    public CraftConfigValue(@NotNull ValueManifest<T> manifest) {
+        super(manifest);
     }
 
     public CraftConfigProvider getBukkitProvider() {

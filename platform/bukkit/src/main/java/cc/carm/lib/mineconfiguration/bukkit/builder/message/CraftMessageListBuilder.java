@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 public class CraftMessageListBuilder<M>
@@ -27,8 +26,7 @@ public class CraftMessageListBuilder<M>
     @Override
     public @NotNull ConfiguredMessageList<M> build() {
         return new ConfiguredMessageList<>(
-                this.provider, this.path, this.headerComments, this.inlineComment,
-                Optional.ofNullable(this.defaultValue).orElse(TextConfig.of(new ArrayList<>())),
+                buildManifest(TextConfig.of(new ArrayList<>())),
                 ParamsUtils.formatParams(this.paramFormatter, this.params),
                 this.messageParser, this.sendFunction
         );
