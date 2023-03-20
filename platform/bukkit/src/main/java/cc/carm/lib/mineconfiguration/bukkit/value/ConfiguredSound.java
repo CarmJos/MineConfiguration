@@ -6,6 +6,7 @@ import cc.carm.lib.configuration.core.value.type.ConfiguredValue;
 import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
 import cc.carm.lib.mineconfiguration.bukkit.builder.sound.SoundConfigBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.data.SoundConfig;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -64,6 +65,10 @@ public class ConfiguredSound extends ConfiguredValue<SoundConfig> {
 
     public void playToAll() {
         Optional.ofNullable(get()).ifPresent(SoundConfig::playToAll);
+    }
+
+    public void playAt(Location location) {
+        Optional.ofNullable(get()).ifPresent(s -> s.playAt(location));
     }
 
     public static ConfigValueParser<Object, SoundConfig> getSoundParser() {

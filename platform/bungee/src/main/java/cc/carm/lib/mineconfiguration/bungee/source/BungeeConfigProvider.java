@@ -3,21 +3,21 @@ package cc.carm.lib.mineconfiguration.bungee.source;
 import cc.carm.lib.configuration.core.ConfigInitializer;
 import cc.carm.lib.configuration.core.source.ConfigurationComments;
 import cc.carm.lib.configuration.core.source.impl.FileConfigProvider;
+import cc.carm.lib.yamlcommentupdater.CommentedYAML;
+import cc.carm.lib.yamlcommentupdater.CommentedYAMLWriter;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class BungeeConfigProvider extends FileConfigProvider<BungeeSectionWrapper> {
+public class BungeeConfigProvider extends FileConfigProvider<BungeeSectionWrapper> implements CommentedYAML {
 
     protected static final char SEPARATOR = '.';
 
@@ -25,7 +25,7 @@ public class BungeeConfigProvider extends FileConfigProvider<BungeeSectionWrappe
     protected Configuration configuration;
     protected ConfigInitializer<BungeeConfigProvider> initializer;
 
-    protected BungeeYAMLComments comments = new BungeeYAMLComments();
+    protected ConfigurationComments comments = new ConfigurationComments();
 
     public BungeeConfigProvider(@NotNull File file, @NotNull ConfigurationProvider loader) {
         super(file);
@@ -52,22 +52,17 @@ public class BungeeConfigProvider extends FileConfigProvider<BungeeSectionWrappe
     }
 
     @Override
-    public @Nullable ConfigurationComments getComments() {
+    public @NotNull ConfigurationComments getComments() {
         return this.comments;
     }
 
     @Override
     public void save() throws Exception {
-        getLoader().save(configuration, file);
-        if (getLoader() instanceof YamlConfiguration) {
-            StringWriter writer = new StringWriter();
-            this.comments.writeComments(configuration, new BufferedWriter(writer));
-            String value = writer.toString(); // config contents
-
-            Path toUpdatePath = getFile().toPath();
-            if (!value.equals(new String(Files.readAllBytes(toUpdatePath), StandardCharsets.UTF_8))) {
-                Files.write(toUpdatePath, value.getBytes(StandardCharsets.UTF_8));
-            }
+        try {
+            CommentedYAMLWriter.writeWithComments(this, this.file);
+        } catch (Exception ex) {
+            getLoader().save(configuration, file);
+            throw ex;
         }
     }
 
@@ -79,4 +74,34 @@ public class BungeeConfigProvider extends FileConfigProvider<BungeeSectionWrappe
     public ConfigurationProvider getLoader() {
         return loader;
     }
+
+    @Override
+    public String serializeValue(@NotNull String key, @NotNull Object value) {
+        Configuration tmp = new Configuration();// 该对象用于临时记录配置内容
+        tmp.set(key, value);
+        StringWriter tmpStr = new StringWriter();
+        loader.save(tmp, tmpStr);
+        return tmpStr.toString();
+    }
+
+    @Override
+    public Set<String> getKeys(@Nullable String sectionKey, boolean deep) {
+        if (sectionKey == null) return BungeeSectionWrapper.getAllKeys(this.configuration);
+
+        Configuration section = configuration.getSection(sectionKey);
+        if (section == null) return null;
+
+        return new HashSet<>(section.getKeys());
+    }
+
+    @Override
+    public @Nullable Object getValue(@NotNull String key) {
+        return configuration.get(key);
+    }
+
+    @Override
+    public @Nullable List<String> getHeaderComments(@Nullable String key) {
+        return comments.getHeaderComment(key);
+    }
+
 }

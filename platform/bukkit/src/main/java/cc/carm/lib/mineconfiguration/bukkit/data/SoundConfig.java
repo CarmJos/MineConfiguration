@@ -1,6 +1,7 @@
 package cc.carm.lib.mineconfiguration.bukkit.data;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
@@ -38,6 +39,12 @@ public class SoundConfig {
     public void playTo(Player player) {
         if (type == null) return;
         player.playSound(player.getLocation(), type, volume, pitch);
+    }
+
+    public void playAt(Location location) {
+        if (type == null) return;
+        if (location.getWorld() == null) return;
+        location.getWorld().playSound(location, type, volume, pitch);
     }
 
     public void playToAll() {
