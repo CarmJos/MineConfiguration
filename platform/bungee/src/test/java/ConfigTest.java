@@ -52,7 +52,7 @@ public class ConfigTest {
 
             @HeaderComment("执行的指令列表")
             @InlineComment("建议以\"\"包裹")
-            public static final ConfigValue<List<String>> COMMANDS = ConfiguredList.builder(String.class)
+            public static final ConfigValue<List<String>> COMMANDS = ConfiguredList.builderOf(String.class)
                     .fromString().defaults("alert Commands here!").build();
         }
 

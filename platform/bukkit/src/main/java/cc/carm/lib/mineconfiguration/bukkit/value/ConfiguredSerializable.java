@@ -35,7 +35,7 @@ public class ConfiguredSerializable<T extends ConfigurationSerializable> extends
             } catch (Exception e) {
                 // 出现了解析错误，提示并返回默认值。
                 e.printStackTrace();
-                return useDefault();
+                return getDefaultValue();
             }
         } else return Optional.ofNullable(getCachedValue()).orElse(defaultValue);
     }
