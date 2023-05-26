@@ -7,9 +7,6 @@ import cc.carm.lib.mineconfiguration.bukkit.builder.CraftConfigBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.source.CraftConfigProvider;
 import cc.carm.lib.mineconfiguration.bukkit.source.CraftSectionWrapper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public abstract class CraftConfigValue<T> extends CachedConfigValue<T> {
 
@@ -17,7 +14,7 @@ public abstract class CraftConfigValue<T> extends CachedConfigValue<T> {
         return new CraftConfigBuilder();
     }
 
-    public CraftConfigValue(@NotNull ValueManifest<T> manifest) {
+    protected CraftConfigValue(@NotNull ValueManifest<T> manifest) {
         super(manifest);
     }
 

@@ -47,11 +47,20 @@ public abstract class ConfigMessage<M, T extends AbstractText<R>, R>
         sendFunction.accept(receiver, message);
     }
 
-    @Override
-    public @Nullable M parse(@Nullable R sender, @NotNull Map<String, Object> placeholders) {
+    protected <N> @Nullable N parseTo(@Nullable R sender, @NotNull Map<String, Object> placeholders,
+                                      @NotNull BiFunction<@Nullable R, @NotNull String, @Nullable N> parser) {
         T value = get();
         if (value == null || value.getMessage().isEmpty()) return null;
-        else return value.parse(this.messageParser, sender, placeholders);
+        else return value.parse(parser, sender, placeholders);
+    }
+
+    public @Nullable String parseString(@Nullable R sender, @NotNull Map<String, Object> placeholders) {
+        return parseTo(sender, placeholders, (r, s) -> s);
+    }
+
+    @Override
+    public @Nullable M parse(@Nullable R sender, @NotNull Map<String, Object> placeholders) {
+        return parseTo(sender, placeholders, this.messageParser);
     }
 
     public void set(@Nullable String value) {

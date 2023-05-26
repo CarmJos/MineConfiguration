@@ -2,19 +2,21 @@ package cc.carm.lib.mineconfiguration.bukkit.builder.item;
 
 import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.mineconfiguration.bukkit.builder.AbstractCraftBuilder;
-import cc.carm.lib.mineconfiguration.bukkit.data.ItemConfig;
 import cc.carm.lib.mineconfiguration.bukkit.value.ConfiguredItem;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
-public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConfigBuilder> {
+public class ItemConfigBuilder extends AbstractCraftBuilder<ItemStack, ItemConfigBuilder> {
 
     protected Material type;
     protected short data = 0;
@@ -84,7 +86,7 @@ public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConf
         return defaultFlags(new LinkedHashSet<>(Arrays.asList(flags)));
     }
 
-    public ItemConfigBuilder formatParam(@NotNull Function<@NotNull String, @NotNull String> paramFormatter) {
+    public ItemConfigBuilder formatParam(@NotNull UnaryOperator<String> paramFormatter) {
         this.paramFormatter = paramFormatter;
         return getThis();
     }
@@ -104,9 +106,20 @@ public class ItemConfigBuilder extends AbstractCraftBuilder<ItemConfig, ItemConf
         return this;
     }
 
-    protected @Nullable ItemConfig buildDefault() {
+    protected @Nullable ItemStack buildDefault() {
         if (this.type == null) return null;
-        else return new ItemConfig(type, data, name, lore, enchants, flags);
+
+        ItemStack item = new ItemStack(type, 1, data);
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
+
+        Optional.ofNullable(this.name).ifPresent(meta::setDisplayName);
+        Optional.ofNullable(this.lore).ifPresent(meta::setLore);
+        enchants.forEach((enchant, level) -> meta.addEnchant(enchant, level, true));
+        flags.forEach(meta::addItemFlags);
+        item.setItemMeta(meta);
+
+        return item;
     }
 
     @Override

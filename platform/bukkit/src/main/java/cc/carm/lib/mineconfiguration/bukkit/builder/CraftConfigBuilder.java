@@ -6,11 +6,8 @@ import cc.carm.lib.mineconfiguration.bukkit.builder.message.CraftMessageBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.builder.serializable.SerializableBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.builder.sound.SoundConfigBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.builder.title.TitleConfigBuilder;
-import cc.carm.lib.mineconfiguration.bukkit.data.ItemConfig;
-import cc.carm.lib.mineconfiguration.bukkit.value.ConfiguredItem;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class CraftConfigBuilder extends ConfigBuilder {
 
@@ -32,14 +29,6 @@ public class CraftConfigBuilder extends ConfigBuilder {
 
     public <V extends ConfigurationSerializable> @NotNull SerializableBuilder<V> ofSerializable(@NotNull Class<V> valueClass) {
         return new SerializableBuilder<>(valueClass);
-    }
-
-    public @NotNull ConfiguredItem ofItem() {
-        return createItem().build();
-    }
-
-    public @NotNull ConfiguredItem ofItem(@Nullable ItemConfig defaultItem) {
-        return createItem().defaults(defaultItem).build();
     }
 
 }

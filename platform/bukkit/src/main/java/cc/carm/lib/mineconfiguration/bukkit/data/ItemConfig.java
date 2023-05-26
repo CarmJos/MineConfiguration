@@ -26,6 +26,8 @@ public class ItemConfig {
     protected @NotNull Map<Enchantment, Integer> enchants;
     protected @NotNull Set<ItemFlag> flags;
 
+    protected int customModelData = 0;
+
     public ItemConfig(@NotNull Material type, @Nullable String name) {
         this(type, name, Collections.emptyList());
     }
@@ -131,7 +133,7 @@ public class ItemConfig {
     public static @NotNull ItemConfig deserialize(@NotNull ConfigurationSection section) throws Exception {
         return deserialize(CraftSectionWrapper.of(section));
     }
-    
+
     public static @NotNull ItemConfig deserialize(@NotNull ConfigurationWrapper<?> section) throws Exception {
         String typeName = section.getString("type");
         if (typeName == null) throw new NullPointerException("Item type name is null");

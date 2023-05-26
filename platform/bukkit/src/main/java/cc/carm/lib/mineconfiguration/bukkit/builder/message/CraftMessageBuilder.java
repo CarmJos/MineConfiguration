@@ -1,6 +1,5 @@
 package cc.carm.lib.mineconfiguration.bukkit.builder.message;
 
-import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.mineconfiguration.bukkit.data.TextConfig;
 import cc.carm.lib.mineconfiguration.bukkit.utils.TextParser;
 import cc.carm.lib.mineconfiguration.common.builder.message.MessageConfigBuilder;
@@ -9,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 public class CraftMessageBuilder extends MessageConfigBuilder<CommandSender, TextConfig> {

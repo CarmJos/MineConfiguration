@@ -3,10 +3,9 @@ package cc.carm.lib.mineconfiguration.bukkit.builder.title;
 import cc.carm.lib.mineconfiguration.bukkit.builder.AbstractCraftBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.data.TitleConfig;
 import cc.carm.lib.mineconfiguration.bukkit.function.TitleSendConsumer;
-import cc.carm.lib.mineconfiguration.bukkit.utils.ProtocolLibHelper;
 import cc.carm.lib.mineconfiguration.bukkit.value.ConfiguredTitle;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
-import org.bukkit.Bukkit;
+import com.cryptomorin.xseries.messages.Titles;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -16,17 +15,7 @@ import java.util.function.Function;
 
 public class TitleConfigBuilder extends AbstractCraftBuilder<TitleConfig, TitleConfigBuilder> {
 
-    @SuppressWarnings("deprecation")
-    protected static @NotNull TitleSendConsumer DEFAULT_TITLE_CONSUMER = (player, fadeIn, stay, fadeOut, line1, line2) -> {
-        if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-            try {
-                ProtocolLibHelper.sendTitle(player, fadeIn, stay, fadeOut, line1, line2);
-            } catch (Exception ignored) {
-            }
-        } else {
-            player.sendTitle(line1, line2);
-        }
-    };
+    protected static @NotNull TitleSendConsumer DEFAULT_TITLE_CONSUMER = Titles::sendTitle;
 
     protected @NotNull String[] params = new String[0];
 

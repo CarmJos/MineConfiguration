@@ -4,6 +4,7 @@ import cc.carm.lib.configuration.core.function.ConfigDataFunction;
 import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.configuration.core.value.type.ConfiguredList;
 import cc.carm.lib.mineconfiguration.common.data.AbstractText;
+import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,14 +69,22 @@ public abstract class ConfigMessageList<M, T extends AbstractText<R>, R>
                 .collect(Collectors.toList());
     }
 
+    public @Nullable M parseToLine(@Nullable R receiver, @NotNull Object... values) {
+        return parseToLine(receiver, "\n", ParamsUtils.buildParams(this.params, values));
+    }
+
     public @Nullable M parseToLine(@Nullable R receiver, @NotNull Map<String, Object> placeholders) {
+        return parseToLine(receiver, "\n", placeholders);
+    }
+
+    public @Nullable M parseToLine(@Nullable R receiver, @NotNull String delimiter, @NotNull Map<String, Object> placeholders) {
         List<T> list = get();
         if (list.isEmpty()) return null;
 
         List<String> messages = list.stream().map(T::getMessage).collect(Collectors.toList());
         if (String.join("", messages).isEmpty()) return null;
 
-        String combined = String.join("\n", messages);
+        String combined = String.join(delimiter, messages);
         T text = textBuilder.apply(combined);
 
         return text.parse(this.messageParser, receiver, placeholders);
