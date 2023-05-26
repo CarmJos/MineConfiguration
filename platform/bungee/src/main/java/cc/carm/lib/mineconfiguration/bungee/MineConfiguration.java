@@ -1,15 +1,18 @@
 package cc.carm.lib.mineconfiguration.bungee;
 
+import cc.carm.lib.configuration.core.ConfigurationRoot;
 import cc.carm.lib.mineconfiguration.bungee.source.BungeeConfigProvider;
+import cc.carm.lib.mineconfiguration.common.AbstractConfiguration;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.JsonConfiguration;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 
-public class MineConfiguration {
+public class MineConfiguration extends AbstractConfiguration<BungeeConfigProvider> {
 
     protected static BungeeConfigProvider create(File file, String source, ConfigurationProvider loader) {
         BungeeConfigProvider provider = new BungeeConfigProvider(file, loader);
@@ -93,5 +96,27 @@ public class MineConfiguration {
     public static BungeeConfigProvider fromJSON(Plugin plugin, String fileName, String source) {
         return fromJSON(new File(plugin.getDataFolder(), fileName), source);
     }
+
+
+    public MineConfiguration(@NotNull Plugin plugin) {
+        super(from(plugin, "config.yml"), from(plugin, "messages.yml"));
+    }
+
+    public MineConfiguration(@NotNull Plugin plugin,
+                             @NotNull ConfigurationRoot configRoot,
+                             @NotNull ConfigurationRoot messageRoot) {
+        this(plugin);
+        initializeConfig(configRoot);
+        initializeMessage(messageRoot);
+    }
+
+    public MineConfiguration(@NotNull Plugin plugin,
+                             @NotNull Class<? extends ConfigurationRoot> configRoot,
+                             @NotNull Class<? extends ConfigurationRoot> messageRoot) {
+        this(plugin);
+        initializeConfig(configRoot);
+        initializeMessage(messageRoot);
+    }
+
 
 }
