@@ -13,10 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ConfiguredItem extends ConfiguredSection<ItemStack> {
@@ -38,6 +35,11 @@ public class ConfiguredItem extends ConfiguredSection<ItemStack> {
 
     public @NotNull String[] getParams() {
         return params;
+    }
+
+    @Override
+    public @Nullable ItemStack get() {
+        return Optional.ofNullable(super.get()).map(ItemStack::clone).orElse(null);
     }
 
     public void modifyItem(Consumer<ItemStack> modifier) {
@@ -81,7 +83,7 @@ public class ConfiguredItem extends ConfiguredSection<ItemStack> {
     }
 
     public @Nullable ItemStack get(@Nullable Player player, @NotNull Map<String, Object> placeholders) {
-        return get((item) -> {
+        return get(item -> {
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return;
 
