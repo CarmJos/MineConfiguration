@@ -7,8 +7,8 @@ import cc.carm.lib.configuration.core.value.type.ConfiguredSection;
 import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
 import cc.carm.lib.mineconfiguration.bukkit.builder.title.TitleConfigBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.data.TitleConfig;
-import cc.carm.lib.mineconfiguration.bukkit.function.TitleSendConsumer;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
+import com.cryptomorin.xseries.messages.Titles;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +21,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class ConfiguredTitle extends ConfiguredSection<TitleConfig> {
+
+    public static final @NotNull ConfiguredTitle.TitleConsumer DEFAULT_TITLE_CONSUMER = Titles::sendTitle;
 
     public static TitleConfigBuilder create() {
         return CraftConfigValue.builder().createTitle();
@@ -35,7 +37,7 @@ public class ConfiguredTitle extends ConfiguredSection<TitleConfig> {
         return create().defaults(line1, line2).fadeIn(fadeIn).stay(stay).fadeOut(fadeOut).build();
     }
 
-    protected final @NotNull TitleSendConsumer sendConsumer;
+    protected final @NotNull ConfiguredTitle.TitleConsumer sendConsumer;
     protected final @NotNull String[] params;
 
     protected final int fadeIn;
@@ -43,7 +45,7 @@ public class ConfiguredTitle extends ConfiguredSection<TitleConfig> {
     protected final int fadeOut;
 
     public ConfiguredTitle(@NotNull ValueManifest<TitleConfig> manifest, @NotNull String[] params,
-                           @NotNull TitleSendConsumer sendConsumer,
+                           @NotNull ConfiguredTitle.TitleConsumer sendConsumer,
                            int fadeIn, int stay, int fadeOut) {
         super(manifest, TitleConfig.class, getTitleParser(), TitleConfig::serialize);
         this.sendConsumer = sendConsumer;
@@ -68,7 +70,7 @@ public class ConfiguredTitle extends ConfiguredSection<TitleConfig> {
         return fadeOut;
     }
 
-    public @NotNull TitleSendConsumer getSendConsumer() {
+    public @NotNull ConfiguredTitle.TitleConsumer getSendConsumer() {
         return sendConsumer;
     }
 
@@ -116,4 +118,26 @@ public class ConfiguredTitle extends ConfiguredSection<TitleConfig> {
     public static ConfigValueParser<ConfigurationWrapper<?>, TitleConfig> getTitleParser() {
         return (s, d) -> TitleConfig.deserialize(s);
     }
+
+    @FunctionalInterface
+    public interface TitleConsumer {
+
+        /**
+         * 向目标玩家发送标题文字
+         *
+         * @param player  目标玩家
+         * @param fadeIn  淡入时间 (ticks)
+         * @param stay    保留时间 (ticks)
+         * @param fadeOut 淡出时间 (ticks)
+         * @param line1   第一行文字
+         * @param line2   第二行文字
+         */
+        void send(@NotNull Player player,
+                  @Range(from = 0L, to = Integer.MAX_VALUE) int fadeIn,
+                  @Range(from = 0L, to = Integer.MAX_VALUE) int stay,
+                  @Range(from = 0L, to = Integer.MAX_VALUE) int fadeOut,
+                  @NotNull String line1, @NotNull String line2);
+
+    }
+
 }

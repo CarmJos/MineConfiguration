@@ -2,20 +2,17 @@ package cc.carm.lib.mineconfiguration.bukkit.builder.title;
 
 import cc.carm.lib.mineconfiguration.bukkit.builder.AbstractCraftBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.data.TitleConfig;
-import cc.carm.lib.mineconfiguration.bukkit.function.TitleSendConsumer;
 import cc.carm.lib.mineconfiguration.bukkit.value.ConfiguredTitle;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
-import com.cryptomorin.xseries.messages.Titles;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class TitleConfigBuilder extends AbstractCraftBuilder<TitleConfig, TitleConfigBuilder> {
-
-    protected static @NotNull TitleSendConsumer DEFAULT_TITLE_CONSUMER = Titles::sendTitle;
 
     protected @NotNull String[] params = new String[0];
 
@@ -23,11 +20,11 @@ public class TitleConfigBuilder extends AbstractCraftBuilder<TitleConfig, TitleC
     protected @Range(from = 0L, to = Integer.MAX_VALUE) int stay = 60;
     protected @Range(from = 0L, to = Integer.MAX_VALUE) int fadeOut = 10;
 
-    protected @NotNull TitleSendConsumer sendConsumer;
+    protected @NotNull ConfiguredTitle.TitleConsumer sendConsumer;
     protected @NotNull Function<@NotNull String, @NotNull String> paramFormatter;
 
     public TitleConfigBuilder() {
-        this.sendConsumer = TitleConfigBuilder.DEFAULT_TITLE_CONSUMER;
+        this.sendConsumer = ConfiguredTitle.DEFAULT_TITLE_CONSUMER;
         this.paramFormatter = ParamsUtils.DEFAULT_PARAM_FORMATTER;
     }
 
@@ -36,7 +33,7 @@ public class TitleConfigBuilder extends AbstractCraftBuilder<TitleConfig, TitleC
         return defaults(TitleConfig.of(line1, line2));
     }
 
-    public @NotNull TitleConfigBuilder whenSend(@NotNull TitleSendConsumer consumer) {
+    public @NotNull TitleConfigBuilder whenSend(@NotNull ConfiguredTitle.TitleConsumer consumer) {
         this.sendConsumer = consumer;
         return this;
     }
@@ -65,7 +62,7 @@ public class TitleConfigBuilder extends AbstractCraftBuilder<TitleConfig, TitleC
         return this;
     }
 
-    public TitleConfigBuilder formatParam(Function<String, String> paramFormatter) {
+    public TitleConfigBuilder formatParam(UnaryOperator<String> paramFormatter) {
         this.paramFormatter = paramFormatter;
         return this;
     }

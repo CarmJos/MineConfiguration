@@ -39,6 +39,16 @@ public interface BaseMessage<R, M> {
     void apply(@NotNull R receiver, @NotNull M message);
 
     /**
+     * 填入变量值，返回一个准备好待发送的消息。
+     *
+     * @param values 变量值
+     * @return 准备好待发送的消息
+     */
+    default @NotNull PreparedMessage<R, M> prepare(@NotNull Object... values) {
+        return new PreparedMessage<>(this, values);
+    }
+
+    /**
      * 为某位接收者解析此消息。
      *
      * @param receiver     接收者

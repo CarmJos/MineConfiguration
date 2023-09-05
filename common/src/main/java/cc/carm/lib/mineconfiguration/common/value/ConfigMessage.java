@@ -7,6 +7,7 @@ import cc.carm.lib.mineconfiguration.common.data.AbstractText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -69,6 +70,30 @@ public abstract class ConfigMessage<M, T extends AbstractText<R>, R>
 
     protected T buildText(String value) {
         return textBuilder.apply(value);
+    }
+
+    public abstract class PreparedMessage<P, N> {
+
+        protected final @NotNull Object[] values;
+
+        protected PreparedMessage(@NotNull Object[] values) {
+            this.values = values;
+        }
+
+        public Object[] getValues() {
+            return values;
+        }
+
+        public abstract void to(P receiver);
+
+        public void to(Collection<P> receivers) {
+            receivers.forEach(this::to);
+        }
+
+        public N get(P receiver) {
+            return null;
+        }
+
     }
 
 }
