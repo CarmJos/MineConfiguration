@@ -1,22 +1,30 @@
 package cc.carm.lib.mineconfiguration.bukkit.value;
 
 import cc.carm.lib.configuration.core.value.ValueManifest;
+import cc.carm.lib.configuration.core.value.type.ConfiguredList;
 import cc.carm.lib.configuration.core.value.type.ConfiguredSection;
 import cc.carm.lib.mineconfiguration.bukkit.builder.item.ItemConfigBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.utils.TextParser;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import com.cryptomorin.xseries.XItemStack;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConfiguredItem extends ConfiguredSection<ItemStack> {
+
+    public static final @NotNull Pattern LORE_INSERT_PATTERN = Pattern.compile("^#(.*)#$");
 
     public static ItemConfigBuilder create() {
         return new ItemConfigBuilder();
@@ -70,6 +78,10 @@ public class ConfiguredItem extends ConfiguredSection<ItemStack> {
         else setLore(Arrays.asList(lore));
     }
 
+    public @NotNull PreparedItem prepare(@NotNull Object... values) {
+        return new PreparedItem(this, values);
+    }
+
     public @Nullable ItemStack get(@Nullable Player player) {
         return get(player, new HashMap<>());
     }
@@ -78,17 +90,31 @@ public class ConfiguredItem extends ConfiguredSection<ItemStack> {
         return get(player, ParamsUtils.buildParams(params, values));
     }
 
+    public @Nullable ItemStack get(@Nullable Player player,
+                                   @NotNull Object[] values,
+                                   @NotNull Map<String, List<String>> inserted) {
+        return get(player, ParamsUtils.buildParams(params, values), inserted);
+    }
+
+
     public @Nullable ItemStack get(@Nullable Player player, @NotNull String[] params, @NotNull Object[] values) {
         return get(player, ParamsUtils.buildParams(params, values));
     }
 
-    public @Nullable ItemStack get(@Nullable Player player, @NotNull Map<String, Object> placeholders) {
+    public @Nullable ItemStack get(@Nullable Player player,
+                                   @NotNull Map<String, Object> placeholders) {
+        return get(player, placeholders, new HashMap<>());
+    }
+
+    public @Nullable ItemStack get(@Nullable Player player,
+                                   @NotNull Map<String, Object> placeholders,
+                                   @NotNull Map<String, List<String>> inserted) {
         return get(item -> {
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return;
 
-            List<String> lore = meta.getLore();
-            if (lore != null && !lore.isEmpty()) {
+            List<String> lore = insertLore(meta.getLore(), inserted);
+            if (!lore.isEmpty()) {
                 meta.setLore(TextParser.parseList(player, lore, placeholders));
             }
 
@@ -108,4 +134,119 @@ public class ConfiguredItem extends ConfiguredSection<ItemStack> {
         }).orElse(null);
     }
 
+    protected static List<String> insertLore(List<String> original, Map<String, List<String>> inserted) {
+        if (original == null) return Collections.emptyList();
+
+        List<String> finalLore = new ArrayList<>();
+        for (String line : original) {
+            if (line == null) continue;
+
+            Matcher matcher = LORE_INSERT_PATTERN.matcher(line);
+            if (!matcher.matches()) {
+                finalLore.add(line);
+            } else {
+                String path = matcher.group(1);
+                Optional.ofNullable(inserted.get(path)).ifPresent(finalLore::addAll);
+            }
+        }
+
+        return finalLore;
+    }
+
+
+    public static class PreparedItem {
+
+        protected final @NotNull ConfiguredItem itemConfig;
+        protected final @NotNull Map<String, List<String>> insertLore = new HashMap<>();
+
+        protected @NotNull Object[] values;
+
+        protected @NotNull BiConsumer<ItemStack, Player> itemModifier;
+        protected @NotNull BiConsumer<ItemMeta, Player> metaModifier;
+
+        protected PreparedItem(@NotNull ConfiguredItem itemConfig, @NotNull Object[] values) {
+            this.itemConfig = itemConfig;
+            this.values = values;
+            itemModifier = (item, player) -> {
+            };
+            metaModifier = (meta, player) -> {
+            };
+        }
+
+        public PreparedItem modifyMeta(@NotNull BiConsumer<ItemMeta, Player> modifier) {
+            this.metaModifier = this.metaModifier.andThen(modifier);
+            return this;
+        }
+
+        public PreparedItem modifyItem(@NotNull BiConsumer<ItemStack, Player> modifier) {
+            this.itemModifier = this.itemModifier.andThen(modifier);
+            return this;
+        }
+
+        public PreparedItem insertLore(String path, List<String> content) {
+            insertLore.put(path, content);
+            return this;
+        }
+
+        public PreparedItem insertLore(String path, String... content) {
+            return insertLore(path, Arrays.asList(content));
+        }
+
+        public PreparedItem insertLore(String path, ConfiguredList<String> content) {
+            return insertLore(path, content.copy());
+        }
+
+        public PreparedItem insertLore(String path, ConfiguredMessage<String> content, Object... params) {
+            return insertLore(path, content.parse(null, params));
+        }
+
+        public PreparedItem insertLore(String path, ConfiguredMessageList<String> content, Object... params) {
+            return insertLore(path, content.parse(null, params));
+        }
+
+        public PreparedItem values(Object... values) {
+            this.values = values;
+            return this;
+        }
+
+        public PreparedItem amount(int amount) {
+            return modifyItem((item, player) -> item.setAmount(amount));
+        }
+
+        public PreparedItem addEnchantment(Enchantment e) {
+            return addEnchantment(e, 1);
+        }
+
+        public PreparedItem addEnchantment(Enchantment e, int level) {
+            return addEnchantment(e, level, true);
+        }
+
+        public PreparedItem addEnchantment(Enchantment e, int level, boolean ignoreLevelRestriction) {
+            return modifyMeta((meta, player) -> meta.addEnchant(e, level, ignoreLevelRestriction));
+        }
+
+        public PreparedItem addItemFlags(ItemFlag... flags) {
+            return modifyMeta((meta, player) -> meta.addItemFlags(flags));
+        }
+
+        public PreparedItem glow() {
+            return addItemFlags(ItemFlag.HIDE_ENCHANTS).addEnchantment(Enchantment.DURABILITY);
+        }
+
+
+        public @Nullable ItemStack get(Player player) {
+            return Optional.ofNullable(itemConfig.get(player, values, insertLore)).map(item -> {
+                itemModifier.accept(item, player);
+
+                ItemMeta meta = item.getItemMeta();
+                if (meta == null) return item;
+
+                metaModifier.accept(meta, player);
+                item.setItemMeta(meta);
+
+                return item;
+            }).orElse(null);
+        }
+
+    }
 }
