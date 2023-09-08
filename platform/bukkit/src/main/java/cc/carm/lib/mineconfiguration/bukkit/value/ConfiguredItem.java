@@ -7,12 +7,15 @@ import cc.carm.lib.mineconfiguration.bukkit.builder.item.ItemConfigBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.utils.TextParser;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import com.cryptomorin.xseries.XItemStack;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +27,8 @@ import java.util.regex.Pattern;
 
 public class ConfiguredItem extends ConfiguredSection<ItemStack> {
 
-    public static final @NotNull Pattern LORE_INSERT_PATTERN = Pattern.compile("^#(.*)#$");
+    public static final @NotNull Pattern LORE_INSERT_PATTERN = Pattern.compile("^#(.*)#(\\{\\w+})?$");
+    public static final @NotNull Pattern LORE_OFFSET_PATTERN = Pattern.compile("\\{(-?\\d+)(?:,(-?\\d+))?}");
 
     public static ItemConfigBuilder create() {
         return new ItemConfigBuilder();
@@ -134,7 +138,7 @@ public class ConfiguredItem extends ConfiguredSection<ItemStack> {
         }).orElse(null);
     }
 
-    protected static List<String> insertLore(List<String> original, Map<String, List<String>> inserted) {
+    public static List<String> insertLore(List<String> original, Map<String, List<String>> inserted) {
         if (original == null) return Collections.emptyList();
 
         List<String> finalLore = new ArrayList<>();
@@ -146,13 +150,38 @@ public class ConfiguredItem extends ConfiguredSection<ItemStack> {
                 finalLore.add(line);
             } else {
                 String path = matcher.group(1);
-                Optional.ofNullable(inserted.get(path)).ifPresent(finalLore::addAll);
+                String offset = matcher.group(2);
+                finalLore.addAll(addLoreOffset(inserted.get(path), offset));
             }
         }
 
         return finalLore;
     }
 
+    public static List<String> addLoreOffset(List<String> lore, String offsetSettings) {
+        if (lore == null || lore.isEmpty()) return Collections.emptyList();
+        if (offsetSettings == null) return lore;
+
+        Matcher offsetMatcher = LORE_OFFSET_PATTERN.matcher(offsetSettings);
+        if (!offsetMatcher.matches()) return lore;
+
+        int upOffset = Optional.ofNullable(offsetMatcher.group(1)).map(Integer::parseInt).orElse(0);
+        int downOffset = Optional.ofNullable(offsetMatcher.group(2)).map(Integer::parseInt).orElse(0);
+
+        return addLoreOffset(lore, upOffset, downOffset);
+    }
+
+    public static List<String> addLoreOffset(List<String> lore, int upOffset, int downOffset) {
+        if (lore == null || lore.isEmpty()) return Collections.emptyList();
+        upOffset = Math.max(0, upOffset);
+        downOffset = Math.max(0, downOffset);
+
+        ArrayList<String> finalLore = new ArrayList<>(lore);
+        for (int i = 0; i < upOffset; i++) finalLore.add(0, " ");
+        for (int i = 0; i < downOffset; i++) finalLore.add(finalLore.size(), " ");
+
+        return finalLore;
+    }
 
     public static class PreparedItem {
 
@@ -233,6 +262,31 @@ public class ConfiguredItem extends ConfiguredSection<ItemStack> {
             return addItemFlags(ItemFlag.HIDE_ENCHANTS).addEnchantment(Enchantment.DURABILITY);
         }
 
+        /**
+         * @param owner 玩家名
+         * @return this
+         * @deprecated Use {@link #setSkullOwner(OfflinePlayer)} instead.
+         */
+        @Deprecated
+        public PreparedItem setSkullOwner(String owner) {
+            return modifyItem((item, player) -> {
+                if (!(item.getItemMeta() instanceof SkullMeta)) return;
+                SkullMeta meta = (SkullMeta) item.getItemMeta();
+                meta.setOwner(owner);
+            });
+        }
+
+        public PreparedItem setSkullOwner(UUID owner) {
+            return setSkullOwner(Bukkit.getOfflinePlayer(owner));
+        }
+
+        public PreparedItem setSkullOwner(OfflinePlayer owner) {
+            return modifyItem((item, player) -> {
+                if (!(item.getItemMeta() instanceof SkullMeta)) return;
+                SkullMeta meta = (SkullMeta) item.getItemMeta();
+                meta.setOwningPlayer(owner);
+            });
+        }
 
         public @Nullable ItemStack get(Player player) {
             return Optional.ofNullable(itemConfig.get(player, values, insertLore)).map(item -> {
