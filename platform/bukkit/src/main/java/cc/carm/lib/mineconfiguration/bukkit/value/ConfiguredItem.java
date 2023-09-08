@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 
 public class ConfiguredItem extends ConfiguredSection<ItemStack> {
 
-    public static final @NotNull Pattern LORE_INSERT_PATTERN = Pattern.compile("^#(.*)#(\\{\\w+})?$");
+    public static final @NotNull Pattern LORE_INSERT_PATTERN = Pattern.compile("^#(.*)#(\\{.*})?$");
     public static final @NotNull Pattern LORE_OFFSET_PATTERN = Pattern.compile("\\{(-?\\d+)(?:,(-?\\d+))?}");
 
     public static ItemConfigBuilder create() {
