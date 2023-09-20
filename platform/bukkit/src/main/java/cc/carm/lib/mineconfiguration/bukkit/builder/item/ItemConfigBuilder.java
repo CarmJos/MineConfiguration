@@ -2,7 +2,7 @@ package cc.carm.lib.mineconfiguration.bukkit.builder.item;
 
 import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.mineconfiguration.bukkit.builder.AbstractCraftBuilder;
-import cc.carm.lib.mineconfiguration.bukkit.value.ConfiguredItem;
+import cc.carm.lib.mineconfiguration.bukkit.value.item.ConfiguredItem;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
