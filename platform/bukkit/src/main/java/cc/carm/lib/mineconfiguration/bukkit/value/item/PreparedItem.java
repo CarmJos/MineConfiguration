@@ -21,7 +21,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class PreparedItem {
 
@@ -215,8 +214,8 @@ public class PreparedItem {
             Integer offset2 = Optional.ofNullable(matcher.group(4))
                     .map(Integer::parseInt).orElse(null);
 
-            List<String> inserted = generateLore(
-                    content.getContent(), prefix,
+            List<String> inserted = parseLoreLine(
+                    player, content, placeholders, prefix,
                     offset2 == null ? 0 : offset1, offset2 == null ? offset1 : offset2
             );
 
@@ -229,17 +228,25 @@ public class PreparedItem {
         return parsedLore;
     }
 
-    public static List<String> generateLore(List<String> lore, String prefix, int upOffset, int downOffset) {
-        if (lore == null || lore.isEmpty()) return Collections.emptyList();
+    public static List<String> parseLoreLine(@Nullable Player player, @NotNull LoreContent content,
+                                             @NotNull Map<String, Object> placeholders,
+                                             @Nullable String prefix, int upOffset, int downOffset) {
+        if (content.getContent().isEmpty()) return Collections.emptyList();
+
         upOffset = Math.max(0, upOffset);
         downOffset = Math.max(0, downOffset);
 
-        String finalPrefix = prefix == null ? "" : prefix;
+        String finalPrefix = prefix == null ? "" : TextParser.parseText(player, prefix, placeholders);
+        List<String> finalLore = new ArrayList<>();
 
-        ArrayList<String> finalLore = lore.stream().map(s -> finalPrefix + s)
-                .collect(Collectors.toCollection(ArrayList::new));
-        for (int i = 0; i < upOffset; i++) finalLore.add(0, " ");
-        for (int i = 0; i < downOffset; i++) finalLore.add(finalLore.size(), " ");
+        for (int i = 0; i < upOffset; i++) finalLore.add(" ");
+        if (content.isOriginal()) {
+            content.getContent().stream().map(s -> finalPrefix + s).forEach(finalLore::add);
+        } else {
+            content.getContent().stream().map(s -> finalPrefix + TextParser.parseText(player, s, placeholders))
+                    .forEach(finalLore::add);
+        }
+        for (int i = 0; i < downOffset; i++) finalLore.add(" ");
 
         return finalLore;
     }
