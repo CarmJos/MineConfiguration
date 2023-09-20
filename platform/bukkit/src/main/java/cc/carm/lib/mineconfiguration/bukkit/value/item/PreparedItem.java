@@ -208,7 +208,9 @@ public class PreparedItem {
             LoreContent content = insertedLore.get(path);
             if (content == null) continue;
 
-            String prefix = matcher.group(1);
+            String prefix = Optional.ofNullable(matcher.group(1))
+                    .map(s -> TextParser.parseText(player, s, placeholders))
+                    .orElse("");
             int offset1 = Optional.ofNullable(matcher.group(3))
                     .map(Integer::parseInt).orElse(0);
             Integer offset2 = Optional.ofNullable(matcher.group(4))
@@ -230,20 +232,19 @@ public class PreparedItem {
 
     public static List<String> parseLoreLine(@Nullable Player player, @NotNull LoreContent content,
                                              @NotNull Map<String, Object> placeholders,
-                                             @Nullable String prefix, int upOffset, int downOffset) {
+                                             @NotNull String parsedPrefix, int upOffset, int downOffset) {
         if (content.getContent().isEmpty()) return Collections.emptyList();
 
         upOffset = Math.max(0, upOffset);
         downOffset = Math.max(0, downOffset);
 
-        String finalPrefix = prefix == null ? "" : TextParser.parseText(player, prefix, placeholders);
         List<String> finalLore = new ArrayList<>();
 
         for (int i = 0; i < upOffset; i++) finalLore.add(" ");
         if (content.isOriginal()) {
-            content.getContent().stream().map(s -> finalPrefix + s).forEach(finalLore::add);
+            content.getContent().stream().map(s -> parsedPrefix + s).forEach(finalLore::add);
         } else {
-            content.getContent().stream().map(s -> finalPrefix + TextParser.parseText(player, s, placeholders))
+            content.getContent().stream().map(s -> parsedPrefix + TextParser.parseText(player, s, placeholders))
                     .forEach(finalLore::add);
         }
         for (int i = 0; i < downOffset; i++) finalLore.add(" ");
