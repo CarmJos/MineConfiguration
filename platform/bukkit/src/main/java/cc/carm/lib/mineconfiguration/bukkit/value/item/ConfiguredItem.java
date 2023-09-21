@@ -1,31 +1,18 @@
 package cc.carm.lib.mineconfiguration.bukkit.value.item;
 
 import cc.carm.lib.configuration.core.value.ValueManifest;
-import cc.carm.lib.configuration.core.value.type.ConfiguredList;
 import cc.carm.lib.configuration.core.value.type.ConfiguredSection;
 import cc.carm.lib.mineconfiguration.bukkit.builder.item.ItemConfigBuilder;
-import cc.carm.lib.mineconfiguration.bukkit.utils.TextParser;
-import cc.carm.lib.mineconfiguration.bukkit.value.ConfiguredMessage;
-import cc.carm.lib.mineconfiguration.bukkit.value.ConfiguredMessageList;
-import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import com.cryptomorin.xseries.XItemStack;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ConfiguredItem extends ConfiguredSection<ItemStack> {
 
@@ -67,7 +54,7 @@ public class ConfiguredItem extends ConfiguredSection<ItemStack> {
     }
 
     public @NotNull PreparedItem prepare(@NotNull Object... values) {
-        return new PreparedItem(this, values);
+        return PreparedItem.of(player -> get()).params(params).values(values);
     }
 
     public @Nullable ItemStack get(@Nullable Player player) {

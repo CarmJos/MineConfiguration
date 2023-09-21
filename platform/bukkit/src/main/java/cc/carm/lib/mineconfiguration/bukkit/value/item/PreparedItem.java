@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,7 +27,15 @@ public class PreparedItem {
 
     public static final @NotNull Pattern LORE_INSERT_PATTERN = Pattern.compile("^(?:\\{(.*)})?#(.*)#(?:\\{(-?\\d+)(?:,(-?\\d+))?})?$");
 
-    protected final @NotNull ConfiguredItem itemConfig;
+    public static PreparedItem of(@NotNull Function<@NotNull Player, @Nullable ItemStack> itemProvider) {
+        return new PreparedItem(itemProvider);
+    }
+
+    public static PreparedItem of(@Nullable ItemStack item) {
+        return of(player -> item);
+    }
+
+    protected final @NotNull Function<@NotNull Player, @Nullable ItemStack> itemProvider;
 
     protected @NotNull Map<String, Object> placeholders = new HashMap<>();
     protected @NotNull String[] params;
@@ -37,10 +46,10 @@ public class PreparedItem {
     protected @NotNull BiConsumer<ItemStack, Player> itemModifier;
     protected @NotNull BiConsumer<ItemMeta, Player> metaModifier;
 
-    protected PreparedItem(@NotNull ConfiguredItem itemConfig, @NotNull Object[] values) {
-        this.itemConfig = itemConfig;
-        this.params = itemConfig.params;
-        this.values = values;
+    protected PreparedItem(@NotNull Function<@NotNull Player, @Nullable ItemStack> itemProvider) {
+        this.itemProvider = itemProvider;
+        this.params = new String[0];
+        this.values = new Object[0];
         itemModifier = (item, player) -> {
         };
         metaModifier = (meta, player) -> {
@@ -48,7 +57,7 @@ public class PreparedItem {
     }
 
     public @Nullable ItemStack get(Player player) {
-        ItemStack item = itemConfig.get();
+        @Nullable ItemStack item = itemProvider.apply(player);
         if (item == null) return null;
 
         ItemMeta meta = item.getItemMeta();
@@ -93,44 +102,50 @@ public class PreparedItem {
         return this;
     }
 
-    public PreparedItem placeholders(Map<String, Object> placeholders) {
+    public PreparedItem placeholders(@NotNull Map<String, Object> placeholders) {
         this.placeholders = placeholders;
         return this;
     }
 
-    public PreparedItem placeholders(Consumer<Map<String, Object>> consumer) {
+    public PreparedItem placeholders(@NotNull Consumer<Map<String, Object>> consumer) {
         Map<String, Object> placeholders = new HashMap<>();
         consumer.accept(placeholders);
         return placeholders(placeholders);
     }
 
-    public PreparedItem insertLore(String path, LoreContent content) {
+    public PreparedItem insertLore(@NotNull String path, @NotNull LoreContent content) {
         insertLore.put(path, content);
         return this;
     }
 
-    public PreparedItem insertLore(String path, List<String> content) {
+    public PreparedItem insertLore(@NotNull String path, @NotNull List<String> content) {
         return insertLore(path, content, false);
     }
 
-    public PreparedItem insertLore(String path, List<String> content, boolean original) {
+    public PreparedItem insertLore(@NotNull String path, @NotNull List<String> content, boolean original) {
         return insertLore(path, LoreContent.of(content, original));
     }
 
-    public PreparedItem insertLore(String path, String... content) {
+    public PreparedItem insertLore(@NotNull String path, @NotNull String... content) {
         return insertLore(path, Arrays.asList(content));
     }
 
-    public PreparedItem insertLore(String path, ConfiguredList<String> content) {
+    public PreparedItem insertLore(@NotNull String path, @NotNull ConfiguredList<String> content) {
         return insertLore(path, content.copy());
     }
 
-    public PreparedItem insertLore(String path, ConfiguredMessage<String> content, Object... params) {
-        return insertLore(path, content.parse(null, params));
+    public PreparedItem insertLore(@NotNull String path,
+                                   @NotNull ConfiguredMessage<String> content, @NotNull Object... params) {
+        String c = content.parse(null, params);
+        if (c == null) return this;
+        return insertLore(path, c);
     }
 
-    public PreparedItem insertLore(String path, ConfiguredMessageList<String> content, Object... params) {
-        return insertLore(path, content.parse(null, params));
+    public PreparedItem insertLore(@NotNull String path,
+                                   @NotNull ConfiguredMessageList<String> content, @NotNull Object... params) {
+        List<String> c = content.parse(null, params);
+        if (c == null || c.isEmpty()) return this;
+        return insertLore(path, c);
     }
 
     public PreparedItem amount(int amount) {
