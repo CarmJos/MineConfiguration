@@ -48,7 +48,7 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
         };
     }
 
-    public abstract @NotNull S getThis();
+    protected abstract @NotNull S getThis();
 
     public abstract @Nullable R get(Player player);
 
