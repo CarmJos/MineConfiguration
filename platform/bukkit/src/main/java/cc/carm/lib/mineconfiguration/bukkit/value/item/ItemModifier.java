@@ -172,10 +172,10 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
      */
     @Deprecated
     public S setSkullOwner(String owner) {
-        return handleItem((item, player) -> {
-            if (!(item.getItemMeta() instanceof SkullMeta)) return;
-            SkullMeta meta = (SkullMeta) item.getItemMeta();
-            meta.setOwner(owner);
+        return handleMeta((meta, player) -> {
+            if (!(meta instanceof SkullMeta)) return;
+            SkullMeta skullMeta = (SkullMeta) meta;
+            skullMeta.setOwner(owner);
         });
     }
 
@@ -184,10 +184,10 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
     }
 
     public S setSkullOwner(OfflinePlayer owner) {
-        return handleItem((item, player) -> {
-            if (!(item.getItemMeta() instanceof SkullMeta)) return;
-            SkullMeta meta = (SkullMeta) item.getItemMeta();
-            meta.setOwningPlayer(owner);
+        return handleMeta((meta, player) -> {
+            if (!(meta instanceof SkullMeta)) return;
+            SkullMeta skullMeta = (SkullMeta) meta;
+            skullMeta.setOwningPlayer(owner);
         });
     }
 
