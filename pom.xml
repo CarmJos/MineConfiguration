@@ -11,7 +11,7 @@
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 
         <deps.easyconfifuration.version>3.8.0</deps.easyconfifuration.version>
-        <deps.easyplugin.version>1.5.8</deps.easyplugin.version>
+        <deps.easyplugin.version>1.5.11</deps.easyplugin.version>
         <deps.yamlcommentwriter.version>1.0.1</deps.yamlcommentwriter.version>
     </properties>
 
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>24.0.1</version>
+            <version>24.1.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -122,7 +122,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.2.2</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
@@ -196,7 +196,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.6.2</version>
                     <configuration>
                         <classifier>javadoc</classifier>
                         <detectJavaApiLink>false</detectJavaApiLink>
