@@ -7,6 +7,7 @@ import cc.carm.lib.mineconfiguration.bukkit.value.ConfiguredMessageList;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -33,18 +34,18 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
     protected @NotNull String[] params;
     protected @NotNull Object[] values;
 
-    protected final @NotNull Map<String, LoreContent> insertLore = new HashMap<>();
+    protected final @NotNull Map<String, LoreContent<?>> insertLore = new HashMap<>();
 
-    protected @NotNull BiConsumer<ItemStack, Player> itemModifier;
-    protected @NotNull BiConsumer<ItemMeta, Player> metaModifier;
+    protected @NotNull BiConsumer<ItemStack, Player> itemConsumer;
+    protected @NotNull BiConsumer<ItemMeta, Player> metaConsumer;
 
     protected ItemModifier(@NotNull Function<@NotNull Player, @Nullable ItemStack> itemProvider) {
         this.itemProvider = itemProvider;
         this.params = new String[0];
         this.values = new Object[0];
-        itemModifier = (item, player) -> {
+        itemConsumer = (item, player) -> {
         };
-        metaModifier = (meta, player) -> {
+        metaConsumer = (meta, player) -> {
         };
     }
 
@@ -70,18 +71,18 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
             meta.setLore(parsedLore);
         }
 
-        metaModifier.accept(meta, player);
+        metaConsumer.accept(meta, player);
         item.setItemMeta(meta);
-        itemModifier.accept(item, player);
+        itemConsumer.accept(item, player);
     }
 
     public S handleMeta(@NotNull BiConsumer<ItemMeta, Player> modifier) {
-        this.metaModifier = this.metaModifier.andThen(modifier);
+        this.metaConsumer = this.metaConsumer.andThen(modifier);
         return getThis();
     }
 
     public S handleItem(@NotNull BiConsumer<ItemStack, Player> modifier) {
-        this.itemModifier = this.itemModifier.andThen(modifier);
+        this.itemConsumer = this.itemConsumer.andThen(modifier);
         return getThis();
     }
 
@@ -106,7 +107,7 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
         return placeholders(placeholders);
     }
 
-    public S insertLore(@NotNull String path, @NotNull LoreContent content) {
+    public S insertLore(@NotNull String path, @NotNull LoreContent<?> content) {
         insertLore.put(path, content);
         return getThis();
     }
@@ -129,16 +130,26 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
 
     public S insertLore(@NotNull String path,
                         @NotNull ConfiguredMessage<String> content, @NotNull Object... params) {
-        String c = content.parse(null, params);
-        if (c == null) return getThis();
-        return insertLore(path, c);
+        return insertLore(path, new LoreContent<ConfiguredMessage<String>>(content, false) {
+            @Override
+            public List<String> parse(CommandSender receiver) {
+                String str = getSource().parse(receiver, params);
+                if (str == null || str.isEmpty()) return Collections.emptyList();
+                return Collections.singletonList(str);
+            }
+        });
     }
 
     public S insertLore(@NotNull String path,
                         @NotNull ConfiguredMessageList<String> content, @NotNull Object... params) {
-        List<String> c = content.parse(null, params);
-        if (c == null || c.isEmpty()) return getThis();
-        return insertLore(path, c);
+        return insertLore(path, new LoreContent<ConfiguredMessageList<String>>(content, false) {
+            @Override
+            public List<String> parse(CommandSender receiver) {
+                List<String> list = getSource().parse(receiver, params);
+                if (list == null || list.isEmpty()) return Collections.emptyList();
+                return list;
+            }
+        });
     }
 
     public S amount(int amount) {
@@ -200,7 +211,7 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
     }
 
     public static List<String> parseLore(@Nullable Player player, @Nullable List<String> lore,
-                                         @NotNull Map<String, LoreContent> insertedLore,
+                                         @NotNull Map<String, LoreContent<?>> insertedLore,
                                          @NotNull Map<String, Object> placeholders) {
         List<String> parsedLore = new ArrayList<>();
         if (lore == null || lore.isEmpty()) return parsedLore;
@@ -213,7 +224,7 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
             }
 
             String path = matcher.group(2);
-            LoreContent content = insertedLore.get(path);
+            LoreContent<?> content = insertedLore.get(path);
             if (content == null) continue;
 
             String prefix = Optional.ofNullable(matcher.group(1))
@@ -238,10 +249,11 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
         return parsedLore;
     }
 
-    public static List<String> parseLoreLine(@Nullable Player player, @NotNull LoreContent content,
+    public static List<String> parseLoreLine(@Nullable Player player, @NotNull LoreContent<?> content,
                                              @NotNull Map<String, Object> placeholders,
                                              @NotNull String parsedPrefix, int upOffset, int downOffset) {
-        if (content.getContent().isEmpty()) return Collections.emptyList();
+        List<String> lore = content.parse(player);
+        if (lore.isEmpty()) return Collections.emptyList();
 
         upOffset = Math.max(0, upOffset);
         downOffset = Math.max(0, downOffset);
@@ -250,10 +262,9 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
 
         for (int i = 0; i < upOffset; i++) finalLore.add(" ");
         if (content.isOriginal()) {
-            content.getContent().stream().map(s -> parsedPrefix + s).forEach(finalLore::add);
+            lore.stream().map(s -> parsedPrefix + s).forEach(finalLore::add);
         } else {
-            content.getContent().stream().map(s -> parsedPrefix + TextParser.parseText(player, s, placeholders))
-                    .forEach(finalLore::add);
+            lore.stream().map(s -> parsedPrefix + TextParser.parseText(player, s, placeholders)).forEach(finalLore::add);
         }
         for (int i = 0; i < downOffset; i++) finalLore.add(" ");
 
