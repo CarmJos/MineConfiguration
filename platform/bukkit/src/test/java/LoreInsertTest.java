@@ -23,7 +23,7 @@ public class LoreInsertTest {
         );
 
         List<String> replace = Arrays.asList("> 插入的点击行1", "> 插入的点击行2");
-        Map<String, LoreContent> inserted = new HashMap<>();
+        Map<String, LoreContent<?>> inserted = new HashMap<>();
         inserted.put("click-lore", LoreContent.of(replace));
         PreparedItem.parseLore(null, original, inserted, new HashMap<>()).forEach(System.out::println);
     }
