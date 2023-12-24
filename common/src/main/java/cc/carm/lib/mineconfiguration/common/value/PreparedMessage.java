@@ -37,7 +37,7 @@ public class PreparedMessage<R, M> {
      *
      * @param receivers 消息的接收者们
      */
-    public void to(@NotNull Iterable<R> receivers) {
+    public void to(@NotNull Iterable<? extends R> receivers) {
         receivers.forEach(this::to);
     }
 

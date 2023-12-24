@@ -58,6 +58,30 @@ public class TitleConfig {
         this.fadeOut = fadeOut;
     }
 
+    public int getFadeIn() {
+        return fadeIn;
+    }
+
+    public int getFadeOut() {
+        return fadeOut;
+    }
+
+    public int getStay() {
+        return stay;
+    }
+
+    public boolean isStandardTime() {
+        return this.fadeIn == 10 && this.stay == 60 && this.fadeOut == 10;
+    }
+
+    public @Nullable TextConfig getLine1() {
+        return line1;
+    }
+
+    public @Nullable TextConfig getLine2() {
+        return line2;
+    }
+
     public void send(@NotNull Player player,
                      @NotNull Map<String, Object> placeholders,
                      @Nullable ConfiguredTitle.TitleConsumer sendConsumer) {

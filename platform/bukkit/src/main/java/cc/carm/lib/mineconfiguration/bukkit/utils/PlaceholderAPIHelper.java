@@ -7,6 +7,9 @@ import java.util.List;
 
 public class PlaceholderAPIHelper {
 
+    private PlaceholderAPIHelper() {
+    }
+
     public static String parseMessages(Player player, String message) {
         try {
             return PlaceholderAPI.setPlaceholders(player, message);

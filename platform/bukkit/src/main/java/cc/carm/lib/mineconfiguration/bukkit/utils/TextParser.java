@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 
 public class TextParser {
 
+    private TextParser() {
+    }
+
     @Contract("_,!null,_->!null")
     public static @Nullable String parseText(@Nullable CommandSender sender, @Nullable String message, @NotNull Map<String, Object> placeholders) {
         if (message == null) return null;
