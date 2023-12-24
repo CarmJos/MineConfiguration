@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class SoundNotify extends NotifyType<SoundConfig> {
 
+
     public SoundNotify(@NotNull String key) {
         super(key, SoundConfig.class);
     }
@@ -18,13 +19,14 @@ public class SoundNotify extends NotifyType<SoundConfig> {
     public @Nullable SoundConfig parseMeta(@Nullable String param, @Nullable String content) {
         if (content == null) return null;
 
-        String[] args = content.split(",");
+        String[] args = param == null ? new String[0] : param.split(",");
         try {
-            return new SoundConfig(content,
+            return new SoundConfig(content.trim(),
                     (args.length >= 1) ? Float.parseFloat(args[0]) : 1,
                     (args.length >= 2) ? Float.parseFloat(args[1]) : 1
             );
         } catch (Exception exception) {
+            exception.printStackTrace();
             return null;
         }
     }
@@ -42,7 +44,11 @@ public class SoundNotify extends NotifyType<SoundConfig> {
 
     @Override
     public void execute(@NotNull Player player, @Nullable SoundConfig meta, @NotNull Map<String, Object> placeholders) {
-        if (meta != null) meta.playTo(player);
+        System.out.println("SoundNotify.execute");
+        if (meta != null) {
+            System.out.println("SoundNotify.play");
+            meta.playTo(player);
+        }
     }
 
 }

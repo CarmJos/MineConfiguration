@@ -2,32 +2,24 @@ package cc.carm.lib.mineconfiguration.bukkit.value.notify;
 
 import cc.carm.lib.configuration.core.value.ValueManifest;
 import cc.carm.lib.configuration.core.value.type.ConfiguredList;
+import cc.carm.lib.mineconfiguration.bukkit.builder.notify.NotifyConfigBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.data.NotifyConfig;
-import cc.carm.lib.mineconfiguration.bukkit.value.notify.type.SoundNotify;
-import cc.carm.lib.mineconfiguration.bukkit.value.notify.type.StringNotify;
-import cc.carm.lib.mineconfiguration.bukkit.value.notify.type.TitleNotify;
 import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
-import com.cryptomorin.xseries.messages.ActionBar;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-@SuppressWarnings("rawtypes")
 public class ConfiguredNotify extends ConfiguredList<NotifyConfig> {
 
-    public static final Set<NotifyType<?>> TYPES = new HashSet<>();
-
-    static {
-        TYPES.add(StringNotify.of("MESSAGE", Player::sendMessage, content -> Optional.ofNullable(content).orElse(" ")));
-        TYPES.add(StringNotify.of("MSG", Player::sendMessage));
-        TYPES.add(StringNotify.of("ACTIONBAR", ActionBar::sendActionBar));
-        TYPES.add(new TitleNotify("TITLE"));
-        TYPES.add(new SoundNotify("SOUND"));
+    public static NotifyConfigBuilder create() {
+        return new NotifyConfigBuilder();
     }
 
+    public static final Set<NotifyType<?>> TYPES = new HashSet<>(Arrays.asList(DefaultNotifyTypes.values()));
+
     public static NotifyType<?> getType(@NotNull String key) {
-        return TYPES.stream().filter(type -> type.key.equals(key)).findFirst().orElse(null);
+        return TYPES.stream().filter(type -> type.key.equalsIgnoreCase(key)).findFirst().orElse(null);
     }
 
     protected final @NotNull String[] params;
@@ -41,15 +33,15 @@ public class ConfiguredNotify extends ConfiguredList<NotifyConfig> {
         return params;
     }
 
-    public @NotNull PreparedNotify prepare(@NotNull String... values) {
+    public @NotNull PreparedNotify prepare(@NotNull Object... values) {
         return new PreparedNotify(getNotNull(), ParamsUtils.buildParams(getParams(), values));
     }
 
-    public void send(@NotNull Player player, @NotNull String... values) {
+    public void send(@NotNull Player player, @NotNull Object... values) {
         prepare(values).to(player);
     }
 
-    public void send(@NotNull Iterable<? extends Player> players, @NotNull String... values) {
+    public void send(@NotNull Iterable<? extends Player> players, @NotNull Object... values) {
         prepare(values).to(players);
     }
 

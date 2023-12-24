@@ -8,11 +8,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TitleNotify extends NotifyType<TitleConfig> {
 
-    //Title param format fadeIn,Stay,FadeOut
-    public static final String PARAM_FORMAT = "(?<fadeIn>\\d+),(?<stay>\\d+),(?<fadeOut>\\d+)";
+    //Content format line1{N}line2
+    public static final Pattern CONTENT_FORMAT = Pattern.compile("(?<line1>.+?)(?:\\{n}(?<line2>.+))?");
+    //Param format fadeIn,stay,fadeOut
+    public static final Pattern PARAM_FORMAT = Pattern.compile("(?<fadeIn>\\d+),(?<stay>\\d+),(?<fadeOut>\\d+)");
 
     public TitleNotify(String key) {
         super(key, TitleConfig.class);
@@ -21,23 +25,25 @@ public class TitleNotify extends NotifyType<TitleConfig> {
     @Override
     public @Nullable TitleConfig parseMeta(@Nullable String param, @Nullable String content) {
         if (content == null) return null;
-        String[] lines = content.split("\\{n}");
+
+        Matcher contentMatcher = CONTENT_FORMAT.matcher(content);
+        if (!contentMatcher.matches()) return null;
+
         if (param == null) {
-            return TitleConfig.of(content, null);
-        } else {
-            String[] params = param.split(",");
-            if (params.length == 3) {
-                try {
-                    return TitleConfig.of(content, null,
-                            Integer.parseInt(params[0]),
-                            Integer.parseInt(params[1]),
-                            Integer.parseInt(params[2]));
-                } catch (Exception ex) {
-                    return TitleConfig.of(content, null);
-                }
-            }
+            return TitleConfig.of(contentMatcher.group("line1"), contentMatcher.group("line2"));
         }
-        return null;
+
+        Matcher paramMatcher = PARAM_FORMAT.matcher(param);
+        if (!paramMatcher.matches()) {
+            return TitleConfig.of(contentMatcher.group("line1"), contentMatcher.group("line2"));
+        }
+
+        return TitleConfig.of(
+                contentMatcher.group("line1"), contentMatcher.group("line2"),
+                Integer.parseInt(paramMatcher.group("fadeIn")),
+                Integer.parseInt(paramMatcher.group("stay")),
+                Integer.parseInt(paramMatcher.group("fadeOut"))
+        );
     }
 
     @Override

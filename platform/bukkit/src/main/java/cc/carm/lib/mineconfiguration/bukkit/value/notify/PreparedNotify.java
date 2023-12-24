@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
 public class PreparedNotify {
 
     protected final @NotNull List<NotifyConfig> notifications;

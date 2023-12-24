@@ -7,12 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public abstract class NotifyType<M> {
-
-    // Notify config format: [TYPE(@PARAM)] CONTENTS...
-    public static final @NotNull Pattern CONFIG_FORMAT = Pattern.compile("^\\[(?<type>[^@\\]]+)(@(?<param>[^]]+))?] (?<content>.*)$");
 
     protected final @NotNull String key;
     protected final @NotNull Class<M> metaClass;
