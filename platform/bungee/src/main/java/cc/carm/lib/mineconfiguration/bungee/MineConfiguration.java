@@ -1,5 +1,6 @@
 package cc.carm.lib.mineconfiguration.bungee;
 
+import cc.carm.lib.configuration.core.Configuration;
 import cc.carm.lib.configuration.core.ConfigurationRoot;
 import cc.carm.lib.mineconfiguration.bungee.source.BungeeConfigProvider;
 import cc.carm.lib.mineconfiguration.common.AbstractConfiguration;
@@ -103,16 +104,16 @@ public class MineConfiguration extends AbstractConfiguration<BungeeConfigProvide
     }
 
     public MineConfiguration(@NotNull Plugin plugin,
-                             @NotNull ConfigurationRoot configRoot,
-                             @NotNull ConfigurationRoot messageRoot) {
+                             @NotNull Configuration configRoot,
+                             @NotNull Configuration messageRoot) {
         this(plugin);
         initializeConfig(configRoot);
         initializeMessage(messageRoot);
     }
 
     public MineConfiguration(@NotNull Plugin plugin,
-                             @NotNull Class<? extends ConfigurationRoot> configRoot,
-                             @NotNull Class<? extends ConfigurationRoot> messageRoot) {
+                             @NotNull Class<? extends Configuration> configRoot,
+                             @NotNull Class<? extends Configuration> messageRoot) {
         this(plugin);
         initializeConfig(configRoot);
         initializeMessage(messageRoot);

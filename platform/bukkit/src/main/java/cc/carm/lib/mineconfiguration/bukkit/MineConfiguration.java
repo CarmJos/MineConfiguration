@@ -1,5 +1,6 @@
 package cc.carm.lib.mineconfiguration.bukkit;
 
+import cc.carm.lib.configuration.core.Configuration;
 import cc.carm.lib.configuration.core.ConfigurationRoot;
 import cc.carm.lib.mineconfiguration.bukkit.source.BukkitConfigProvider;
 import cc.carm.lib.mineconfiguration.common.AbstractConfiguration;
@@ -48,16 +49,16 @@ public class MineConfiguration extends AbstractConfiguration<BukkitConfigProvide
     }
 
     public MineConfiguration(@NotNull JavaPlugin plugin,
-                             @NotNull ConfigurationRoot configRoot,
-                             @NotNull ConfigurationRoot messageRoot) {
+                             @NotNull Configuration configRoot,
+                             @NotNull Configuration messageRoot) {
         this(plugin);
         initializeConfig(configRoot);
         initializeMessage(messageRoot);
     }
 
     public MineConfiguration(@NotNull JavaPlugin plugin,
-                             @NotNull Class<? extends ConfigurationRoot> configRoot,
-                             @NotNull Class<? extends ConfigurationRoot> messageRoot) {
+                             @NotNull Class<? extends Configuration> configRoot,
+                             @NotNull Class<? extends Configuration> messageRoot) {
         this(plugin);
         initializeConfig(configRoot);
         initializeMessage(messageRoot);

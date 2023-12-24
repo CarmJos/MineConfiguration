@@ -1,6 +1,6 @@
 package cc.carm.lib.mineconfiguration.common;
 
-import cc.carm.lib.configuration.core.ConfigurationRoot;
+import cc.carm.lib.configuration.core.Configuration;
 import cc.carm.lib.configuration.core.source.ConfigurationProvider;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,19 +14,19 @@ public abstract class AbstractConfiguration<P extends ConfigurationProvider<?>> 
         this.messageProvider = messageProvider;
     }
 
-    public void initializeConfig(@NotNull ConfigurationRoot configRoot) {
+    public void initializeConfig(@NotNull Configuration configRoot) {
         this.configProvider.initialize(configRoot);
     }
 
-    public void initializeMessage(@NotNull ConfigurationRoot messageRoot) {
+    public void initializeMessage(@NotNull Configuration messageRoot) {
         this.messageProvider.initialize(messageRoot);
     }
 
-    public void initializeConfig(@NotNull Class<? extends ConfigurationRoot> configRoot) {
+    public void initializeConfig(@NotNull Class<? extends Configuration> configRoot) {
         this.configProvider.initialize(configRoot);
     }
 
-    public void initializeMessage(@NotNull Class<? extends ConfigurationRoot> messageRoot) {
+    public void initializeMessage(@NotNull Class<? extends Configuration> messageRoot) {
         this.messageProvider.initialize(messageRoot);
     }
 
