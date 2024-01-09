@@ -44,11 +44,7 @@ public class SoundNotify extends NotifyType<SoundConfig> {
 
     @Override
     public void execute(@NotNull Player player, @Nullable SoundConfig meta, @NotNull Map<String, Object> placeholders) {
-        System.out.println("SoundNotify.execute");
-        if (meta != null) {
-            System.out.println("SoundNotify.play");
-            meta.playTo(player);
-        }
+        if (meta != null) meta.playTo(player);
     }
 
 }
