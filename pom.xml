@@ -12,7 +12,7 @@
 
         <deps.easyconfifuration.version>3.9.1</deps.easyconfifuration.version>
         <deps.easyplugin.version>1.5.12</deps.easyplugin.version>
-        <deps.yamlcommentwriter.version>1.0.1</deps.yamlcommentwriter.version>
+        <deps.yamlcommentwriter.version>1.2.0</deps.yamlcommentwriter.version>
     </properties>
 
     <groupId>cc.carm.lib</groupId>
