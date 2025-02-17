@@ -1,11 +1,9 @@
 package cc.carm.lib.mineconfiguration.bukkit.value;
 
-import cc.carm.lib.configuration.core.value.ValueManifest;
-import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
-import cc.carm.lib.mineconfiguration.bukkit.builder.message.CraftMessageValueBuilder;
-import cc.carm.lib.mineconfiguration.bukkit.data.TextConfig;
-import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
-import cc.carm.lib.mineconfiguration.common.value.ConfigMessage;
+import cc.carm.lib.configuration.value.ValueManifest;
+import cc.carm.lib.configuration.value.text.ConfiguredText;
+import cc.carm.lib.configuration.value.text.data.TextContents;
+import cc.carm.lib.mineconfiguration.bukkit.utils.MessageUtils;
 import com.cryptomorin.xseries.messages.ActionBar;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -13,52 +11,61 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-public class ConfiguredMessage<M> extends ConfigMessage<M, TextConfig, CommandSender> {
+public class ConfiguredMessage<M> extends ConfiguredText<M, CommandSender> {
 
     @NotNull
-    public static <M> CraftMessageValueBuilder<@Nullable M> create(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser) {
-        return CraftConfigValue.builder().createMessage().asValue(messageParser);
+    public static <M> ConfiguredMessage.Builder<M> create(
+            @NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> compiler
+    ) {
+        return new Builder<M>().compiler(compiler);
     }
 
-    public static CraftMessageValueBuilder<String> asString() {
-        return CraftConfigValue.builder().createMessage().asStringValue();
+    public static Builder<String> asString() {
+        return create((sender, message) -> message)
+                .parser(MessageUtils::parseMessage)
+                .dispatcher((sender, message) -> message.forEach(sender::sendMessage));
     }
 
     public static ConfiguredMessage<String> ofString() {
         return asString().build();
     }
 
-    public static ConfiguredMessage<String> ofString(@NotNull String defaultMessage) {
-        return asString().defaults(defaultMessage).build();
+    public static ConfiguredMessage<String> ofString(@NotNull String... messages) {
+        return asString().defaults(messages).build();
     }
 
-    public ConfiguredMessage(@NotNull ValueManifest<TextConfig> manifest, @NotNull String[] params,
-                             @NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser,
-                             @NotNull BiConsumer<@NotNull CommandSender, @NotNull M> sendFunction) {
-        super(manifest, TextConfig.class, params, messageParser, sendFunction, TextConfig::of);
+    public ConfiguredMessage(@NotNull ValueManifest<TextContents> manifest,
+                             @NotNull BiFunction<CommandSender, String, String> parser,
+                             @NotNull BiFunction<CommandSender, String, M> compiler,
+                             @NotNull BiConsumer<CommandSender, List<M>> dispatcher,
+                             @NotNull String[] params) {
+        super(manifest, parser, compiler, dispatcher, params);
     }
 
-    public void sendActionBar(Player player, String... values) {
-        sendActionBar(player, ParamsUtils.buildParams(this.params, values));
+    public void sendActionBar(Player player, Object... values) {
+        ActionBar.sendActionBar(player, prepare(values).parseLine(player, (sender, message) -> message));
     }
 
-    public void sendActionBar(Player player, Map<String, Object> placeholders) {
-        ActionBar.sendActionBar(player, parseString(player, placeholders));
+    public void print(Object... values) {
+        prepare(values).to(Bukkit.getConsoleSender());
     }
 
-    @Override
-    public @NotNull Collection<CommandSender> getAllReceivers() {
-        List<CommandSender> senders = new ArrayList<>();
-        senders.add(Bukkit.getConsoleSender());
-        senders.addAll(Bukkit.getOnlinePlayers());
-        return senders;
+    public static class Builder<M> extends ConfiguredText.Builder<M, CommandSender, Builder<M>> {
+
+        @Override
+        public @NotNull ConfiguredMessage<M> build() {
+            return new ConfiguredMessage<>(buildManifest(), this.parser, this.compiler, this.dispatcher, this.params);
+        }
+
+        @Override
+        public @NotNull ConfiguredMessage.Builder<M> self() {
+            return this;
+        }
     }
+
 
 }

@@ -1,4 +1,4 @@
-package cc.carm.lib.mineconfiguration.bukkit.value.notify;
+package cc.carm.lib.mineconfiguration.bukkit.value.notify.type;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +21,7 @@ public class NotifyCache<T extends NotifyType<M>, M> {
     }
 
     public static @Nullable NotifyCache<?, ?> of(@NotNull String key, @Nullable String param, @Nullable String content) {
-        NotifyType<?> type = ConfiguredNotify.getType(key);
+        NotifyType<?> type = NotifyType.get(key);
         if (type == null) return null;
         return NotifyCache.of(type, param, content);
     }

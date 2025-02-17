@@ -1,6 +1,6 @@
-package cc.carm.lib.mineconfiguration.bukkit.value.notify.type;
+package cc.carm.lib.mineconfiguration.bukkit.value.notify.type.standard;
 
-import cc.carm.lib.mineconfiguration.bukkit.value.notify.NotifyType;
+import cc.carm.lib.mineconfiguration.bukkit.value.notify.type.NotifyType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +46,7 @@ public abstract class StringNotify extends NotifyType<String> {
     @Override
     public void execute(@NotNull Player player, @Nullable String content, @NotNull Map<String, Object> placeholders) {
         if (content == null) return;
-        send(player, setPlaceholders(player, content, placeholders));
+        send(player, setPlaceholders(player, placeholders, content));
     }
 
 }

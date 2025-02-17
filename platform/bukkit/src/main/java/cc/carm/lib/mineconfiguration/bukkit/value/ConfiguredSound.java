@@ -1,10 +1,12 @@
 package cc.carm.lib.mineconfiguration.bukkit.value;
 
-import cc.carm.lib.configuration.core.function.ConfigValueParser;
-import cc.carm.lib.configuration.core.value.ValueManifest;
-import cc.carm.lib.configuration.core.value.type.ConfiguredValue;
-import cc.carm.lib.mineconfiguration.bukkit.CraftConfigValue;
-import cc.carm.lib.mineconfiguration.bukkit.builder.sound.SoundConfigBuilder;
+
+import cc.carm.lib.configuration.adapter.ValueAdapter;
+import cc.carm.lib.configuration.adapter.ValueType;
+import cc.carm.lib.configuration.builder.AbstractConfigBuilder;
+import cc.carm.lib.configuration.source.ConfigurationHolder;
+import cc.carm.lib.configuration.value.ValueManifest;
+import cc.carm.lib.configuration.value.standard.ConfiguredValue;
 import cc.carm.lib.mineconfiguration.bukkit.data.SoundConfig;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -15,47 +17,57 @@ import java.util.Optional;
 
 public class ConfiguredSound extends ConfiguredValue<SoundConfig> {
 
-    public static @NotNull SoundConfigBuilder create() {
-        return CraftConfigValue.builder().createSound();
+    public static @NotNull Builder create() {
+        return new Builder();
     }
 
     public static @NotNull ConfiguredSound of(Sound sound) {
-        return CraftConfigValue.builder().createSound().defaults(sound).build();
+        return create().defaults(sound).build();
     }
 
     public static @NotNull ConfiguredSound of(Sound sound, float volume) {
-        return CraftConfigValue.builder().createSound().defaults(sound, volume).build();
+        return create().defaults(sound, volume).build();
     }
 
     public static @NotNull ConfiguredSound of(Sound sound, float volume, float pitch) {
-        return CraftConfigValue.builder().createSound().defaults(sound, volume, pitch).build();
+        return create().defaults(sound, volume, pitch).build();
     }
 
     public static @NotNull ConfiguredSound of(String soundName) {
-        return CraftConfigValue.builder().createSound().defaults(soundName).build();
+        return create().defaults(soundName).build();
     }
 
     public static @NotNull ConfiguredSound of(String soundName, float volume) {
-        return CraftConfigValue.builder().createSound().defaults(soundName, volume).build();
+        return create().defaults(soundName, volume).build();
     }
 
     public static @NotNull ConfiguredSound of(String soundName, float volume, float pitch) {
-        return CraftConfigValue.builder().createSound().defaults(soundName, volume, pitch).build();
+        return create().defaults(soundName, volume, pitch).build();
     }
 
-    public ConfiguredSound(@NotNull ValueManifest<SoundConfig> manifest) {
-        super(manifest, SoundConfig.class, getSoundParser(), SoundConfig::serialize);
+
+    public static final ValueType<SoundConfig> SOUND_TYPE = ValueType.of(SoundConfig.class);
+    public static final ValueAdapter<SoundConfig> SOUND_ADAPTER = new ValueAdapter<>(SOUND_TYPE,
+            (holder, type, value) -> value.serialize(),
+            (holder, type, value) -> {
+                String conf = holder.deserialize(String.class, value);
+                return SoundConfig.deserialize(conf);
+            }
+    );
+
+    public ConfiguredSound(@NotNull ValueManifest<SoundConfig> manifest, @NotNull ValueAdapter<SoundConfig> adapter) {
+        super(manifest, adapter);
     }
 
-    public void setSound(@NotNull Sound sound) {
-        setSound(sound, 1.0f);
+    public void set(@NotNull Sound sound) {
+        set(sound, 1.0f);
     }
 
-    public void setSound(@NotNull Sound sound, float volume) {
-        setSound(sound, volume, 1.0f);
+    public void set(@NotNull Sound sound, float volume) {
+        set(sound, volume, 1.0f);
     }
 
-    public void setSound(@NotNull Sound sound, float volume, float pitch) {
+    public void set(@NotNull Sound sound, float volume, float pitch) {
         set(new SoundConfig(sound.name(), sound, volume, pitch));
     }
 
@@ -71,8 +83,53 @@ public class ConfiguredSound extends ConfiguredValue<SoundConfig> {
         Optional.ofNullable(get()).ifPresent(s -> s.playAt(location));
     }
 
-    public static ConfigValueParser<Object, SoundConfig> getSoundParser() {
-        return ConfigValueParser.castToString().andThen((s, d) -> SoundConfig.deserialize(s));
+    public static class Builder extends AbstractConfigBuilder<SoundConfig, ConfiguredSound, ConfigurationHolder<?>, Builder> {
+
+        protected @NotNull ValueAdapter<SoundConfig> adapter = SOUND_ADAPTER;
+
+        protected Builder() {
+            super(ConfigurationHolder.class, SOUND_TYPE);
+        }
+
+        public @NotNull Builder adapter(@NotNull ValueAdapter<SoundConfig> adapter) {
+            this.adapter = adapter;
+            return this;
+        }
+
+        public @NotNull Builder defaults(@NotNull Sound sound, float volume, float pitch) {
+            return defaults(new SoundConfig(sound.name(), sound, volume, pitch));
+        }
+
+        public @NotNull Builder defaults(@NotNull Sound sound, float volume) {
+            return defaults(sound, volume, 1.0f);
+        }
+
+        public @NotNull Builder defaults(@NotNull Sound sound) {
+            return defaults(sound, 1.0f);
+        }
+
+        public @NotNull Builder defaults(@NotNull String soundName, float volume, float pitch) {
+            return defaults(new SoundConfig(soundName, volume, pitch));
+        }
+
+        public @NotNull Builder defaults(@NotNull String soundName, float volume) {
+            return defaults(soundName, volume, 1.0f);
+        }
+
+        public @NotNull Builder defaults(@NotNull String soundName) {
+            return defaults(soundName, 1.0f);
+        }
+
+        @Override
+        protected @NotNull Builder self() {
+            return this;
+        }
+
+        @Override
+        public @NotNull ConfiguredSound build() {
+            return new ConfiguredSound(buildManifest(), this.adapter);
+        }
     }
+
 
 }

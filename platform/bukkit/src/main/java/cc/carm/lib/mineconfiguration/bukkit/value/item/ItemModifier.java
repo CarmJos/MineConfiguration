@@ -1,13 +1,10 @@
 package cc.carm.lib.mineconfiguration.bukkit.value.item;
 
-import cc.carm.lib.configuration.core.value.type.ConfiguredList;
-import cc.carm.lib.mineconfiguration.bukkit.utils.TextParser;
+import cc.carm.lib.configuration.value.text.data.TextContents;
+import cc.carm.lib.configuration.value.text.function.ContentHandler;
 import cc.carm.lib.mineconfiguration.bukkit.value.ConfiguredMessage;
-import cc.carm.lib.mineconfiguration.bukkit.value.ConfiguredMessageList;
-import cc.carm.lib.mineconfiguration.common.utils.ParamsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -17,39 +14,33 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
+public abstract class ItemModifier<S extends ItemModifier<S, R>, R>
+        extends ContentHandler<Player, S> {
 
     public static final @NotNull Pattern LORE_INSERT_PATTERN = Pattern.compile("^(?:\\{(.*)})?#(.*)#(?:\\{(-?\\d+)(?:,(-?\\d+))?})?$");
 
     protected final @NotNull Function<@NotNull Player, @Nullable ItemStack> itemProvider;
 
-    protected @NotNull Map<String, Object> placeholders = new HashMap<>();
-    protected @NotNull String[] params;
-    protected @NotNull Object[] values;
-
-    protected final @NotNull Map<String, LoreContent<?>> insertLore = new HashMap<>();
-
     protected @NotNull BiConsumer<ItemStack, Player> itemConsumer;
     protected @NotNull BiConsumer<ItemMeta, Player> metaConsumer;
 
     protected ItemModifier(@NotNull Function<@NotNull Player, @Nullable ItemStack> itemProvider) {
+        super();
         this.itemProvider = itemProvider;
-        this.params = new String[0];
-        this.values = new Object[0];
-        itemConsumer = (item, player) -> {
+        this.itemConsumer = (item, player) -> {
         };
-        metaConsumer = (meta, player) -> {
+        this.metaConsumer = (meta, player) -> {
         };
+        this.lineSeparator = " ";
     }
-
-    protected abstract @NotNull S getThis();
 
     public abstract @Nullable R get(Player player);
 
@@ -59,14 +50,12 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
-        Map<String, Object> finalPlaceholders = buildPlaceholders();
-
         String name = meta.getDisplayName();
         if (!name.isEmpty()) {
-            meta.setDisplayName(TextParser.parseText(player, name, finalPlaceholders));
+            meta.setDisplayName(parse(player, name));
         }
 
-        List<String> parsedLore = parseLore(player, meta.getLore(), insertLore, finalPlaceholders);
+        List<String> parsedLore = parseLore(player, meta.getLore());
         if (!parsedLore.isEmpty()) {
             meta.setLore(parsedLore);
         }
@@ -78,78 +67,17 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
 
     public S handleMeta(@NotNull BiConsumer<ItemMeta, Player> modifier) {
         this.metaConsumer = this.metaConsumer.andThen(modifier);
-        return getThis();
+        return self();
     }
 
     public S handleItem(@NotNull BiConsumer<ItemStack, Player> modifier) {
         this.itemConsumer = this.itemConsumer.andThen(modifier);
-        return getThis();
+        return self();
     }
 
-    public S params(String[] params) {
-        this.params = params;
-        return getThis();
-    }
-
-    public S values(Object... values) {
-        this.values = values;
-        return getThis();
-    }
-
-    public S placeholders(@NotNull Map<String, Object> placeholders) {
-        this.placeholders = placeholders;
-        return getThis();
-    }
-
-    public S placeholders(@NotNull Consumer<Map<String, Object>> consumer) {
-        Map<String, Object> placeholders = new HashMap<>();
-        consumer.accept(placeholders);
-        return placeholders(placeholders);
-    }
-
-    public S insertLore(@NotNull String path, @NotNull LoreContent<?> content) {
-        insertLore.put(path, content);
-        return getThis();
-    }
-
-    public S insertLore(@NotNull String path, @NotNull List<String> content) {
-        return insertLore(path, content, false);
-    }
-
-    public S insertLore(@NotNull String path, @NotNull List<String> content, boolean original) {
-        return insertLore(path, LoreContent.of(content, original));
-    }
-
-    public S insertLore(@NotNull String path, @NotNull String... content) {
-        return insertLore(path, Arrays.asList(content));
-    }
-
-    public S insertLore(@NotNull String path, @NotNull ConfiguredList<String> content) {
-        return insertLore(path, content.copy());
-    }
-
-    public S insertLore(@NotNull String path,
-                        @NotNull ConfiguredMessage<String> content, @NotNull Object... params) {
-        return insertLore(path, new LoreContent<ConfiguredMessage<String>>(content, false) {
-            @Override
-            public List<String> parse(CommandSender receiver) {
-                String str = getSource().parse(receiver, params);
-                if (str == null || str.isEmpty()) return Collections.emptyList();
-                return Collections.singletonList(str);
-            }
-        });
-    }
-
-    public S insertLore(@NotNull String path,
-                        @NotNull ConfiguredMessageList<String> content, @NotNull Object... params) {
-        return insertLore(path, new LoreContent<ConfiguredMessageList<String>>(content, false) {
-            @Override
-            public List<String> parse(CommandSender receiver) {
-                List<String> list = getSource().parse(receiver, params);
-                if (list == null || list.isEmpty()) return Collections.emptyList();
-                return list;
-            }
-        });
+    public S insert(@NotNull String key, @NotNull ConfiguredMessage<?> message,
+                    @NotNull Object... values) {
+        return insert(key, receiver -> message.parse(receiver, values));
     }
 
     public S amount(int amount) {
@@ -202,72 +130,12 @@ public abstract class ItemModifier<S extends ItemModifier<S, R>, R> {
         });
     }
 
-
-    protected Map<String, Object> buildPlaceholders() {
-        Map<String, Object> finalPlaceholders = new HashMap<>();
-        finalPlaceholders.putAll(ParamsUtils.buildParams(params, values));
-        finalPlaceholders.putAll(this.placeholders);
-        return finalPlaceholders;
+    public List<String> parseLore(@Nullable Player player, @Nullable List<String> current) {
+        if (current == null || current.isEmpty()) return new ArrayList<>();
+        List<String> parsed = new ArrayList<>();
+        handle(TextContents.of(current, new HashMap<>()), player, parsed::add);
+        return parsed;
     }
 
-    public static List<String> parseLore(@Nullable Player player, @Nullable List<String> lore,
-                                         @NotNull Map<String, LoreContent<?>> insertedLore,
-                                         @NotNull Map<String, Object> placeholders) {
-        List<String> parsedLore = new ArrayList<>();
-        if (lore == null || lore.isEmpty()) return parsedLore;
 
-        for (String line : lore) {
-            Matcher matcher = LORE_INSERT_PATTERN.matcher(line);
-            if (!matcher.matches()) {
-                parsedLore.add(TextParser.parseText(player, line, placeholders));
-                continue;
-            }
-
-            String path = matcher.group(2);
-            LoreContent<?> content = insertedLore.get(path);
-            if (content == null) continue;
-
-            String prefix = Optional.ofNullable(matcher.group(1))
-                    .map(s -> TextParser.parseText(player, s, placeholders))
-                    .orElse("");
-            int offset1 = Optional.ofNullable(matcher.group(3))
-                    .map(Integer::parseInt).orElse(0);
-            Integer offset2 = Optional.ofNullable(matcher.group(4))
-                    .map(Integer::parseInt).orElse(null);
-
-            List<String> inserted = parseLoreLine(
-                    player, content, placeholders, prefix,
-                    offset2 == null ? 0 : offset1, offset2 == null ? offset1 : offset2
-            );
-
-            if (content.isOriginal()) {
-                parsedLore.addAll(inserted);
-            } else {
-                parsedLore.addAll(TextParser.parseList(player, inserted, placeholders));
-            }
-        }
-        return parsedLore;
-    }
-
-    public static List<String> parseLoreLine(@Nullable Player player, @NotNull LoreContent<?> content,
-                                             @NotNull Map<String, Object> placeholders,
-                                             @NotNull String parsedPrefix, int upOffset, int downOffset) {
-        List<String> lore = content.parse(player);
-        if (lore.isEmpty()) return Collections.emptyList();
-
-        upOffset = Math.max(0, upOffset);
-        downOffset = Math.max(0, downOffset);
-
-        List<String> finalLore = new ArrayList<>();
-
-        for (int i = 0; i < upOffset; i++) finalLore.add(" ");
-        if (content.isOriginal()) {
-            lore.stream().map(s -> parsedPrefix + s).forEach(finalLore::add);
-        } else {
-            lore.stream().map(s -> parsedPrefix + TextParser.parseText(player, s, placeholders)).forEach(finalLore::add);
-        }
-        for (int i = 0; i < downOffset; i++) finalLore.add(" ");
-
-        return finalLore;
-    }
 }

@@ -36,12 +36,16 @@ public class SoundConfig {
         this.pitch = pitch;
     }
 
-    public void playTo(Player player) {
-        if (type == null) return;
-        player.playSound(player.getLocation(), type, volume, pitch);
+    public void playTo(@NotNull Player player) {
+        playTo(player, player.getLocation());
     }
 
-    public void playAt(Location location) {
+    public void playTo(@NotNull Player player, @NotNull Location location) {
+        if (type == null) return;
+        player.playSound(location, type, volume, pitch);
+    }
+
+    public void playAt(@NotNull Location location) {
         if (type == null) return;
         if (location.getWorld() == null) return;
         location.getWorld().playSound(location, type, volume, pitch);
@@ -49,6 +53,10 @@ public class SoundConfig {
 
     public void playToAll() {
         Bukkit.getOnlinePlayers().forEach(this::playTo);
+    }
+
+    public void playToAll(@NotNull Location location) {
+        Bukkit.getOnlinePlayers().forEach(player -> playTo(player, location));
     }
 
     public @NotNull String getTypeName() {

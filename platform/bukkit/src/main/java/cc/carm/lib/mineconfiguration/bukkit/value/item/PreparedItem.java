@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.function.Function;
 
 public class PreparedItem extends ItemModifier<PreparedItem, ItemStack> {
@@ -29,9 +30,21 @@ public class PreparedItem extends ItemModifier<PreparedItem, ItemStack> {
         return item;
     }
 
-    @Override
-    public @NotNull PreparedItem getThis() {
-        return this;
+    public @Nullable Map<Integer, ItemStack> give(Player player) {
+        @Nullable ItemStack item = get(player);
+        if (item == null) return null;
+        return player.getInventory().addItem(item);
     }
 
+    public boolean giveOrDrop(Player player) {
+        @Nullable Map<Integer, ItemStack> left = give(player);
+        if (left == null) return false;
+        left.values().forEach(item -> player.getWorld().dropItem(player.getLocation(), item));
+        return true;
+    }
+
+    @Override
+    public PreparedItem self() {
+        return this;
+    }
 }

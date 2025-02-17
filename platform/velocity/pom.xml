@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mineconfiguration-parent</artifactId>
         <groupId>cc.carm.lib</groupId>
-        <version>2.9.3</version>
+        <version>3.0.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -21,6 +21,13 @@
     <name>MineConfiguration-Velocity</name>
     <description>轻松(做)配置，适用于Velocity的版本，可用JSON与YAML格式。</description>
 
+    <repositories>
+        <repository>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
 
         <dependency>
@@ -32,24 +39,15 @@
 
         <dependency>
             <groupId>cc.carm.lib</groupId>
-            <artifactId>yamlcommentwriter</artifactId>
-            <version>${deps.yamlcommentwriter.version}</version>
+            <artifactId>easyconfiguration-yaml</artifactId>
+            <version>${deps.easyconfifuration.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>velocitycord-api</artifactId>
-            <version>1.18-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>velocitycord-api</artifactId>
-            <version>1.18-R0.1-SNAPSHOT</version>
-            <type>javadoc</type>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>3.4.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 

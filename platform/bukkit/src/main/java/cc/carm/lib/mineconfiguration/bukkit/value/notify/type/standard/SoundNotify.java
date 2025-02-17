@@ -1,7 +1,7 @@
-package cc.carm.lib.mineconfiguration.bukkit.value.notify.type;
+package cc.carm.lib.mineconfiguration.bukkit.value.notify.type.standard;
 
 import cc.carm.lib.mineconfiguration.bukkit.data.SoundConfig;
-import cc.carm.lib.mineconfiguration.bukkit.value.notify.NotifyType;
+import cc.carm.lib.mineconfiguration.bukkit.value.notify.type.NotifyType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

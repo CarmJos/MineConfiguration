@@ -1,52 +1,64 @@
 package cc.carm.lib.mineconfiguration.bungee.value;
 
-import cc.carm.lib.configuration.core.value.ValueManifest;
-import cc.carm.lib.mineconfiguration.bungee.BungeeConfigValue;
-import cc.carm.lib.mineconfiguration.bungee.builder.message.BungeeMessageValueBuilder;
-import cc.carm.lib.mineconfiguration.bungee.data.TextConfig;
-import cc.carm.lib.mineconfiguration.common.value.ConfigMessage;
+import cc.carm.lib.configuration.value.ValueManifest;
+import cc.carm.lib.configuration.value.text.ConfiguredText;
+import cc.carm.lib.configuration.value.text.data.TextContents;
+import cc.carm.lib.easyplugin.utils.ColorParser;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-public class ConfiguredMessage<M> extends ConfigMessage<M, TextConfig, CommandSender> {
+public class ConfiguredMessage extends ConfiguredText<BaseComponent[], CommandSender> {
 
     @NotNull
-    public static <M> BungeeMessageValueBuilder<@Nullable M> create(@NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser) {
-        return BungeeConfigValue.builder().createMessage().asValue(messageParser);
+    public static ConfiguredMessage.Builder create() {
+        return new Builder();
     }
 
-    public static BungeeMessageValueBuilder<String> asString() {
-        return BungeeConfigValue.builder().createMessage().asStringValue();
+    public static ConfiguredMessage ofString(@NotNull String... messages) {
+        return create().defaults(messages).build();
     }
 
-    public static ConfiguredMessage<String> ofString() {
-        return asString().build();
+    public ConfiguredMessage(@NotNull ValueManifest<TextContents> manifest,
+                             @NotNull BiFunction<CommandSender, String, String> parser,
+                             @NotNull BiFunction<CommandSender, String, BaseComponent[]> compiler,
+                             @NotNull BiConsumer<CommandSender, List<BaseComponent[]>> dispatcher,
+                             @NotNull String[] params) {
+        super(manifest, parser, compiler, dispatcher, params);
     }
 
-    public static ConfiguredMessage<String> ofString(@NotNull String defaultMessage) {
-        return asString().defaults(defaultMessage).build();
+    public void print(Object... values) {
+        prepare(values).to(ProxyServer.getInstance().getConsole());
     }
 
-    public ConfiguredMessage(@NotNull ValueManifest<TextConfig> manifest, @NotNull String[] params,
-                             @NotNull BiFunction<@Nullable CommandSender, @NotNull String, @Nullable M> messageParser,
-                             @NotNull BiConsumer<@NotNull CommandSender, @NotNull M> sendFunction) {
-        super(manifest, TextConfig.class, params, messageParser, sendFunction, TextConfig::of);
-    }
+    public static class Builder extends ConfiguredText.Builder<BaseComponent[], CommandSender, Builder> {
 
-    @Override
-    public @NotNull Collection<CommandSender> getAllReceivers() {
-        List<CommandSender> senders = new ArrayList<>();
-        senders.add(ProxyServer.getInstance().getConsole());
-        senders.addAll(ProxyServer.getInstance().getPlayers());
-        return senders;
+        public Builder() {
+            super();
+            this.parser = (sender, message) -> ColorParser.parse(message);
+            this.compiler = (sender, message) -> new BaseComponent[]{new TextComponent(message)};
+            this.dispatcher = (sender, message) -> {
+                for (BaseComponent[] component : message) {
+                    sender.sendMessage(component);
+                }
+            };
+        }
+
+        @Override
+        public @NotNull ConfiguredMessage build() {
+            return new ConfiguredMessage(buildManifest(), this.parser, this.compiler, this.dispatcher, this.params);
+        }
+
+        @Override
+        public @NotNull ConfiguredMessage.Builder self() {
+            return this;
+        }
     }
 
 

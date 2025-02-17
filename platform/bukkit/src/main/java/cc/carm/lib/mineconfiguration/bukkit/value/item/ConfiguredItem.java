@@ -1,11 +1,18 @@
 package cc.carm.lib.mineconfiguration.bukkit.value.item;
 
-import cc.carm.lib.configuration.core.value.ValueManifest;
-import cc.carm.lib.configuration.core.value.type.ConfiguredSection;
-import cc.carm.lib.mineconfiguration.bukkit.builder.item.ItemConfigBuilder;
+import cc.carm.lib.configuration.adapter.ValueAdapter;
+import cc.carm.lib.configuration.adapter.ValueType;
+import cc.carm.lib.configuration.builder.AbstractConfigBuilder;
+import cc.carm.lib.configuration.source.ConfigurationHolder;
+import cc.carm.lib.configuration.value.ValueManifest;
+import cc.carm.lib.configuration.value.standard.ConfiguredValue;
+import cc.carm.lib.configuration.value.text.function.ContentHandler;
 import com.cryptomorin.xseries.XItemStack;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -13,48 +20,48 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
-public class ConfiguredItem extends ConfiguredSection<ItemStack> {
+public class ConfiguredItem extends ConfiguredValue<ItemStack> {
 
-
-    public static ItemConfigBuilder create() {
-        return new ItemConfigBuilder();
+    public static Builder create() {
+        return new Builder();
     }
 
+    public static final @NotNull ValueType<ItemStack> ITEM_TYPE = ValueType.of(ItemStack.class);
+    public static final ValueAdapter<ItemStack> ITEM_ADAPTER = new ValueAdapter<>(ITEM_TYPE,
+            (holder, type, value) -> XItemStack.serialize(value),
+            (holder, type, value) -> {
+                ConfigurationSection section = (ConfigurationSection) value;
+                return XItemStack.deserialize(section);
+            }
+    );
+
+    protected final @NotNull UnaryOperator<String> paramBuilder;
     protected final @NotNull String[] params;
 
-    public ConfiguredItem(@NotNull ValueManifest<ItemStack> manifest, @NotNull String[] params) {
-        super(
-                manifest, ItemStack.class,
-                (data, v) -> XItemStack.deserialize((ConfigurationSection) data.getSource()),
-                XItemStack::serialize
-        );
+    public ConfiguredItem(@NotNull ValueManifest<ItemStack> manifest, ValueAdapter<ItemStack> adapter,
+                          @NotNull UnaryOperator<String> paramBuilder, @NotNull String[] params) {
+        super(manifest, adapter);
+        this.paramBuilder = paramBuilder;
         this.params = params;
     }
 
-    public @NotNull String[] getParams() {
-        return params;
-    }
-
     @Override
-    public @NotNull Optional<@Nullable ItemStack> getOptional() {
+    public @NotNull Optional<@Nullable ItemStack> optional() {
         return Optional.ofNullable(super.get());
     }
 
     @Override
     public @Nullable ItemStack get() {
-        return getOptional().map(ItemStack::clone).orElse(null);
+        return optional().map(ItemStack::clone).orElse(null);
     }
 
     public @Nullable ItemStack get(Consumer<ItemStack> modifier) {
-        return getOptional().map(item -> {
+        return optional().map(item -> {
             modifier.accept(item);
             return item;
         }).orElse(null);
-    }
-
-    public @NotNull PreparedItem prepare(@NotNull Object... values) {
-        return PreparedItem.of(player -> get()).params(params).values(values);
     }
 
     public @Nullable ItemStack get(@Nullable Player player) {
@@ -65,15 +72,18 @@ public class ConfiguredItem extends ConfiguredSection<ItemStack> {
         return prepare(values).get(player);
     }
 
-    public @Nullable ItemStack get(@Nullable Player player, @NotNull String[] params, @NotNull Object[] values) {
-        return prepare().params(params).values(values).get(player);
-    }
-
     public @Nullable ItemStack get(@Nullable Player player,
                                    @NotNull Map<String, Object> placeholders) {
         return prepare().placeholders(placeholders).get(player);
     }
 
+    public @Nullable Map<Integer, ItemStack> give(@NotNull Player player, @NotNull Object... values) {
+        return prepare(values).give(player);
+    }
+
+    public @NotNull PreparedItem prepare(@NotNull Object... values) {
+        return PreparedItem.of(player -> get()).params(params).placeholders(values);
+    }
 
     public void modifyItem(Consumer<ItemStack> modifier) {
         ItemStack item = get();
@@ -102,5 +112,105 @@ public class ConfiguredItem extends ConfiguredSection<ItemStack> {
         if (lore.length == 0) setLore((List<String>) null);
         else setLore(Arrays.asList(lore));
     }
+
+
+    public static class Builder extends AbstractConfigBuilder<ItemStack, ConfiguredItem, ConfigurationHolder<?>, Builder> {
+
+        protected @Nullable ItemStack item = null;
+        protected @NotNull String[] params = new String[0];
+        protected @NotNull UnaryOperator<String> paramFormatter = ContentHandler.DEFAULT_PARAM_BUILDER;
+
+        public Builder() {
+            super(ConfigurationHolder.class, ITEM_TYPE);
+            defaults(() -> item);
+        }
+
+        @Override
+        public @NotNull Builder defaults(@Nullable ItemStack item) {
+            this.item = item;
+            return this;
+        }
+
+        public Builder defaults(@NotNull Material type) {
+            return defaults(new ItemStack(type));
+        }
+
+        public Builder defaults(Consumer<ItemStack> consumer) {
+            if (this.item == null) return self();
+            consumer.accept(this.item);
+            return self();
+        }
+
+        public Builder defaultMeta(Consumer<ItemMeta> consumer) {
+            return defaults(stack -> {
+                ItemMeta meta = stack.getItemMeta();
+                consumer.accept(meta);
+                stack.setItemMeta(meta);
+            });
+        }
+
+        public Builder defaultType(@NotNull Material type) {
+            return defaults(new ItemStack(type));
+        }
+
+        public Builder defaultName(@Nullable String name) {
+            return defaultMeta(meta -> meta.setDisplayName(name));
+        }
+
+        @SuppressWarnings("deprecation")
+        public Builder defaultDataID(short dataID) {
+            return defaults(stack -> stack.setDurability(dataID));
+        }
+
+        public Builder defaultLore(@NotNull String... lore) {
+            return defaultLore(Arrays.asList(lore));
+        }
+
+        public Builder defaultLore(@NotNull List<String> lore) {
+            return defaultMeta(meta -> meta.setLore(lore));
+        }
+
+        public Builder defaultEnchants(@NotNull Map<Enchantment, Integer> enchants) {
+            return defaultMeta(meta -> enchants.forEach((enchant, level) -> meta.addEnchant(enchant, level, true)));
+        }
+
+        public Builder defaultEnchant(@NotNull Enchantment enchant, int level) {
+            return defaultEnchants(Collections.singletonMap(enchant, level));
+        }
+
+        public Builder defaultFlags(@NotNull Set<ItemFlag> flags) {
+            return defaultMeta(meta -> flags.forEach(meta::addItemFlags));
+        }
+
+        public Builder defaultFlags(@NotNull ItemFlag... flags) {
+            return defaultFlags(new LinkedHashSet<>(Arrays.asList(flags)));
+        }
+
+        public Builder formatParam(@NotNull UnaryOperator<String> paramFormatter) {
+            this.paramFormatter = paramFormatter;
+            return self();
+        }
+
+        public Builder params(@NotNull String... params) {
+            this.params = params;
+            return self();
+        }
+
+        public Builder params(@NotNull List<String> params) {
+            this.params = params.toArray(new String[0]);
+            return self();
+        }
+
+        @Override
+        protected @NotNull Builder self() {
+            return this;
+        }
+
+        @Override
+        public @NotNull ConfiguredItem build() {
+            return new ConfiguredItem(buildManifest(), ITEM_ADAPTER, paramFormatter, params);
+        }
+    }
+
 
 }

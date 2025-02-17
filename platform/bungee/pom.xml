@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mineconfiguration-parent</artifactId>
         <groupId>cc.carm.lib</groupId>
-        <version>2.9.3</version>
+        <version>3.0.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -19,7 +19,7 @@
     <packaging>jar</packaging>
 
     <name>MineConfiguration-Bungee</name>
-    <description>轻松(做)配置，适用于BungeeCord的版本，可用JSON与YAML格式。</description>
+    <description>EasyConfiguration for BungeeCord.</description>
 
     <dependencies>
 
@@ -32,24 +32,17 @@
 
         <dependency>
             <groupId>cc.carm.lib</groupId>
-            <artifactId>yamlcommentwriter</artifactId>
-            <version>${deps.yamlcommentwriter.version}</version>
+            <artifactId>easyconfiguration-yaml</artifactId>
+            <version>${deps.easyconfifuration.version}</version>
             <scope>compile</scope>
         </dependency>
 
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>1.20-R0.2</version>
             <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.20-R0.2</version>
-            <type>javadoc</type>
             <scope>provided</scope>
         </dependency>
 
