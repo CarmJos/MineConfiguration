@@ -55,7 +55,7 @@ public class BukkitSource extends FileConfigSource<BukkitSection, YamlConfigurat
     @Override
     public void save() throws Exception {
         CommentedYAMLWriter writer = new CommentedYAMLWriter(
-                String.valueOf(this.separator()), 2,
+                String.valueOf(this.pathSeparator()), 2,
                 holder.options().get(CommentableOptions.COMMENT_EMPTY_VALUE)
         );
         try {

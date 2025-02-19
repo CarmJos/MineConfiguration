@@ -23,7 +23,6 @@ public class BukkitSection implements ConfigureSection {
         this.data = data;
     }
 
-    @Override
     public @NotNull BukkitSource source() {
         return this.source;
     }
@@ -50,6 +49,11 @@ public class BukkitSection implements ConfigureSection {
     @Override
     public void set(@NotNull String path, @Nullable Object value) {
         data().set(path, value);
+    }
+
+    @Override
+    public void remove(@NotNull String path) {
+        data().set(path, null);
     }
 
     @Override
