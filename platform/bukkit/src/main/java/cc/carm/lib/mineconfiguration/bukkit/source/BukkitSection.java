@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -57,22 +56,24 @@ public class BukkitSection implements ConfigureSection {
     }
 
     @Override
-    public boolean contains(@NotNull String path) {
-        return data().contains(path);
-    }
-
-    @Override
-    public @Nullable List<?> getList(@NotNull String path) {
-        return data().getList(path);
-    }
-
-    @Override
     public @Nullable ConfigureSection getSection(@NotNull String path) {
         Object value = get(path);
         if (value instanceof ConfigureSection) {
             return (ConfigureSection) value;
+        } else if (value instanceof ConfigurationSection) {
+            return new BukkitSection(source(), this, (ConfigurationSection) value);
         }
         return null;
+    }
+
+    @Override
+    public @NotNull ConfigureSection createSection(@NotNull Map<?, ?> data) {
+        throw new UnsupportedOperationException("BukkitSection does not support this operation");
+    }
+
+    @Override
+    public @NotNull ConfigureSection computeSection(@NotNull String path) {
+        return new BukkitSection(source(), this, data.createSection(path));
     }
 
     @Override
