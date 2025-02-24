@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,12 +14,14 @@ public class BukkitSection implements ConfigureSection {
 
     protected final @NotNull BukkitSource source;
     protected final @Nullable BukkitSection parent;
+    protected final @NotNull String path;
     protected final @NotNull ConfigurationSection data;
 
     public BukkitSection(@NotNull BukkitSource source, @Nullable BukkitSection parent,
-                         @NotNull ConfigurationSection data) {
+                         @NotNull String path, @NotNull ConfigurationSection data) {
         this.source = source;
         this.parent = parent;
+        this.path = path;
         this.data = data;
     }
 
@@ -29,6 +32,11 @@ public class BukkitSection implements ConfigureSection {
     @Override
     public @Nullable BukkitSection parent() {
         return this.parent;
+    }
+
+    @Override
+    public @NotNull String path() {
+        return this.path;
     }
 
     public @NotNull ConfigurationSection data() {
@@ -42,11 +50,23 @@ public class BukkitSection implements ConfigureSection {
 
     @Override
     public @NotNull @UnmodifiableView Map<String, Object> getValues(boolean deep) {
-        return data().getValues(deep);
+
+        Map<String, Object> original = data().getValues(deep);
+        // wrap all ConfigurationSection
+        for (Map.Entry<String, Object> entry : original.entrySet()) {
+            if (entry.getValue() instanceof ConfigurationSection) {
+                original.put(entry.getKey(), createSection(entry.getKey(), (ConfigurationSection) entry.getValue()));
+            }
+        }
+
+        return Collections.unmodifiableMap(original);
     }
 
     @Override
     public void set(@NotNull String path, @Nullable Object value) {
+        if (value instanceof BukkitSection) { // unwrap
+            value = ((BukkitSection) value).data();
+        }
         data().set(path, value);
     }
 
@@ -60,27 +80,24 @@ public class BukkitSection implements ConfigureSection {
         Object value = get(path);
         if (value instanceof ConfigureSection) {
             return (ConfigureSection) value;
-        } else if (value instanceof ConfigurationSection) {
-            return new BukkitSection(source(), this, (ConfigurationSection) value);
         }
         return null;
     }
 
-    @Override
-    public @NotNull ConfigureSection createSection(@NotNull Map<?, ?> data) {
-        throw new UnsupportedOperationException("BukkitSection does not support this operation");
+    public @NotNull BukkitSection createSection(@NotNull String path, @NotNull ConfigurationSection section) {
+        return new BukkitSection(source(), this, path, section);
     }
 
     @Override
-    public @NotNull ConfigureSection computeSection(@NotNull String path) {
-        return new BukkitSection(source(), this, data.createSection(path));
+    public @NotNull BukkitSection createSection(@NotNull String path, @NotNull Map<?, ?> data) {
+        return createSection(path, data().createSection(path, data));
     }
 
     @Override
     public @Nullable Object get(@NotNull String path) {
         Object value = data().get(path);
-        if (value instanceof ConfigurationSection) {
-            return new BukkitSection(source(), this, (ConfigurationSection) value);
+        if (value instanceof ConfigurationSection) { // wrap
+            return createSection(path, (ConfigurationSection) value);
         }
         return value;
     }

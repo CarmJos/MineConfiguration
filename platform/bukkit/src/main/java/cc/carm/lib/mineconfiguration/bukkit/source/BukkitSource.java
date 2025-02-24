@@ -38,7 +38,7 @@ public class BukkitSource extends FileConfigSource<BukkitSection, YamlConfigurat
     }
 
     @Override
-    protected BukkitSource self() {
+    protected @NotNull BukkitSource self() {
         return this;
     }
 
@@ -68,7 +68,7 @@ public class BukkitSource extends FileConfigSource<BukkitSection, YamlConfigurat
     @Override
     protected void onReload() throws Exception {
         YamlConfiguration configuration = fileReader(YamlConfiguration::loadConfiguration);
-        this.rootSection = new BukkitSection(this, null, configuration);
+        this.rootSection = new BukkitSection(this, null, "", configuration);
     }
 
     @Override
