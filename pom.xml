@@ -10,7 +10,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 
-        <deps.easyconfifuration.version>4.0.9</deps.easyconfifuration.version>
+        <deps.easyconfifuration.version>4.0.10</deps.easyconfifuration.version>
         <deps.yamlcommentwriter.version>1.2.1</deps.yamlcommentwriter.version>
         <deps.easyplugin.version>1.5.12</deps.easyplugin.version>
     </properties>
