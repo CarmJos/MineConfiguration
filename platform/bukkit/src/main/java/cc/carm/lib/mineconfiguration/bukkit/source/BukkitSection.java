@@ -6,9 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class BukkitSection implements ConfigureSection {
 
@@ -60,6 +58,38 @@ public class BukkitSection implements ConfigureSection {
         }
 
         return Collections.unmodifiableMap(original);
+    }
+
+    public Map<String, Object> toMap(ConfigurationSection section) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        for (String key : section.getKeys(false)) {
+            Object value = section.get(key);
+            if (value instanceof ConfigurationSection) {
+                map.put(key, toMap((ConfigurationSection) value));
+            } else if (value instanceof BukkitSection) {
+                map.put(key, toMap(((BukkitSection) value).data()));
+            } else if (value instanceof List<?>) {
+                List<Object> list = new ArrayList<>();
+                for (Object o : (List<?>) value) {
+                    if (o instanceof ConfigurationSection) {
+                        list.add(toMap((ConfigurationSection) o));
+                    } else if (o instanceof BukkitSection) {
+                        list.add(toMap(((BukkitSection) o).data()));
+                    } else {
+                        list.add(o);
+                    }
+                }
+                map.put(key, list);
+            } else {
+                map.put(key, value);
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public @NotNull @UnmodifiableView Map<String, Object> asMap() {
+        return toMap(data());
     }
 
     @Override

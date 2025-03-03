@@ -4,12 +4,12 @@ import cc.carm.lib.configuration.adapter.ValueAdapter;
 import cc.carm.lib.configuration.adapter.ValueType;
 import cc.carm.lib.configuration.builder.AbstractConfigBuilder;
 import cc.carm.lib.configuration.source.ConfigurationHolder;
+import cc.carm.lib.configuration.source.section.ConfigureSection;
 import cc.carm.lib.configuration.value.ValueManifest;
 import cc.carm.lib.configuration.value.standard.ConfiguredValue;
 import cc.carm.lib.configuration.value.text.function.ContentHandler;
 import com.cryptomorin.xseries.XItemStack;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -32,8 +32,8 @@ public class ConfiguredItem extends ConfiguredValue<ItemStack> {
     public static final ValueAdapter<ItemStack> ITEM_ADAPTER = new ValueAdapter<>(ITEM_TYPE,
             (holder, type, value) -> XItemStack.serialize(value),
             (holder, type, value) -> {
-                ConfigurationSection section = (ConfigurationSection) value;
-                return XItemStack.deserialize(section);
+                ConfigureSection section = (ConfigureSection) value;
+                return XItemStack.deserialize(section.asMap());
             }
     );
 
