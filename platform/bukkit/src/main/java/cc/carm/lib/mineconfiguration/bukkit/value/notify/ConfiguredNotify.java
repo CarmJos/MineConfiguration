@@ -40,7 +40,7 @@ public class ConfiguredNotify extends ConfiguredList<NotifyConfig> {
     protected final @NotNull UnaryOperator<String> paramBuilder;
     protected final @NotNull String[] params;
 
-    public ConfiguredNotify(@NotNull ValueManifest<List<NotifyConfig>> manifest,
+    public ConfiguredNotify(@NotNull ValueManifest<List<NotifyConfig>, NotifyConfig> manifest,
                             @NotNull ValueAdapter<NotifyConfig> adapter,
                             @NotNull UnaryOperator<String> paramBuilder, @NotNull String[] params) {
         super(manifest, ArrayList::new, adapter);
@@ -65,7 +65,7 @@ public class ConfiguredNotify extends ConfiguredList<NotifyConfig> {
     }
 
 
-    public static class NotifyBuilder extends AbstractConfigBuilder<List<NotifyConfig>, ConfiguredNotify, ConfigurationHolder<?>, NotifyBuilder> {
+    public static class NotifyBuilder extends AbstractConfigBuilder<List<NotifyConfig>, NotifyConfig, ConfiguredNotify, ConfigurationHolder<?>, NotifyBuilder> {
 
         protected final @NotNull List<NotifyConfig> notifications = new ArrayList<>();
 

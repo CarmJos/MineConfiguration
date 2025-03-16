@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mineconfiguration-parent</artifactId>
         <groupId>cc.carm.lib</groupId>
-        <version>3.0.3</version>
+        <version>3.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <properties>
@@ -23,29 +23,29 @@
 
         <dependency>
             <groupId>cc.carm.lib</groupId>
-            <artifactId>easyconfiguration-core</artifactId>
-            <version>${deps.easyconfifuration.version}</version>
+            <artifactId>configured-core</artifactId>
+            <version>${deps.configured.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>cc.carm.lib</groupId>
-            <artifactId>easyconfiguration-feature-commentable</artifactId>
-            <version>${deps.easyconfifuration.version}</version>
+            <artifactId>configured-feature-commentable</artifactId>
+            <version>${deps.configured.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>cc.carm.lib</groupId>
-            <artifactId>easyconfiguration-feature-file</artifactId>
-            <version>${deps.easyconfifuration.version}</version>
+            <artifactId>configured-feature-file</artifactId>
+            <version>${deps.configured.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>cc.carm.lib</groupId>
-            <artifactId>easyconfiguration-feature-text</artifactId>
-            <version>${deps.easyconfifuration.version}</version>
+            <artifactId>configured-feature-text</artifactId>
+            <version>${deps.configured.version}</version>
             <scope>compile</scope>
         </dependency>
 

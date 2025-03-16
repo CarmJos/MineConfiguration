@@ -38,7 +38,7 @@ public class ConfiguredMessage<M> extends ConfiguredText<M, CommandSender> {
         return asString().defaults(messages).build();
     }
 
-    public ConfiguredMessage(@NotNull ValueManifest<TextContents> manifest,
+    public ConfiguredMessage(@NotNull ValueManifest<TextContents, TextContents> manifest,
                              @NotNull BiFunction<CommandSender, String, String> parser,
                              @NotNull BiFunction<CommandSender, String, M> compiler,
                              @NotNull BiConsumer<CommandSender, List<M>> dispatcher,

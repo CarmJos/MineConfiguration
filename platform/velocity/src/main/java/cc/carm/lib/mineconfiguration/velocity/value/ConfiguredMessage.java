@@ -23,7 +23,7 @@ public class ConfiguredMessage extends ConfiguredText<Component, Audience> {
         return create().defaults(messages).build();
     }
 
-    public ConfiguredMessage(@NotNull ValueManifest<TextContents> manifest,
+    public ConfiguredMessage(@NotNull ValueManifest<TextContents, TextContents> manifest,
                              @NotNull BiFunction<Audience, String, String> parser,
                              @NotNull BiFunction<Audience, String, Component> compiler,
                              @NotNull BiConsumer<Audience, List<Component>> dispatcher,

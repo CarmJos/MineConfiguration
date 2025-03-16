@@ -55,7 +55,7 @@ public class ConfiguredSound extends ConfiguredValue<SoundConfig> {
             }
     );
 
-    public ConfiguredSound(@NotNull ValueManifest<SoundConfig> manifest, @NotNull ValueAdapter<SoundConfig> adapter) {
+    public ConfiguredSound(@NotNull ValueManifest<SoundConfig, SoundConfig> manifest, @NotNull ValueAdapter<SoundConfig> adapter) {
         super(manifest, adapter);
     }
 
@@ -83,7 +83,7 @@ public class ConfiguredSound extends ConfiguredValue<SoundConfig> {
         Optional.ofNullable(get()).ifPresent(s -> s.playAt(location));
     }
 
-    public static class Builder extends AbstractConfigBuilder<SoundConfig, ConfiguredSound, ConfigurationHolder<?>, Builder> {
+    public static class Builder extends AbstractConfigBuilder<SoundConfig, SoundConfig, ConfiguredSound, ConfigurationHolder<?>, Builder> {
 
         protected @NotNull ValueAdapter<SoundConfig> adapter = SOUND_ADAPTER;
 

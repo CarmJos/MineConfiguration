@@ -55,7 +55,7 @@ public class ConfiguredTitle extends ConfiguredValue<TitleConfig> {
     protected final @NotNull UnaryOperator<String> paramBuilder;
     protected final @NotNull String[] params;
 
-    public ConfiguredTitle(@NotNull ValueManifest<TitleConfig> manifest, ValueAdapter<TitleConfig> adapter,
+    public ConfiguredTitle(@NotNull ValueManifest<TitleConfig, TitleConfig> manifest, ValueAdapter<TitleConfig> adapter,
                            @NotNull UnaryOperator<String> paramBuilder, @NotNull String[] params,
                            @NotNull ConfiguredTitle.TitleConsumer sendConsumer) {
         super(manifest, adapter);
@@ -150,7 +150,7 @@ public class ConfiguredTitle extends ConfiguredValue<TitleConfig> {
 
     }
 
-    public static class Builder extends AbstractConfigBuilder<TitleConfig, ConfiguredTitle, ConfigurationHolder<?>, Builder> {
+    public static class Builder extends AbstractConfigBuilder<TitleConfig, TitleConfig, ConfiguredTitle, ConfigurationHolder<?>, Builder> {
 
         protected @NotNull ValueAdapter<TitleConfig> adapter = TITLE_ADAPTER;
         protected @NotNull TitleConfig title = TitleConfig.of(null, null);

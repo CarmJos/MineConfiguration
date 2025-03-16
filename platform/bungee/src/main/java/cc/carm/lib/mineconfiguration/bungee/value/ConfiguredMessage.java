@@ -25,7 +25,7 @@ public class ConfiguredMessage extends ConfiguredText<BaseComponent[], CommandSe
         return create().defaults(messages).build();
     }
 
-    public ConfiguredMessage(@NotNull ValueManifest<TextContents> manifest,
+    public ConfiguredMessage(@NotNull ValueManifest<TextContents, TextContents> manifest,
                              @NotNull BiFunction<CommandSender, String, String> parser,
                              @NotNull BiFunction<CommandSender, String, BaseComponent[]> compiler,
                              @NotNull BiConsumer<CommandSender, List<BaseComponent[]>> dispatcher,

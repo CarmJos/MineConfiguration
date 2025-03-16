@@ -40,7 +40,7 @@ public class ConfiguredItem extends ConfiguredValue<ItemStack> {
     protected final @NotNull UnaryOperator<String> paramBuilder;
     protected final @NotNull String[] params;
 
-    public ConfiguredItem(@NotNull ValueManifest<ItemStack> manifest, ValueAdapter<ItemStack> adapter,
+    public ConfiguredItem(@NotNull ValueManifest<ItemStack, ItemStack> manifest, ValueAdapter<ItemStack> adapter,
                           @NotNull UnaryOperator<String> paramBuilder, @NotNull String[] params) {
         super(manifest, adapter);
         this.paramBuilder = paramBuilder;
@@ -114,7 +114,7 @@ public class ConfiguredItem extends ConfiguredValue<ItemStack> {
     }
 
 
-    public static class Builder extends AbstractConfigBuilder<ItemStack, ConfiguredItem, ConfigurationHolder<?>, Builder> {
+    public static class Builder extends AbstractConfigBuilder<ItemStack, ItemStack, ConfiguredItem, ConfigurationHolder<?>, Builder> {
 
         protected @Nullable ItemStack item = null;
         protected @NotNull String[] params = new String[0];
