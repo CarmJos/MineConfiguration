@@ -22,7 +22,7 @@ public class PreparedItem extends ItemModifier<PreparedItem, ItemStack> {
         super(itemProvider);
     }
 
-    public @Nullable ItemStack get(Player player) {
+    public @Nullable ItemStack get(@Nullable Player player) {
         @Nullable ItemStack item = itemProvider.apply(player);
         if (item == null) return null;
 
