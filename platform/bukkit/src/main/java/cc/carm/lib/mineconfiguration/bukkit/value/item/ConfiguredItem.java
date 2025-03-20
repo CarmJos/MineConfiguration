@@ -7,7 +7,6 @@ import cc.carm.lib.configuration.source.ConfigurationHolder;
 import cc.carm.lib.configuration.source.section.ConfigureSection;
 import cc.carm.lib.configuration.value.ValueManifest;
 import cc.carm.lib.configuration.value.standard.ConfiguredValue;
-import cc.carm.lib.configuration.value.text.function.ContentHandler;
 import cc.carm.lib.easyplugin.utils.ColorParser;
 import com.cryptomorin.xseries.XItemStack;
 import org.bukkit.Material;
@@ -22,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
 
 public class ConfiguredItem extends ConfiguredValue<ItemStack> {
 
@@ -40,15 +38,12 @@ public class ConfiguredItem extends ConfiguredValue<ItemStack> {
     );
 
     protected final @NotNull BiFunction<Player, String, String> parser;
-    protected final @NotNull UnaryOperator<String> paramBuilder;
     protected final @NotNull String[] params;
 
     public ConfiguredItem(@NotNull ValueManifest<ItemStack, ItemStack> manifest, ValueAdapter<ItemStack> adapter,
-                          @NotNull BiFunction<Player, String, String> parser,
-                          @NotNull UnaryOperator<String> paramBuilder, @NotNull String[] params) {
+                          @NotNull BiFunction<Player, String, String> parser, @NotNull String[] params) {
         super(manifest, adapter);
         this.parser = parser;
-        this.paramBuilder = paramBuilder;
         this.params = params;
     }
 
@@ -124,7 +119,6 @@ public class ConfiguredItem extends ConfiguredValue<ItemStack> {
         protected @Nullable ItemStack item = null;
         protected @NotNull String[] params = new String[0];
         protected @NotNull BiFunction<Player, String, String> parser = (player, message) -> ColorParser.parse(message);
-        protected @NotNull UnaryOperator<String> paramFormatter = ContentHandler.DEFAULT_PARAM_BUILDER;
 
         public Builder() {
             super(ConfigurationHolder.class, ITEM_TYPE);
@@ -197,11 +191,6 @@ public class ConfiguredItem extends ConfiguredValue<ItemStack> {
             return self();
         }
 
-        public Builder formatParam(@NotNull UnaryOperator<String> paramFormatter) {
-            this.paramFormatter = paramFormatter;
-            return self();
-        }
-
         public Builder params(@NotNull String... params) {
             this.params = params;
             return self();
@@ -219,7 +208,7 @@ public class ConfiguredItem extends ConfiguredValue<ItemStack> {
 
         @Override
         public @NotNull ConfiguredItem build() {
-            return new ConfiguredItem(buildManifest(), ITEM_ADAPTER, parser, paramFormatter, params);
+            return new ConfiguredItem(buildManifest(), ITEM_ADAPTER, parser, params);
         }
     }
 

@@ -46,7 +46,7 @@ public class ConfiguredMessage<M> extends ConfiguredText<M, CommandSender> {
         super(manifest, parser, compiler, dispatcher, params);
     }
 
-    public void sendActionBar(Player player, Object... values) {
+    public void sendActionBar(@NotNull Player player, Object... values) {
         ActionBar.sendActionBar(player, prepare(values).parseLine(player, (sender, message) -> message));
     }
 

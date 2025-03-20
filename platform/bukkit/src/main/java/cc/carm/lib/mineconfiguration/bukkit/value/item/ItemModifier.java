@@ -20,13 +20,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 public abstract class ItemModifier<S extends ItemModifier<S, R>, R>
         extends ContentHandler<Player, S> {
-
-    public static final @NotNull Pattern LORE_INSERT_PATTERN = Pattern.compile("^(?:\\{(.*)})?#(.*)#(?:\\{(-?\\d+)(?:,(-?\\d+))?})?$");
-
+    
     protected final @NotNull Function<@NotNull Player, @Nullable ItemStack> itemProvider;
 
     protected @NotNull BiConsumer<ItemStack, Player> itemConsumer;
