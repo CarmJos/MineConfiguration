@@ -8,17 +8,25 @@ import cc.carm.lib.mineconfiguration.common.AbstractConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
 public class MineConfiguration extends AbstractConfiguration<ConfigurationHolder<BukkitSource>> {
 
-    public static ConfigurationHolder<BukkitSource> from(File file, String source) {
+    public static ConfigurationHolder<BukkitSource> from(@NotNull File file,
+                                                         @Nullable String source) {
         return BukkitConfigFactory.from(file).resourcePath(source).build();
     }
 
-    public static ConfigurationHolder<BukkitSource> from(Plugin plugin, String fileName) {
-        return from(new File(plugin.getDataFolder(), fileName), fileName);
+    public static ConfigurationHolder<BukkitSource> from(@NotNull Plugin plugin,
+                                                         @NotNull String fileName) {
+        return from(plugin, fileName, null);
+    }
+
+    public static ConfigurationHolder<BukkitSource> from(@NotNull Plugin plugin,
+                                                         @NotNull String fileName, @Nullable String resource) {
+        return from(new File(plugin.getDataFolder(), fileName), resource);
     }
 
     public MineConfiguration(@NotNull JavaPlugin plugin) {

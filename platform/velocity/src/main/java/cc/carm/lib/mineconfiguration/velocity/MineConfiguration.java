@@ -13,8 +13,8 @@ public class MineConfiguration extends AbstractConfiguration<ConfigurationHolder
 
     public MineConfiguration(@NotNull File pluginDataFolder) {
         super(
-                YAMLConfigFactory.from(pluginDataFolder, "config.yml").resourcePath("config.yml").build(),
-                YAMLConfigFactory.from(pluginDataFolder, "messages.yml").resourcePath("messages.yml").build()
+                YAMLConfigFactory.from(pluginDataFolder, "config.yml").build(),
+                YAMLConfigFactory.from(pluginDataFolder, "messages.yml").build()
         );
     }
 
