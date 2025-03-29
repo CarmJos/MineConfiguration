@@ -60,7 +60,7 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-chat</artifactId>
-            <version>1.20-R0.2-deprecated+build.19</version>
+            <version>1.21-R0.2-deprecated+build.21</version>
             <scope>provided</scope>
         </dependency>
 
