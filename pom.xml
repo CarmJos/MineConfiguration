@@ -92,9 +92,9 @@
         </repository>
 
         <repository>
-            <id>carm-repo</id>
-            <name>Carm's Repo</name>
-            <url>https://repo.carm.cc/repository/maven-public/</url>
+            <id>github</id>
+            <name>Github Packages for configured</name>
+            <url>https://maven.pkg.github.com/CarmJos/configured</url>
         </repository>
 
     </repositories>
