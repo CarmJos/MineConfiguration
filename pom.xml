@@ -10,7 +10,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 
-        <deps.configured.version>4.1.4</deps.configured.version>
+        <deps.configured.version>4.1.5</deps.configured.version>
         <deps.yamlcommentwriter.version>1.2.1</deps.yamlcommentwriter.version>
         <deps.easyplugin.version>1.5.12</deps.easyplugin.version>
     </properties>
@@ -89,12 +89,6 @@
         <repository>
             <id>lumine</id>
             <url>https://mvn.lumine.io/repository/maven-public/</url>
-        </repository>
-
-        <repository>
-            <id>github</id>
-            <name>Github Packages for configured</name>
-            <url>https://maven.pkg.github.com/CarmJos/configured</url>
         </repository>
 
     </repositories>
