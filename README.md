@@ -12,7 +12,6 @@
 [![License](https://img.shields.io/github/license/CarmJos/MineConfiguration)](https://opensource.org/licenses/MIT)
 [![workflow](https://github.com/CarmJos/MineConfiguration/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/CarmJos/MineConfiguration/actions/workflows/maven.yml)
 ![CodeSize](https://img.shields.io/github/languages/code-size/CarmJos/MineConfiguration)
-![](https://visitor-badge.glitch.me/badge?page_id=MineConfiguration.readme)
 
 EasyConfiguration for MineCraft!
 
