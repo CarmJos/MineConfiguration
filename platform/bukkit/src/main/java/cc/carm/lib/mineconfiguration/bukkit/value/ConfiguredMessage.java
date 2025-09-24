@@ -47,7 +47,7 @@ public class ConfiguredMessage<M> extends ConfiguredText<M, CommandSender> {
     }
 
     public void sendActionBar(@NotNull Player player, Object... values) {
-        ActionBar.sendActionBar(player, prepare(values).parseLine(player, (sender, message) -> message));
+        ActionBar.sendActionBar(player, (String) prepare(values).parseLine(player, (sender, message) -> message));
     }
 
     public void print(Object... values) {
