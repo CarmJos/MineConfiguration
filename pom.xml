@@ -23,7 +23,7 @@
         <module>common</module>
         <module>platform/bukkit</module>
         <module>platform/bungee</module>
-        <module>platform/velocity</module>
+        <module>platform/adventure</module>
     </modules>
 
     <name>MineConfiguration</name>

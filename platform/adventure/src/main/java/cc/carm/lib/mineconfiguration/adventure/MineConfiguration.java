@@ -1,4 +1,4 @@
-package cc.carm.lib.mineconfiguration.velocity;
+package cc.carm.lib.mineconfiguration.adventure;
 
 import cc.carm.lib.configuration.Configuration;
 import cc.carm.lib.configuration.source.ConfigurationHolder;
