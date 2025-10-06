@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 
-        <deps.adventure.version>4.24.0</deps.adventure.version>
+        <deps.adventure.version>4.25.0</deps.adventure.version>
     </properties>
     <artifactId>mineconfiguration-velocity</artifactId>
     <packaging>jar</packaging>
